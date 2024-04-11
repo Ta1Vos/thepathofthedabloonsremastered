@@ -6,7 +6,17 @@ body {
     padding: 25px;
     border-radius: 5px;
     background-color: darkgreen;
-    color: #FFD966;
     text-align: center;
+}
+
+.fm-courier {
     font-family: 'Courier New', Courier, monospace;
+}
+
+.text-gold {
+    color: #FFD966;
+}
+
+.bg-lightgreen {
+    background-color: lightgreen;
 }
