@@ -23,4 +23,12 @@ class GuestController extends AbstractController
             'controller_name' => 'GuestController',
         ]);
     }
+
+    #[Route('/settings', name: 'app_guest_settings')]
+    public function guestSettings(): Response
+    {
+        return $this->render('guest/settings.html.twig', [
+            'controller_name' => 'GuestController',
+        ]);
+    }
 }
