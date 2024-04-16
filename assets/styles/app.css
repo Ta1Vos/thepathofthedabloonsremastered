@@ -7,6 +7,7 @@ body {
     border-radius: 5px;
     background-color: darkgreen;
     text-align: center;
+    font-weight: 500;
 }
 
 .fm-courier {
