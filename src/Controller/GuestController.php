@@ -15,4 +15,12 @@ class GuestController extends AbstractController
             'controller_name' => 'GuestController',
         ]);
     }
+
+    #[Route('/aboutme', name: 'app_about')]
+    public function aboutMe(): Response
+    {
+        return $this->render('guest/aboutme.html.twig', [
+            'controller_name' => 'GuestController',
+        ]);
+    }
 }
