@@ -18,6 +18,10 @@ body {
     color: #FFD966;
 }
 
+.text-gray {
+    color: lightgray;
+}
+
 .bg-mint {
     background-color: #DDF8E8;
 }
