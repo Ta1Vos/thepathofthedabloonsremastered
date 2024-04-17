@@ -1,17 +1,66 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}TPOTDR!{% endblock %}</title>
+    <link rel="icon" type="image/jpg" href="{{ asset('img/logos/Dabloon.jpg') }}"/>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+    {% endblock %}
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    {% endblock %}
+</head>
+<body class="bg-mint">
+<nav class="navbar navbar-expand-xl bg-darkgreen mb-5">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ path('app_home') }}"><img class="w-75 img-fluid"
+                                                                   src="{{ asset('img/logos/Dabloon.jpg') }}"
+                                                                   alt="dabloon image to home"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="w-100 row gx-6 gy-3 gy-xl-0 navbar-nav text-center px-3 fs-5">
+                {% if app.user is null %}
+                    <li class="nav-item col-12 col-xl-2">
+                        <div class="bg-lightgreen rounded-1">
+                            <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Home</a>
+                        </div>
+                    </li>
+                    <li class="nav-item col-12 col-xl-2">
+                        <div class="bg-lightgreen rounded-1">
+                            <a class="nav-link" href="{{ path('app_guest_settings') }}">Settings</a>
+                        </div>
+                    </li>
+                    <li class="nav-item col-12 col-xl-2">
+                        <div class="bg-lightgreen rounded-1">
+                            <a class="nav-link" href="{{ path('app_about') }}">About</a>
+                        </div>
+                    </li>
+                    <li class="nav-item col-12 col-xl-2">
+                        <div class="bg-lightgreen rounded-1">
+                            {#                        <a class="nav-link disabled" href="#"></a> #}
+                    </li>
+                    <li class="nav-item col-12 col-xl-2">
+                        <div class="bg-lightgreen rounded-1">
+                            <a class="nav-link" aria-disabled="true">Register</a>
+                        </div>
+                    </li>
+                    <li class="nav-item col-12 col-xl-2">
+                        <div class="bg-lightgreen rounded-1">
+                            <a class="nav-link" aria-disabled="true">Login</a>
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+{% block body %}{% endblock %}
+</body>
 </html>

@@ -8,10 +8,26 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class GuestController extends AbstractController
 {
-    #[Route('/guest', name: 'app_guest')]
+    #[Route('/', name: 'app_home')]
     public function index(): Response
     {
         return $this->render('guest/index.html.twig', [
+            'controller_name' => 'GuestController',
+        ]);
+    }
+
+    #[Route('/aboutme', name: 'app_about')]
+    public function aboutMe(): Response
+    {
+        return $this->render('guest/aboutme.html.twig', [
+            'controller_name' => 'GuestController',
+        ]);
+    }
+
+    #[Route('/settings', name: 'app_guest_settings')]
+    public function guestSettings(): Response
+    {
+        return $this->render('guest/settings.html.twig', [
             'controller_name' => 'GuestController',
         ]);
     }
