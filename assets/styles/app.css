@@ -30,10 +30,18 @@ body {
     background-color: lightgreen;
 }
 
+.bg-darkgreen {
+    background-color: #385723;
+}
+
 .bg-olive {
     background-color: #A9D18E;
 }
 
 .bg-lightolive {
-    background-color: #C5E0B4;;
+    background-color: #C5E0B4;
+}
+
+.g-6,.gx-6{
+    --bs-gutter-x:5rem
 }
