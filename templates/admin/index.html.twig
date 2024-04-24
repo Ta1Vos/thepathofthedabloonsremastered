@@ -1,20 +1,29 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}TPOTDR | Admin home{% endblock %}
+{% set bannerTitle = "TPOTDR | ADMIN " ~ app.user.username %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="row wrapper text-center">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <div class="row d-flex align-items-baseline">
+                <div class="col-2">
+                    <img class="img-fluid" src="{{ asset('img/logos/Dabloon.jpg') }}" alt="dabloon image">
+                </div>
+                <div class="col-8">
+                    <div class="title-text text-gold fs-1 fm-courier">
+                        {{ bannerTitle }}
+                    </div>
+                </div>
+                <div class="col-2">
+                    <img class="img-fluid" src="{{ asset('img/logos/Dabloon.jpg') }}" alt="dabloon image">
+                </div>
+            </div>
+            <div class="my-5">&nbsp;</div>
+            <div class="my-3">&nbsp;</div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/xampp/htdocs/sd22-p08-symfony-project-x-Ta1Vos/src/Controller/AdminController.php</code></li>
-        <li>Your template at <code>C:/xampp/htdocs/sd22-p08-symfony-project-x-Ta1Vos/templates/admin/index.html.twig</code></li>
-    </ul>
-</div>
+        </div>
+        <div class="col-1"></div>
+    </div>
 {% endblock %}
