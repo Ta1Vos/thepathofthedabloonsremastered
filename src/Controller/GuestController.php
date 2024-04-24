@@ -11,9 +11,20 @@ class GuestController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {
-        if ($this->isGranted('ROLE_USER')){
+        if ($this->isGranted('ROLE_USER')) {//Check if user is logged in
+            //Check for any special roles
+            if ($this->isGranted('ROLE_MODERATOR')) {
+                return $this->render('member/index.html.twig', [
+
+                ]);
+            } else if ($this->isGranted('ROLE_ADMIN')) {
+                return $this->render('member/index.html.twig', [
+
+                ]);
+            }
+
             return $this->render('member/index.html.twig', [
-                'controller_name' => 'GuestController',
+
             ]);
         }
 
