@@ -11,6 +11,10 @@ class MemberController extends AbstractController
     #[Route('/member', name: 'app_member')]
     public function memberIndex(): Response
     {
+        if (!$this->getUser()) {//Prevents guests from going to user pages.
+            $this->addFlash('danger', 'Something went wrong! (You are not logged in)');
+            return $this->redirectToRoute('app_home');
+        }
         return $this->render('member/index.html.twig', [
             'controller_name' => 'MemberController',
         ]);
@@ -19,6 +23,10 @@ class MemberController extends AbstractController
     #[Route('/profile', name: 'app_profile')]
     public function profile(): Response
     {
+        if (!$this->getUser()) {//Prevents guests from going to user pages.
+            $this->addFlash('danger', 'Something went wrong! (You are not logged in)');
+            return $this->redirectToRoute('app_home');
+        }
         return $this->render('member/profile.html.twig', [
             'controller_name' => 'MemberController',
         ]);
