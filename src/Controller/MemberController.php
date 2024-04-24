@@ -19,7 +19,7 @@ class MemberController extends AbstractController
     #[Route('/profile', name: 'app_profile')]
     public function profile(): Response
     {
-        return $this->render('member/index.html.twig', [
+        return $this->render('member/profile.html.twig', [
             'controller_name' => 'MemberController',
         ]);
     }
