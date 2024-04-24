@@ -13,7 +13,7 @@ class MemberController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         return $this->render('member/profile.html.twig', [
-            'controller_name' => 'MemberController',
+            'bannerTitle' => 'TPOTDR | Profile',
         ]);
     }
 }
