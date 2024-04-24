@@ -9,7 +9,15 @@ use Symfony\Component\Routing\Attribute\Route;
 class MemberController extends AbstractController
 {
     #[Route('/member', name: 'app_member')]
-    public function index(): Response
+    public function memberIndex(): Response
+    {
+        return $this->render('member/index.html.twig', [
+            'controller_name' => 'MemberController',
+        ]);
+    }
+
+    #[Route('/profile', name: 'app_profile')]
+    public function profile(): Response
     {
         return $this->render('member/index.html.twig', [
             'controller_name' => 'MemberController',
