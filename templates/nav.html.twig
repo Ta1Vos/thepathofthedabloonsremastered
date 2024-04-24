@@ -41,37 +41,46 @@
                                 <a class="nav-link" aria-disabled="true" href="{{ path('app_login') }}">Login</a>
                             </div>
                         </li>
-                    {% elseif app.user is not null %}
-                        <li class="nav-item col-12 col-xl-2">
-                            <div class="bg-lightgreen rounded-1">
-                                <a class="nav-link active" aria-current="page" href="{{ path('app_member') }}">Home</a>
-                            </div>
-                        </li>
-                        <li class="nav-item col-12 col-xl-2">
-                            <div class="bg-lightgreen rounded-1">
-                                <a class="nav-link" href="{{ path('app_guest_settings') }}">Settings</a>
-                            </div>
-                        </li>
-                        <li class="nav-item col-12 col-xl-2">
-                            <div class="bg-lightgreen rounded-1">
-                                <a class="nav-link" href="{{ path('app_about') }}">About</a>
-                            </div>
-                        </li>
-                        <li class="nav-item col-12 col-xl-2">
-                            <div class="bg-lightgreen rounded-1">
-                                {#                            <a class="nav-link disabled" href="#"></a> #}
-                            </div>
-                        </li>
-                        <li class="nav-item col-12 col-xl-2">
-                            <div class="bg-lightgreen rounded-1">
-                                {#                            <a class="nav-link" aria-disabled="true">Register</a> #}
-                            </div>
-                        </li>
-                        <li class="nav-item col-12 col-xl-2">
-                            <div class="bg-lightgreen rounded-1">
-                                <a class="nav-link" aria-disabled="true" href="{{ path('app_logout') }}">Logout</a>
-                            </div>
-                        </li>
+                    {% else %}
+                        {# The user navbars #}
+                        {% if 'ROLE_ADMIN' in app.user.roles %}
+                            {# Admin #}
+                        {% elseif 'ROLE_MODERATOR' in app.user.roles %}
+                            {# Moderator #}
+                        {% elseif 'ROLE_USER' in app.user.roles %}
+                            {# Member #}
+                            <li class="nav-item col-12 col-xl-2">
+                                <div class="bg-lightgreen rounded-1">
+                                    <a class="nav-link active" aria-current="page"
+                                       href="{{ path('app_member') }}">Home</a>
+                                </div>
+                            </li>
+                            <li class="nav-item col-12 col-xl-2">
+                                <div class="bg-lightgreen rounded-1">
+                                    <a class="nav-link" href="{{ path('app_guest_settings') }}">Settings</a>
+                                </div>
+                            </li>
+                            <li class="nav-item col-12 col-xl-2">
+                                <div class="bg-lightgreen rounded-1">
+                                    <a class="nav-link" href="{{ path('app_about') }}">About</a>
+                                </div>
+                            </li>
+                            <li class="nav-item col-12 col-xl-2">
+                                <div class="bg-lightgreen rounded-1">
+                                    {#                            <a class="nav-link disabled" href="#"></a> #}
+                                </div>
+                            </li>
+                            <li class="nav-item col-12 col-xl-2">
+                                <div class="bg-lightgreen rounded-1">
+                                    <a class="nav-link" aria-disabled="true">Profile</a>
+                                </div>
+                            </li>
+                            <li class="nav-item col-12 col-xl-2">
+                                <div class="bg-lightgreen rounded-1">
+                                    <a class="nav-link" aria-disabled="true" href="{{ path('app_logout') }}">Logout</a>
+                                </div>
+                            </li>
+                        {% endif %}
                     {% endif %}
                 </ul>
             </div>
