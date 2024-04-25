@@ -35,11 +35,11 @@ class MemberController extends AbstractController
             $this->addFlash('danger', 'Something went wrong! Please try again later');
             $this->denyAccessUnlessGranted('ROLE_DENIED');
         } else if ($form->isSubmitted() && $form->isValid()) {
-            $username = $form->getData();
+            $username = $form->get('username')->getData();
             $loggedInUser->setUsername($username);
             $entityManager->flush();
             $this->addFlash('success', "Successfully edited username to: " . $username);
-            $this->redirectToRoute('app_profile');
+            return $this->redirectToRoute('app_profile');
         }
 
         return $this->render('member/reset.html.twig', [
@@ -60,11 +60,11 @@ class MemberController extends AbstractController
             $this->addFlash('danger', 'Something went wrong! Please try again later');
             $this->denyAccessUnlessGranted('ROLE_DENIED');
         } else if ($form->isSubmitted() && $form->isValid()) {
-            $email = $form->getData();
+            $email = $form->get('email')->getData();
             $loggedInUser->setEmail($email);
             $entityManager->flush();
             $this->addFlash('success', "Successfully edited email to: " . $email);
-            $this->redirectToRoute('app_profile');
+            return $this->redirectToRoute('app_profile');
         }
 
         return $this->render('member/reset.html.twig', [
