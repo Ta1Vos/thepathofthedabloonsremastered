@@ -56,9 +56,22 @@
                                     <a class="nav-link" href="{{ path('app_guest_settings') }}">Moderate</a>
                                 </div>
                             </li>
-                            <li class="nav-item col-12 col-xl-2">
+                            <li class="nav-item dropdown col-12 col-xl-2">
                                 <div class="bg-lightgreen rounded-1">
-                                                                        <a class="nav-link" href="{{ path('app_about') }}">Dashboard</a>
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Dashboard
+                                    </a>
+                                    <ul class="dropdown-menu bg-lightgreen w-100" aria-labelledby="navbarDropdown">
+                                        <li><a class="nav-link fw-bold" href="#">Editor dashboard</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="nav-link" href="#">Dialogue editor</a></li>
+                                        <li><a class="nav-link" href="#">Events editor</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="nav-link" href="#">Item editor</a></li>
+                                        <li><a class="nav-link" href="#">Effect editor</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="nav-link disabled" href="#">Quest editor</a></li>
+                                    </ul>
                                 </div>
                             </li>
                             <li class="nav-item col-12 col-xl-2">
@@ -68,7 +81,8 @@
                             </li>
                             <li class="nav-item col-12 col-xl-2">
                                 <div class="bg-lightgreen rounded-1">
-                                    <a class="nav-link" aria-disabled="true" href="{{ path('app_profile') }}">Profile</a>
+                                    <a class="nav-link" aria-disabled="true"
+                                       href="{{ path('app_profile') }}">Profile</a>
                                 </div>
                             </li>
                             <li class="nav-item col-12 col-xl-2">
@@ -91,7 +105,7 @@
                             </li>
                             <li class="nav-item col-12 col-xl-2">
                                 <div class="bg-lightgreen rounded-1">
-{#                                    <a class="nav-link" href="{{ path('app_about') }}">About</a>#}
+                                    {#                                    <a class="nav-link" href="{{ path('app_about') }}">About</a> #}
                                 </div>
                             </li>
                             <li class="nav-item col-12 col-xl-2">
@@ -101,7 +115,8 @@
                             </li>
                             <li class="nav-item col-12 col-xl-2">
                                 <div class="bg-lightgreen rounded-1">
-                                    <a class="nav-link" aria-disabled="true" href="{{ path('app_profile') }}">Profile</a>
+                                    <a class="nav-link" aria-disabled="true"
+                                       href="{{ path('app_profile') }}">Profile</a>
                                 </div>
                             </li>
                             <li class="nav-item col-12 col-xl-2">
@@ -134,7 +149,8 @@
                             </li>
                             <li class="nav-item col-12 col-xl-2">
                                 <div class="bg-lightgreen rounded-1">
-                                    <a class="nav-link" aria-disabled="true" href="{{ path('app_profile') }}">Profile</a>
+                                    <a class="nav-link" aria-disabled="true"
+                                       href="{{ path('app_profile') }}">Profile</a>
                                 </div>
                             </li>
                             <li class="nav-item col-12 col-xl-2">
