@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Form\UserEmailType;
 use App\Form\UserPasswordType;
 use App\Form\UserUsernameType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -28,18 +31,38 @@ class MemberController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $loggedInUser = $this->getUser();
-        $form = $this->createForm(UserUsernameType::class, $loggedInUser);
+
+        //Build the form for the username
+        $form = $this->createFormBuilder()
+            ->add('username', TextType::class, [
+                'attr' => [
+                    'value' => $loggedInUser->getUsername()
+                ]
+            ])
+            ->add('submit', SubmitType::class)
+            ->getForm();
+
+
+//        $form = $this->createForm(UserUsernameType::class, $loggedInUser->getUsername());
         $form->handleRequest($request);
 
         if (!$loggedInUser->getRoles()) {
             $this->addFlash('danger', 'Something went wrong! Please try again later');
             $this->denyAccessUnlessGranted('ROLE_DENIED');
         } else if ($form->isSubmitted() && $form->isValid()) {
-            $username = $form->get('username')->getData();
-            $loggedInUser->setUsername($username);
-            $entityManager->flush();
-            $this->addFlash('success', "Successfully edited username to: " . $username);
-            return $this->redirectToRoute('app_profile');
+            $username = $form->get('username')->getData();//Fetch username
+
+            $foundUsername = $entityManager->getRepository(User::class)->findBy(['username' => $username]);//Search for duplicates
+
+            if (count($foundUsername) > 0) {//Extra check to see if there are no duplicates
+                $this->addFlash('warning', 'This username already exists!');
+                return $this->redirectToRoute('app_profile_edit_username');
+            } else {
+                $loggedInUser->setUsername($username);
+                $entityManager->flush();
+                $this->addFlash('success', "Successfully edited username to: " . $username);
+                return $this->redirectToRoute('app_profile');
+            }
         }
 
         return $this->render('member/reset.html.twig', [
@@ -56,11 +79,22 @@ class MemberController extends AbstractController
         $form = $this->createForm(UserEmailType::class, $loggedInUser);
         $form->handleRequest($request);
 
-        if (!$loggedInUser->getRoles()) {
+        if (!$loggedInUser->getRoles()) {//Extra check to see if there are no duplicates
             $this->addFlash('danger', 'Something went wrong! Please try again later');
-            $this->denyAccessUnlessGranted('ROLE_DENIED');
         } else if ($form->isSubmitted() && $form->isValid()) {
-            $email = $form->get('email')->getData();
+            $email = $form->get('email')->getData();//Fetch email
+
+            $foundEmail = $entityManager->getRepository(User::class)->findBy(['email' => $email]);
+
+            if (count($foundEmail) > 0) {
+                $this->addFlash('warning', 'This email already exists!');
+            } else {
+                $loggedInUser->setEmail($email);
+                $entityManager->flush();
+                $this->addFlash('success', "Successfully edited username to: " . $email);
+                return $this->redirectToRoute('app_profile');
+            }
+
             $loggedInUser->setEmail($email);
             $entityManager->flush();
             $this->addFlash('success', "Successfully edited email to: " . $email);
