@@ -26,18 +26,18 @@
                 <div class="col-3">
                     <div class="bg-lightgreen rounded-2">Username</div>
                     <div class="border border-black border-2 rounded-2 my-2">{{ app.user.username }}</div>
-                    <a href="#"><button class="bg-lightgreen rounded-3 border-0">Request New Username</button></a>
+                    <a href="{{ path('app_profile_edit_username') }}"><button class="bg-lightgreen rounded-3 border-0">Request New Username</button></a>
                 </div>
                 <div class="col-2"></div>
                 <div class="col-3">
                     <div class="bg-lightgreen rounded-2">Email</div>
                     <div class="border border-black border-2 rounded-2 my-2">{{ app.user.email }}</div>
-                    <a href="#"><button class="bg-lightgreen rounded-3 border-0">Reset Email</button></a>
+                    <a href="{{ path('app_profile_edit_email') }}"><button class="bg-lightgreen rounded-3 border-0">Reset Email</button></a>
                 </div>
                 <div class="col-2"></div>
             </div>
             <div class="my-3">&nbsp;</div>
-            <a href="#"><button class="bg-lightgreen rounded-3 border-0 fs-3">Reset Password</button></a>
+            <a href="{{ path('app_profile_edit_password') }}"><button class="bg-lightgreen rounded-3 border-0 fs-3">Reset Password</button></a>
         </div>
         <div class="col-1"></div>
     </div>
