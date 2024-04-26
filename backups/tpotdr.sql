@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 24 apr 2024 om 13:00
+-- Gegenereerd op: 26 apr 2024 om 10:01
 -- Serverversie: 10.4.32-MariaDB
 -- PHP-versie: 8.2.12
 
@@ -54,8 +54,9 @@ CREATE TABLE `doctrine_migration_versions` (
 --
 
 INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
-('DoctrineMigrations\\Version20240417104828', '2024-04-24 11:06:17', 86),
-('DoctrineMigrations\\Version20240424102111', '2024-04-24 12:21:15', 43);
+('DoctrineMigrations\\Version20240417104828', '2024-04-26 09:57:35', 87),
+('DoctrineMigrations\\Version20240424102111', '2024-04-26 09:57:35', 9),
+('DoctrineMigrations\\Version20240426075216', '2024-04-26 09:57:35', 655);
 
 -- --------------------------------------------------------
 
@@ -81,8 +82,55 @@ CREATE TABLE `effect` (
 DROP TABLE IF EXISTS `event`;
 CREATE TABLE `event` (
   `id` int(11) NOT NULL,
-  `event_text` longtext NOT NULL,
-  `options` longtext NOT NULL COMMENT '(DC2Type:array)'
+  `event_text` longtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `event_dialogue`
+--
+
+DROP TABLE IF EXISTS `event_dialogue`;
+CREATE TABLE `event_dialogue` (
+  `event_id` int(11) NOT NULL,
+  `dialogue_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `event_effect`
+--
+
+DROP TABLE IF EXISTS `event_effect`;
+CREATE TABLE `event_effect` (
+  `event_id` int(11) NOT NULL,
+  `effect_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `event_option`
+--
+
+DROP TABLE IF EXISTS `event_option`;
+CREATE TABLE `event_option` (
+  `event_id` int(11) NOT NULL,
+  `option_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `event_world`
+--
+
+DROP TABLE IF EXISTS `event_world`;
+CREATE TABLE `event_world` (
+  `event_id` int(11) NOT NULL,
+  `world_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -95,7 +143,8 @@ DROP TABLE IF EXISTS `game_option`;
 CREATE TABLE `game_option` (
   `id` int(11) NOT NULL,
   `luck_enabled` tinyint(1) NOT NULL,
-  `dialogue_skips` tinyint(1) NOT NULL
+  `dialogue_skips` tinyint(1) NOT NULL,
+  `player_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -109,7 +158,9 @@ CREATE TABLE `inventory_slot` (
   `id` int(11) NOT NULL,
   `effect_is_active` tinyint(1) NOT NULL,
   `debuff_severity` varchar(10) NOT NULL,
-  `debuff_duration` int(11) NOT NULL
+  `debuff_duration` int(11) NOT NULL,
+  `player_id` int(11) DEFAULT NULL,
+  `item_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -126,7 +177,20 @@ CREATE TABLE `item` (
   `is_weapon` tinyint(1) NOT NULL,
   `description` longtext NOT NULL,
   `debuff_severity` varchar(10) DEFAULT NULL,
-  `debuff_duration` int(11) DEFAULT NULL
+  `debuff_duration` int(11) DEFAULT NULL,
+  `rarity_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `item_effect`
+--
+
+DROP TABLE IF EXISTS `item_effect`;
+CREATE TABLE `item_effect` (
+  `item_id` int(11) NOT NULL,
+  `effect_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -155,7 +219,8 @@ CREATE TABLE `messenger_messages` (
 DROP TABLE IF EXISTS `option`;
 CREATE TABLE `option` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL
+  `name` varchar(255) NOT NULL,
+  `quests_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -171,7 +236,9 @@ CREATE TABLE `player` (
   `dabloons` int(11) NOT NULL,
   `distance` int(11) NOT NULL,
   `inventory_max` int(11) NOT NULL,
-  `last_save` datetime NOT NULL
+  `last_save` datetime NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `world_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -221,10 +288,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `roles`, `password`, `email`) VALUES
-(2, 'Arentvos', '[\"ROLE_MODERATOR\", \"ROLE_ADMIN\"]', '$2y$13$YCmEJk9AUzWULklBfdpUkeleQ/.VDd5cM8UL4ep5a0ZXojCbeO05K', 'Arentvos@outlook.com'),
-(3, 'test', '[]', '$2y$13$ibcD47d8TnJ0BNc/u7NhReK3n/8ksp4CE7/fnsn6i9RftOsu.0ZWy', 'test@test.com'),
-(4, 'DeLange', '[]', '$2y$13$J3HNPX.AZAee9D4t54SWnuNg8YBj/QPw7fVTF35Az7WwFpfJBbI5i', 'lalala@lweiiregh.nl'),
-(5, 'test2', '[]', '$2y$13$FYYRT7X.MmbLy7AQUNodSOfwTDjJeeIcGk2s54kJwn7pVP4NpPDl.', 'test@testing.nl');
+(1, 'M. Kleijwegt', '[]', '$2y$13$YtyeCceAPQloKF0lzlbPGO8S3/g5.evA.5fp7F4ae5ACpQVVg4FmO', 'kleiwegt@rocmondriaan.nl');
 
 -- --------------------------------------------------------
 
@@ -268,22 +332,66 @@ ALTER TABLE `event`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexen voor tabel `event_dialogue`
+--
+ALTER TABLE `event_dialogue`
+  ADD PRIMARY KEY (`event_id`,`dialogue_id`),
+  ADD KEY `IDX_B766F5E971F7E88B` (`event_id`),
+  ADD KEY `IDX_B766F5E9A6E12CBD` (`dialogue_id`);
+
+--
+-- Indexen voor tabel `event_effect`
+--
+ALTER TABLE `event_effect`
+  ADD PRIMARY KEY (`event_id`,`effect_id`),
+  ADD KEY `IDX_84F9E6A071F7E88B` (`event_id`),
+  ADD KEY `IDX_84F9E6A0F5E9B83B` (`effect_id`);
+
+--
+-- Indexen voor tabel `event_option`
+--
+ALTER TABLE `event_option`
+  ADD PRIMARY KEY (`event_id`,`option_id`),
+  ADD KEY `IDX_681F77E271F7E88B` (`event_id`),
+  ADD KEY `IDX_681F77E2A7C41D6F` (`option_id`);
+
+--
+-- Indexen voor tabel `event_world`
+--
+ALTER TABLE `event_world`
+  ADD PRIMARY KEY (`event_id`,`world_id`),
+  ADD KEY `IDX_7B6CA06F71F7E88B` (`event_id`),
+  ADD KEY `IDX_7B6CA06F8925311C` (`world_id`);
+
+--
 -- Indexen voor tabel `game_option`
 --
 ALTER TABLE `game_option`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_27B3AD7899E6F5DF` (`player_id`);
 
 --
 -- Indexen voor tabel `inventory_slot`
 --
 ALTER TABLE `inventory_slot`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_E6A8EF4999E6F5DF` (`player_id`),
+  ADD KEY `IDX_E6A8EF49126F525E` (`item_id`);
 
 --
 -- Indexen voor tabel `item`
 --
 ALTER TABLE `item`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_1F1B251EF3747573` (`rarity_id`);
+
+--
+-- Indexen voor tabel `item_effect`
+--
+ALTER TABLE `item_effect`
+  ADD PRIMARY KEY (`item_id`,`effect_id`),
+  ADD KEY `IDX_3099E43D126F525E` (`item_id`),
+  ADD KEY `IDX_3099E43DF5E9B83B` (`effect_id`);
 
 --
 -- Indexen voor tabel `messenger_messages`
@@ -298,13 +406,16 @@ ALTER TABLE `messenger_messages`
 -- Indexen voor tabel `option`
 --
 ALTER TABLE `option`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_5A8600B05D8115BE` (`quests_id`);
 
 --
 -- Indexen voor tabel `player`
 --
 ALTER TABLE `player`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_98197A65A76ED395` (`user_id`),
+  ADD KEY `IDX_98197A658925311C` (`world_id`);
 
 --
 -- Indexen voor tabel `quest`
@@ -406,13 +517,84 @@ ALTER TABLE `rarity`
 -- AUTO_INCREMENT voor een tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `world`
 --
 ALTER TABLE `world`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Beperkingen voor geëxporteerde tabellen
+--
+
+--
+-- Beperkingen voor tabel `event_dialogue`
+--
+ALTER TABLE `event_dialogue`
+  ADD CONSTRAINT `FK_B766F5E971F7E88B` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_B766F5E9A6E12CBD` FOREIGN KEY (`dialogue_id`) REFERENCES `dialogue` (`id`) ON DELETE CASCADE;
+
+--
+-- Beperkingen voor tabel `event_effect`
+--
+ALTER TABLE `event_effect`
+  ADD CONSTRAINT `FK_84F9E6A071F7E88B` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_84F9E6A0F5E9B83B` FOREIGN KEY (`effect_id`) REFERENCES `effect` (`id`) ON DELETE CASCADE;
+
+--
+-- Beperkingen voor tabel `event_option`
+--
+ALTER TABLE `event_option`
+  ADD CONSTRAINT `FK_681F77E271F7E88B` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_681F77E2A7C41D6F` FOREIGN KEY (`option_id`) REFERENCES `option` (`id`) ON DELETE CASCADE;
+
+--
+-- Beperkingen voor tabel `event_world`
+--
+ALTER TABLE `event_world`
+  ADD CONSTRAINT `FK_7B6CA06F71F7E88B` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_7B6CA06F8925311C` FOREIGN KEY (`world_id`) REFERENCES `world` (`id`) ON DELETE CASCADE;
+
+--
+-- Beperkingen voor tabel `game_option`
+--
+ALTER TABLE `game_option`
+  ADD CONSTRAINT `FK_27B3AD7899E6F5DF` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`);
+
+--
+-- Beperkingen voor tabel `inventory_slot`
+--
+ALTER TABLE `inventory_slot`
+  ADD CONSTRAINT `FK_E6A8EF49126F525E` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`),
+  ADD CONSTRAINT `FK_E6A8EF4999E6F5DF` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`);
+
+--
+-- Beperkingen voor tabel `item`
+--
+ALTER TABLE `item`
+  ADD CONSTRAINT `FK_1F1B251EF3747573` FOREIGN KEY (`rarity_id`) REFERENCES `rarity` (`id`);
+
+--
+-- Beperkingen voor tabel `item_effect`
+--
+ALTER TABLE `item_effect`
+  ADD CONSTRAINT `FK_3099E43D126F525E` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_3099E43DF5E9B83B` FOREIGN KEY (`effect_id`) REFERENCES `effect` (`id`) ON DELETE CASCADE;
+
+--
+-- Beperkingen voor tabel `option`
+--
+ALTER TABLE `option`
+  ADD CONSTRAINT `FK_5A8600B05D8115BE` FOREIGN KEY (`quests_id`) REFERENCES `quest` (`id`);
+
+--
+-- Beperkingen voor tabel `player`
+--
+ALTER TABLE `player`
+  ADD CONSTRAINT `FK_98197A658925311C` FOREIGN KEY (`world_id`) REFERENCES `world` (`id`),
+  ADD CONSTRAINT `FK_98197A65A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
