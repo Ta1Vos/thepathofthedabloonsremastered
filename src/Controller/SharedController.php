@@ -11,7 +11,7 @@ class SharedController extends AbstractController
     #[Route('/shared', name: 'app_shared')]
     public function index(): Response
     {
-        return $this->render('shared/index.html.twig', [
+        return $this->render('shared/dashboard.html.twig', [
             'controller_name' => 'SharedController',
         ]);
     }

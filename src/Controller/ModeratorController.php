@@ -11,7 +11,7 @@ class ModeratorController extends AbstractController
     #[Route('/moderator', name: 'app_moderator')]
     public function index(): Response
     {
-        return $this->render('moderator/index.html.twig', [
+        return $this->render('moderator/dashboard.html.twig', [
             'controller_name' => 'ModeratorController',
         ]);
     }
