@@ -1,4 +1,4 @@
-import './bootstrap.js';
+// import './bootstrap.js';//Accidentally imports twice?
 /*
  * Welcome to your app's main JavaScript file!
  *
