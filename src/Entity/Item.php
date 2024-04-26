@@ -28,12 +28,6 @@ class Item
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 10, nullable: true)]
-    private ?string $debuffSeverity = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $debuffDuration = null;
-
     /**
      * @var Collection<int, InventorySlot>
      */
@@ -111,30 +105,6 @@ class Item
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getDebuffSeverity(): ?string
-    {
-        return $this->debuffSeverity;
-    }
-
-    public function setDebuffSeverity(?string $debuffSeverity): static
-    {
-        $this->debuffSeverity = $debuffSeverity;
-
-        return $this;
-    }
-
-    public function getDebuffDuration(): ?int
-    {
-        return $this->debuffDuration;
-    }
-
-    public function setDebuffDuration(?int $debuffDuration): static
-    {
-        $this->debuffDuration = $debuffDuration;
 
         return $this;
     }

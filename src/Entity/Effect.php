@@ -25,6 +25,7 @@ class Effect
     #[ORM\Column]
     private ?int $debuffDuration = null;
 
+    //THERE HAS TO BE A DIRECT LINK WITH PLAYER PROPERTIES, ASK THE TEACHER HOW TO LINK IT THROUGH A VARIABLE.
     #[ORM\Column(type: Types::ARRAY)]
     private array $debuffs = [];
 
