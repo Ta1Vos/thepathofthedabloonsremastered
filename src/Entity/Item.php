@@ -49,10 +49,17 @@ class Item
     #[ORM\ManyToMany(targetEntity: Effect::class, inversedBy: 'items')]
     private Collection $effects;
 
+    /**
+     * @var Collection<int, Quest>
+     */
+    #[ORM\OneToMany(targetEntity: Quest::class, mappedBy: 'rewardedItem')]
+    private Collection $quests;
+
     public function __construct()
     {
         $this->inventorySlots = new ArrayCollection();
         $this->effects = new ArrayCollection();
+        $this->quests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -194,6 +201,36 @@ class Item
     public function removeEffect(Effect $effect): static
     {
         $this->effects->removeElement($effect);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Quest>
+     */
+    public function getQuests(): Collection
+    {
+        return $this->quests;
+    }
+
+    public function addQuest(Quest $quest): static
+    {
+        if (!$this->quests->contains($quest)) {
+            $this->quests->add($quest);
+            $quest->setRewardedItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuest(Quest $quest): static
+    {
+        if ($this->quests->removeElement($quest)) {
+            // set the owning side to null (unless already changed)
+            if ($quest->getRewardedItem() === $this) {
+                $quest->setRewardedItem(null);
+            }
+        }
 
         return $this;
     }

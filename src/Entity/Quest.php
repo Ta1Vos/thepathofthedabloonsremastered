@@ -31,9 +31,22 @@ class Quest
     #[ORM\OneToMany(targetEntity: Option::class, mappedBy: 'quests')]
     private Collection $options;
 
+    /**
+     * @var Collection<int, AcceptedQuest>
+     */
+    #[ORM\OneToMany(targetEntity: AcceptedQuest::class, mappedBy: 'quest')]
+    private Collection $acceptedQuests;
+
+    #[ORM\ManyToOne(inversedBy: 'quests')]
+    private ?Item $rewardedItem = null;
+
+    #[ORM\Column]
+    private ?bool $singleCompletion = null;
+
     public function __construct()
     {
         $this->options = new ArrayCollection();
+        $this->acceptedQuests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,6 +116,60 @@ class Quest
                 $option->setQuests(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AcceptedQuest>
+     */
+    public function getAcceptedQuests(): Collection
+    {
+        return $this->acceptedQuests;
+    }
+
+    public function addAcceptedQuest(AcceptedQuest $acceptedQuest): static
+    {
+        if (!$this->acceptedQuests->contains($acceptedQuest)) {
+            $this->acceptedQuests->add($acceptedQuest);
+            $acceptedQuest->setQuest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAcceptedQuest(AcceptedQuest $acceptedQuest): static
+    {
+        if ($this->acceptedQuests->removeElement($acceptedQuest)) {
+            // set the owning side to null (unless already changed)
+            if ($acceptedQuest->getQuest() === $this) {
+                $acceptedQuest->setQuest(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getRewardedItem(): ?Item
+    {
+        return $this->rewardedItem;
+    }
+
+    public function setRewardedItem(?Item $rewardedItem): static
+    {
+        $this->rewardedItem = $rewardedItem;
+
+        return $this;
+    }
+
+    public function isSingleCompletion(): ?bool
+    {
+        return $this->singleCompletion;
+    }
+
+    public function setSingleCompletion(bool $singleCompletion): static
+    {
+        $this->singleCompletion = $singleCompletion;
 
         return $this;
     }

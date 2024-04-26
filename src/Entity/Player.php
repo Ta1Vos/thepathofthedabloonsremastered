@@ -46,9 +46,16 @@ class Player
     #[ORM\ManyToOne(inversedBy: 'players')]
     private ?World $world = null;
 
+    /**
+     * @var Collection<int, AcceptedQuest>
+     */
+    #[ORM\OneToMany(targetEntity: AcceptedQuest::class, mappedBy: 'player')]
+    private Collection $acceptedQuests;
+
     public function __construct()
     {
         $this->inventorySlots = new ArrayCollection();
+        $this->acceptedQuests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -183,6 +190,36 @@ class Player
     public function setWorld(?World $world): static
     {
         $this->world = $world;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AcceptedQuest>
+     */
+    public function getAcceptedQuests(): Collection
+    {
+        return $this->acceptedQuests;
+    }
+
+    public function addAcceptedQuest(AcceptedQuest $acceptedQuest): static
+    {
+        if (!$this->acceptedQuests->contains($acceptedQuest)) {
+            $this->acceptedQuests->add($acceptedQuest);
+            $acceptedQuest->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAcceptedQuest(AcceptedQuest $acceptedQuest): static
+    {
+        if ($this->acceptedQuests->removeElement($acceptedQuest)) {
+            // set the owning side to null (unless already changed)
+            if ($acceptedQuest->getPlayer() === $this) {
+                $acceptedQuest->setPlayer(null);
+            }
+        }
 
         return $this;
     }
