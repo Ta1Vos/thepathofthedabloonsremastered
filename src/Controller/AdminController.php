@@ -39,6 +39,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $events = $entityManager->getRepository(Event::class)->findAll();
+        $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / EVENTS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
 
         return $this->render('admin/events.html.twig', [
             'bannerTitle' => "TPOTDR | Event Editor"
@@ -50,6 +51,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $items = $entityManager->getRepository(Item::class)->findAll();
+        $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / ITEMS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
 
         return $this->render('admin/items.html.twig', [
             'bannerTitle' => "TPOTDR | Item Editor"
@@ -60,6 +62,7 @@ class AdminController extends AbstractController
     public function effects(EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / EFFECTS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
         $effects = $entityManager->getRepository(Effect::class)->findAll();
 
         return $this->render('admin/effects.html.twig', [
