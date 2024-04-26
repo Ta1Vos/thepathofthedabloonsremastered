@@ -62,15 +62,15 @@
                                         Dashboard
                                     </a>
                                     <ul class="dropdown-menu bg-lightgreen w-100" aria-labelledby="navbarDropdown">
-                                        <li><a class="nav-link fw-bold" href="#">Editor dashboard</a></li>
+                                        <li><a class="nav-link fw-bold" href="{{ path('app_admin_dashboard') }}">Editor dashboard</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="nav-link" href="#">Dialogue editor</a></li>
-                                        <li><a class="nav-link" href="#">Events editor</a></li>
+                                        <li><a class="nav-link" href="{{ path('app_admin_dashboard_dialogues') }}">Dialogue editor</a></li>
+                                        <li><a class="nav-link" href="{{ path('app_admin_dashboard_events') }}">Events editor</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="nav-link" href="#">Item editor</a></li>
-                                        <li><a class="nav-link" href="#">Effect editor</a></li>
+                                        <li><a class="nav-link" href="{{ path('app_admin_dashboard_items') }}">Item editor</a></li>
+                                        <li><a class="nav-link" href="{{ path('app_admin_dashboard_effects') }}">Effect editor</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="nav-link disabled" href="#">Quest editor</a></li>
+                                        <li><a class="nav-link disabled" href="{{ path('app_admin_dashboard_quests') }}">Quest editor</a></li>
                                     </ul>
                                 </div>
                             </li>
