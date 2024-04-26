@@ -28,7 +28,7 @@ class GuestController extends AbstractController
             ]);
         }
 
-        return $this->render('guest/dashboard.html.twig', [
+        return $this->render('guest/index.html.twig', [
             'controller_name' => 'GuestController',
         ]);
     }
