@@ -13,7 +13,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('admin/dashboard.html.twig', [
-
+            'bannerTitle' => "TPOTDR | Creator Dashboard "
         ]);
     }
 
@@ -22,7 +22,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('admin/dialogues.html.twig', [
-
+            'bannerTitle' => "TPOTDR | Dialogue Editor"
         ]);
     }
 
@@ -31,7 +31,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('admin/events.html.twig', [
-
+            'bannerTitle' => "TPOTDR | Event Editor"
         ]);
     }
 
@@ -40,7 +40,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('admin/items.html.twig', [
-
+            'bannerTitle' => "TPOTDR | Item Editor"
         ]);
     }
 
@@ -49,16 +49,16 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('admin/effects.html.twig', [
-
+            'bannerTitle' => "TPOTDR | Effect Editor"
         ]);
     }
 
-    #[Route('/admin/dashboard/quests', name: 'app_admin_quesys')]
+    #[Route('/admin/dashboard/quests', name: 'app_admin_dashboard_quests')]
     public function quests(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('admin/quests.html.twig', [
-
+            'bannerTitle' => "TPOTDR | Quest Editor"
         ]);
     }
 }
