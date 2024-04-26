@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 26 apr 2024 om 10:03
+-- Gegenereerd op: 26 apr 2024 om 11:16
 -- Serverversie: 10.4.32-MariaDB
 -- PHP-versie: 8.2.12
 
@@ -26,6 +26,20 @@ USE `tpotdr`;
 -- --------------------------------------------------------
 
 --
+-- Tabelstructuur voor tabel `accepted_quest`
+--
+
+DROP TABLE IF EXISTS `accepted_quest`;
+CREATE TABLE `accepted_quest` (
+  `id` int(11) NOT NULL,
+  `quest_id` int(11) DEFAULT NULL,
+  `player_id` int(11) DEFAULT NULL,
+  `is_completed` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Tabelstructuur voor tabel `dialogue`
 --
 
@@ -35,6 +49,13 @@ CREATE TABLE `dialogue` (
   `dialogue_text` longtext NOT NULL,
   `name` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `dialogue`
+--
+
+INSERT INTO `dialogue` (`id`, `dialogue_text`, `name`) VALUES
+(1, 'This is a big test dialogue heheheheheha', 'E');
 
 -- --------------------------------------------------------
 
@@ -56,7 +77,8 @@ CREATE TABLE `doctrine_migration_versions` (
 INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
 ('DoctrineMigrations\\Version20240417104828', '2024-04-26 09:57:35', 87),
 ('DoctrineMigrations\\Version20240424102111', '2024-04-26 09:57:35', 9),
-('DoctrineMigrations\\Version20240426075216', '2024-04-26 09:57:35', 655);
+('DoctrineMigrations\\Version20240426075216', '2024-04-26 09:57:35', 655),
+('DoctrineMigrations\\Version20240426091136', '2024-04-26 11:11:41', 129);
 
 -- --------------------------------------------------------
 
@@ -73,6 +95,13 @@ CREATE TABLE `effect` (
   `debuffs` longtext NOT NULL COMMENT '(DC2Type:array)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Gegevens worden geëxporteerd voor tabel `effect`
+--
+
+INSERT INTO `effect` (`id`, `name`, `debuff_severity`, `debuff_duration`, `debuffs`) VALUES
+(1, 'Damage', '', 1, '');
+
 -- --------------------------------------------------------
 
 --
@@ -84,6 +113,13 @@ CREATE TABLE `event` (
   `id` int(11) NOT NULL,
   `event_text` longtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `event`
+--
+
+INSERT INTO `event` (`id`, `event_text`) VALUES
+(1, 'You stumble over a rock');
 
 -- --------------------------------------------------------
 
@@ -147,6 +183,13 @@ CREATE TABLE `game_option` (
   `player_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Gegevens worden geëxporteerd voor tabel `game_option`
+--
+
+INSERT INTO `game_option` (`id`, `luck_enabled`, `dialogue_skips`, `player_id`) VALUES
+(2, 1, 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -180,6 +223,13 @@ CREATE TABLE `item` (
   `debuff_duration` int(11) DEFAULT NULL,
   `rarity_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `item`
+--
+
+INSERT INTO `item` (`id`, `name`, `price`, `is_weapon`, `description`, `debuff_severity`, `debuff_duration`, `rarity_id`) VALUES
+(3, 'Twig', 4, 1, 'A very cheap and very unreliable weapon. It is very not advised to use this in fights unless you have great accuracy.', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -241,6 +291,13 @@ CREATE TABLE `player` (
   `world_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Gegevens worden geëxporteerd voor tabel `player`
+--
+
+INSERT INTO `player` (`id`, `health`, `dabloons`, `distance`, `inventory_max`, `last_save`, `user_id`, `world_id`) VALUES
+(1, 100, 150, 50, 12, '2024-04-26 10:58:21', 2, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -252,7 +309,9 @@ CREATE TABLE `quest` (
   `id` int(11) NOT NULL,
   `quest_text` longtext NOT NULL,
   `dabloon_reward` int(11) NOT NULL,
-  `is_completed` tinyint(1) NOT NULL
+  `is_completed` tinyint(1) NOT NULL,
+  `rewarded_item_id` int(11) DEFAULT NULL,
+  `single_completion` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -267,6 +326,13 @@ CREATE TABLE `rarity` (
   `name` varchar(50) NOT NULL,
   `chance_in` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `rarity`
+--
+
+INSERT INTO `rarity` (`id`, `name`, `chance_in`) VALUES
+(1, 'COMMON', 5);
 
 -- --------------------------------------------------------
 
@@ -308,6 +374,14 @@ CREATE TABLE `world` (
 --
 -- Indexen voor geëxporteerde tabellen
 --
+
+--
+-- Indexen voor tabel `accepted_quest`
+--
+ALTER TABLE `accepted_quest`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_C90641CA209E9EF4` (`quest_id`),
+  ADD KEY `IDX_C90641CA99E6F5DF` (`player_id`);
 
 --
 -- Indexen voor tabel `dialogue`
@@ -423,7 +497,8 @@ ALTER TABLE `player`
 -- Indexen voor tabel `quest`
 --
 ALTER TABLE `quest`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_4317F817843BB51E` (`rewarded_item_id`);
 
 --
 -- Indexen voor tabel `rarity`
@@ -450,28 +525,34 @@ ALTER TABLE `world`
 --
 
 --
+-- AUTO_INCREMENT voor een tabel `accepted_quest`
+--
+ALTER TABLE `accepted_quest`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT voor een tabel `dialogue`
 --
 ALTER TABLE `dialogue`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `effect`
 --
 ALTER TABLE `effect`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `event`
 --
 ALTER TABLE `event`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `game_option`
 --
 ALTER TABLE `game_option`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT voor een tabel `inventory_slot`
@@ -483,7 +564,7 @@ ALTER TABLE `inventory_slot`
 -- AUTO_INCREMENT voor een tabel `item`
 --
 ALTER TABLE `item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT voor een tabel `messenger_messages`
@@ -501,7 +582,7 @@ ALTER TABLE `option`
 -- AUTO_INCREMENT voor een tabel `player`
 --
 ALTER TABLE `player`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `quest`
@@ -513,7 +594,7 @@ ALTER TABLE `quest`
 -- AUTO_INCREMENT voor een tabel `rarity`
 --
 ALTER TABLE `rarity`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `user`
@@ -530,6 +611,13 @@ ALTER TABLE `world`
 --
 -- Beperkingen voor geëxporteerde tabellen
 --
+
+--
+-- Beperkingen voor tabel `accepted_quest`
+--
+ALTER TABLE `accepted_quest`
+  ADD CONSTRAINT `FK_C90641CA209E9EF4` FOREIGN KEY (`quest_id`) REFERENCES `quest` (`id`),
+  ADD CONSTRAINT `FK_C90641CA99E6F5DF` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`);
 
 --
 -- Beperkingen voor tabel `event_dialogue`
@@ -597,6 +685,12 @@ ALTER TABLE `option`
 ALTER TABLE `player`
   ADD CONSTRAINT `FK_98197A658925311C` FOREIGN KEY (`world_id`) REFERENCES `world` (`id`),
   ADD CONSTRAINT `FK_98197A65A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+--
+-- Beperkingen voor tabel `quest`
+--
+ALTER TABLE `quest`
+  ADD CONSTRAINT `FK_4317F817843BB51E` FOREIGN KEY (`rewarded_item_id`) REFERENCES `item` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
