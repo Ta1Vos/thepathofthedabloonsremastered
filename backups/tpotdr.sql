@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 26 apr 2024 om 10:01
+-- Gegenereerd op: 26 apr 2024 om 10:03
 -- Serverversie: 10.4.32-MariaDB
 -- PHP-versie: 8.2.12
 
@@ -288,7 +288,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `roles`, `password`, `email`) VALUES
-(1, 'M. Kleijwegt', '[]', '$2y$13$YtyeCceAPQloKF0lzlbPGO8S3/g5.evA.5fp7F4ae5ACpQVVg4FmO', 'kleiwegt@rocmondriaan.nl');
+(1, 'M. Kleijwegt', '[]', '$2y$13$YtyeCceAPQloKF0lzlbPGO8S3/g5.evA.5fp7F4ae5ACpQVVg4FmO', 'kleiwegt@rocmondriaan.nl'),
+(2, 'admin', '[\"ROLE_ADMIN\", \"ROLE_MODERATOR\"]', '$2y$13$dW8MnLc/MOqyxae9ctyVUuA3oXpzJJfNX0bfKQA9RjCR1tvExZv8q', 'admin@TPOTDR.com'),
+(3, 'moderator', '[\"ROLE_MODERATOR\"]', '$2y$13$ChutEeM3kLAxUrlMi768g.gn0.UrfHBjxD0sA81gr5GmvQ7sH4iYe', 'moderator@TPOTDR.com');
 
 -- --------------------------------------------------------
 
@@ -517,7 +519,7 @@ ALTER TABLE `rarity`
 -- AUTO_INCREMENT voor een tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT voor een tabel `world`
