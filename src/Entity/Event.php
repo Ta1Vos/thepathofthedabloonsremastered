@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,8 +19,37 @@ class Event
     #[ORM\Column(type: Types::TEXT)]
     private ?string $eventText = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
-    private array $options = [];
+    /**
+     * @var Collection<int, Effect>
+     */
+    #[ORM\ManyToMany(targetEntity: Effect::class, inversedBy: 'events')]
+    private Collection $effects;
+
+    /**
+     * @var Collection<int, Dialogue>
+     */
+    #[ORM\ManyToMany(targetEntity: Dialogue::class, inversedBy: 'events')]
+    private Collection $dialogues;
+
+    /**
+     * @var Collection<int, Option>
+     */
+    #[ORM\ManyToMany(targetEntity: Option::class, inversedBy: 'events')]
+    private Collection $options;
+
+    /**
+     * @var Collection<int, World>
+     */
+    #[ORM\ManyToMany(targetEntity: World::class, inversedBy: 'events')]
+    private Collection $worlds;
+
+    public function __construct()
+    {
+        $this->effects = new ArrayCollection();
+        $this->dialogues = new ArrayCollection();
+        $this->options = new ArrayCollection();
+        $this->worlds = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -37,14 +68,98 @@ class Event
         return $this;
     }
 
-    public function getOptions(): array
+    /**
+     * @return Collection<int, Effect>
+     */
+    public function getEffects(): Collection
+    {
+        return $this->effects;
+    }
+
+    public function addEffect(Effect $effect): static
+    {
+        if (!$this->effects->contains($effect)) {
+            $this->effects->add($effect);
+        }
+
+        return $this;
+    }
+
+    public function removeEffect(Effect $effect): static
+    {
+        $this->effects->removeElement($effect);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Dialogue>
+     */
+    public function getDialogues(): Collection
+    {
+        return $this->dialogues;
+    }
+
+    public function addDialogue(Dialogue $dialogue): static
+    {
+        if (!$this->dialogues->contains($dialogue)) {
+            $this->dialogues->add($dialogue);
+        }
+
+        return $this;
+    }
+
+    public function removeDialogue(Dialogue $dialogue): static
+    {
+        $this->dialogues->removeElement($dialogue);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Option>
+     */
+    public function getOptions(): Collection
     {
         return $this->options;
     }
 
-    public function setOptions(array $options): static
+    public function addOption(Option $option): static
     {
-        $this->options = $options;
+        if (!$this->options->contains($option)) {
+            $this->options->add($option);
+        }
+
+        return $this;
+    }
+
+    public function removeOption(Option $option): static
+    {
+        $this->options->removeElement($option);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, World>
+     */
+    public function getWorlds(): Collection
+    {
+        return $this->worlds;
+    }
+
+    public function addWorld(World $world): static
+    {
+        if (!$this->worlds->contains($world)) {
+            $this->worlds->add($world);
+        }
+
+        return $this;
+    }
+
+    public function removeWorld(World $world): static
+    {
+        $this->worlds->removeElement($world);
 
         return $this;
     }

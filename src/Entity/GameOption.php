@@ -19,6 +19,10 @@ class GameOption
     #[ORM\Column]
     private ?bool $dialogueSkips = null;
 
+    #[ORM\OneToOne(inversedBy: 'gameOption', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Player $player = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +48,18 @@ class GameOption
     public function setDialogueSkips(bool $dialogueSkips): static
     {
         $this->dialogueSkips = $dialogueSkips;
+
+        return $this;
+    }
+
+    public function getPlayer(): ?Player
+    {
+        return $this->player;
+    }
+
+    public function setPlayer(Player $player): static
+    {
+        $this->player = $player;
 
         return $this;
     }

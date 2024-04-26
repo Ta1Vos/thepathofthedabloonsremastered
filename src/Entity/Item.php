@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ItemRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,6 +33,27 @@ class Item
 
     #[ORM\Column(nullable: true)]
     private ?int $debuffDuration = null;
+
+    /**
+     * @var Collection<int, InventorySlot>
+     */
+    #[ORM\OneToMany(targetEntity: InventorySlot::class, mappedBy: 'item')]
+    private Collection $inventorySlots;
+
+    #[ORM\ManyToOne(inversedBy: 'items')]
+    private ?Rarity $rarity = null;
+
+    /**
+     * @var Collection<int, Effect>
+     */
+    #[ORM\ManyToMany(targetEntity: Effect::class, inversedBy: 'items')]
+    private Collection $effects;
+
+    public function __construct()
+    {
+        $this->inventorySlots = new ArrayCollection();
+        $this->effects = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -105,6 +128,72 @@ class Item
     public function setDebuffDuration(?int $debuffDuration): static
     {
         $this->debuffDuration = $debuffDuration;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, InventorySlot>
+     */
+    public function getInventorySlots(): Collection
+    {
+        return $this->inventorySlots;
+    }
+
+    public function addInventorySlot(InventorySlot $inventorySlot): static
+    {
+        if (!$this->inventorySlots->contains($inventorySlot)) {
+            $this->inventorySlots->add($inventorySlot);
+            $inventorySlot->setItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInventorySlot(InventorySlot $inventorySlot): static
+    {
+        if ($this->inventorySlots->removeElement($inventorySlot)) {
+            // set the owning side to null (unless already changed)
+            if ($inventorySlot->getItem() === $this) {
+                $inventorySlot->setItem(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getRarity(): ?Rarity
+    {
+        return $this->rarity;
+    }
+
+    public function setRarity(?Rarity $rarity): static
+    {
+        $this->rarity = $rarity;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Effect>
+     */
+    public function getEffects(): Collection
+    {
+        return $this->effects;
+    }
+
+    public function addEffect(Effect $effect): static
+    {
+        if (!$this->effects->contains($effect)) {
+            $this->effects->add($effect);
+        }
+
+        return $this;
+    }
+
+    public function removeEffect(Effect $effect): static
+    {
+        $this->effects->removeElement($effect);
 
         return $this;
     }

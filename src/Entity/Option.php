@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OptionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OptionRepository::class)]
@@ -15,6 +17,20 @@ class Option
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
+
+    /**
+     * @var Collection<int, Event>
+     */
+    #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'options')]
+    private Collection $events;
+
+    #[ORM\ManyToOne(inversedBy: 'options')]
+    private ?Quest $quests = null;
+
+    public function __construct()
+    {
+        $this->events = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -29,6 +45,45 @@ class Option
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): static
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->addOption($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): static
+    {
+        if ($this->events->removeElement($event)) {
+            $event->removeOption($this);
+        }
+
+        return $this;
+    }
+
+    public function getQuests(): ?Quest
+    {
+        return $this->quests;
+    }
+
+    public function setQuests(?Quest $quests): static
+    {
+        $this->quests = $quests;
 
         return $this;
     }

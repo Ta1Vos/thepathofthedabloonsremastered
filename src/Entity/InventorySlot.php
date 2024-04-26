@@ -22,6 +22,12 @@ class InventorySlot
     #[ORM\Column]
     private ?int $debuffDuration = null;
 
+    #[ORM\ManyToOne(inversedBy: 'inventorySlots')]
+    private ?Player $player = null;
+
+    #[ORM\ManyToOne(inversedBy: 'inventorySlots')]
+    private ?Item $item = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +65,30 @@ class InventorySlot
     public function setDebuffDuration(int $debuffDuration): static
     {
         $this->debuffDuration = $debuffDuration;
+
+        return $this;
+    }
+
+    public function getPlayer(): ?Player
+    {
+        return $this->player;
+    }
+
+    public function setPlayer(?Player $player): static
+    {
+        $this->player = $player;
+
+        return $this;
+    }
+
+    public function getItem(): ?Item
+    {
+        return $this->item;
+    }
+
+    public function setItem(?Item $item): static
+    {
+        $this->item = $item;
 
         return $this;
     }
