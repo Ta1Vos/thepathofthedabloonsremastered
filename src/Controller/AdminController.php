@@ -17,7 +17,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/dashboard/dialogue', name: 'app_dashboard_dialogue')]
+    #[Route('/admin/dashboard/dialogue', name: 'app_admin_dashboard_dialogues')]
     public function dialogues(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');

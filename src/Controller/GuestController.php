@@ -14,16 +14,16 @@ class GuestController extends AbstractController
         if ($this->isGranted('ROLE_USER')) {//Check if user is logged in
             //Check for any special roles
             if ($this->isGranted('ROLE_MODERATOR')) {
-                return $this->render('member/dashboard.html.twig', [
+                return $this->render('guest/index.html.twig', [
 
                 ]);
             } else if ($this->isGranted('ROLE_ADMIN')) {
-                return $this->render('member/dashboard.html.twig', [
+                return $this->render('guest/index.html.twig', [
 
                 ]);
             }
 
-            return $this->render('member/dashboard.html.twig', [
+            return $this->render('guest/index.html.twig', [
 
             ]);
         }
