@@ -29,8 +29,10 @@ class AdminController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $dialogues = $entityManager->getRepository(Dialogue::class)->findAll();
 
+
         return $this->render('admin/dialogues.html.twig', [
-            'bannerTitle' => "TPOTDR | Dialogue Editor"
+            'bannerTitle' => "TPOTDR | Dialogue Editor",
+            'dialogues' => $dialogues
         ]);
     }
 
@@ -42,7 +44,8 @@ class AdminController extends AbstractController
         $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / EVENTS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
 
         return $this->render('admin/events.html.twig', [
-            'bannerTitle' => "TPOTDR | Event Editor"
+            'bannerTitle' => "TPOTDR | Event Editor",
+            'events' => $events
         ]);
     }
 
@@ -54,7 +57,8 @@ class AdminController extends AbstractController
         $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / ITEMS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
 
         return $this->render('admin/items.html.twig', [
-            'bannerTitle' => "TPOTDR | Item Editor"
+            'bannerTitle' => "TPOTDR | Item Editor",
+            'items' => $items
         ]);
     }
 
@@ -66,7 +70,8 @@ class AdminController extends AbstractController
         $effects = $entityManager->getRepository(Effect::class)->findAll();
 
         return $this->render('admin/effects.html.twig', [
-            'bannerTitle' => "TPOTDR | Effect Editor"
+            'bannerTitle' => "TPOTDR | Effect Editor",
+            'effects' => $effects
         ]);
     }
 
@@ -77,7 +82,8 @@ class AdminController extends AbstractController
         $quests = $entityManager->getRepository(Quest::class)->findAll();
 
         return $this->render('admin/quests.html.twig', [
-            'bannerTitle' => "TPOTDR | Quest Editor"
+            'bannerTitle' => "TPOTDR | Quest Editor",
+            'quests' => $quests
         ]);
     }
 }

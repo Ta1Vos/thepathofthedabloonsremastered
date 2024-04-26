@@ -43,6 +43,9 @@ class Event
     #[ORM\ManyToMany(targetEntity: World::class, inversedBy: 'events')]
     private Collection $worlds;
 
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->effects = new ArrayCollection();
@@ -160,6 +163,18 @@ class Event
     public function removeWorld(World $world): static
     {
         $this->worlds->removeElement($world);
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }
