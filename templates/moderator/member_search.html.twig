@@ -13,7 +13,12 @@
                 </div>
                 <div class="col-2"></div>
             </div>
-            
+            <select name="users">
+                {% for user in users %}
+                    {% set name = { user.username } %}
+                    <option value="{{ name }}">{{ name }}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="col-1"></div>
     </div>
