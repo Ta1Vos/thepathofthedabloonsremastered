@@ -11,8 +11,20 @@ class ModeratorController extends AbstractController
     #[Route('/moderator', name: 'app_moderator')]
     public function index(): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         return $this->render('moderator/dashboard.html.twig', [
             'controller_name' => 'ModeratorController',
+            'bannerTitle' => "TPOTDR | MODERATOR",
+        ]);
+    }
+
+    #[Route('/moderator/member-edit', name: 'app_mod_member_editing')]
+    public function modMemberEdit(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
+        return $this->render('moderator/member_editing.html.twig', [
+            'controller_name' => 'ModeratorController',
+            'bannerTitle' => "TPOTDR | MODERATE",
         ]);
     }
 }
