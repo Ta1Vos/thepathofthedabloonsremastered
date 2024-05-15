@@ -18,6 +18,16 @@ class ModeratorController extends AbstractController
         ]);
     }
 
+    #[Route('/moderator/member-search', name: 'app_mod_member_searching')]
+    public function modMemberSearch(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
+        return $this->render('moderator/member_editing.html.twig', [
+            'controller_name' => 'ModeratorController',
+            'bannerTitle' => "TPOTDR | SEARCH",
+        ]);
+    }
+
     #[Route('/moderator/member-edit', name: 'app_mod_member_editing')]
     public function modMemberEdit(): Response
     {
