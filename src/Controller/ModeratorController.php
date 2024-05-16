@@ -46,7 +46,7 @@ class ModeratorController extends AbstractController
         } else if ($searchForm->isSubmitted() && $searchForm->isValid()) {
             //If search one
             $result = $searchForm->getData();
-            $userList = $entityManager->getRepository(User::class)->findBy(['username' => $result['username']]);
+            $userList = $entityManager->getRepository(User::class)->findNameBySearchQuery($result['username']);
         }
 
         return $this->render('moderator/member_search.html.twig', [
