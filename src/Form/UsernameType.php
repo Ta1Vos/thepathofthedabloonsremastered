@@ -15,9 +15,7 @@ class UsernameType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'attr' => [
-                    'required' => ''
-                ]
+                'required' => false
             ])
             ->add('submit', SubmitType::class)
         ;
