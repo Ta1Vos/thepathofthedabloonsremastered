@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UsernameType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,16 +55,46 @@ class ModeratorController extends AbstractController
             }
         }
 
+        $selectableUsers = [];
+
+        foreach ($userList as $user) {
+            $selectableUsers[$user->getUsername()] = $user->getId();
+        }
+
+        $moderateUserForm = $this->createFormBuilder()
+            ->add('select', ChoiceType::class, [
+                'choices' => [
+                    'Members' => $selectableUsers,
+                    'Moderators' => []
+                ],
+            ])
+//            ->add('submit', SubmitType::class, [
+//                'attr' => [
+//                    'label' => 'Moderate User'
+//                ]
+//            ])
+            ->getForm();
+        $moderateUserForm->handleRequest($request);
+
+        if ($moderateUserForm->isSubmitted() && $moderateUserForm->isValid()) {
+            $userId = $moderateUserForm->getData();
+            //Check if exist
+            if ($entityManager->getRepository(User::class)->find($userId)) {
+                return $this->redirectToRoute('app_mod_member_editing', ['id' => $userId]);
+            }
+        }
+
         return $this->render('moderator/member_search.html.twig', [
             'bannerTitle' => "TPOTDR | SEARCH",
             'users' => $userList,
             'searchForm' => $searchForm,
             'searchAllForm' => $selectAllForm,
+            'moderateUserForm' => $moderateUserForm
         ]);
     }
 
-    #[Route('/moderator/member-edit', name: 'app_mod_member_editing')]
-    public function modMemberEdit(): Response
+    #[Route('/moderator/member-edit/{id}', name: 'app_mod_member_editing')]
+    public function modMemberEdit(int $id): Response
     {
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         return $this->render('moderator/member_editing.html.twig', [
