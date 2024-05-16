@@ -98,6 +98,11 @@ class ModeratorController extends AbstractController
         if ($moderateUserForm->isSubmitted() && $moderateUserForm->isValid()) {
             $userId = $moderateUserForm->getData()['select'];//Get the select from the form
 
+            if (!is_int($userId)) {
+                $this->addFlash('danger', 'Please select an User before proceeding.');
+                return $this->redirectToRoute('app_mod_member_searching');
+            }
+
             //Check if exist
             if ($entityManager->getRepository(User::class)->find($userId)) {
                 return $this->redirectToRoute('app_mod_member_editing', ['id' => $userId]);
