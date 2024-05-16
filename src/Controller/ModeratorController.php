@@ -73,8 +73,8 @@ class ModeratorController extends AbstractController
             }
         }
 
+        //Put selected users in array, suitable for the ChoiceType form child.
         $selectableUsers = [];
-
         foreach ($userList as $user) {
             $selectableUsers[$user->getUsername()] = $user->getId();
         }
@@ -96,7 +96,7 @@ class ModeratorController extends AbstractController
 //        dd($moderateUserForm->getData());
         //Double verify if user id is valid, then send User to moderation page.
         if ($moderateUserForm->isSubmitted() && $moderateUserForm->isValid()) {
-            $userId = $moderateUserForm->getData()['select'];
+            $userId = $moderateUserForm->getData()['select'];//Get the select from the form
 
             //Check if exist
             if ($entityManager->getRepository(User::class)->find($userId)) {
