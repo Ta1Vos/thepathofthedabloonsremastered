@@ -9,11 +9,28 @@
             <div class="row">
                 <div class="col-2"></div>
                 <div class="col-8">
+                    {{ form_errors(form) }}
 
+                    {{ form_start(form) }}
+                    {{ form_row(form.username) }}
+                    {{ form_row(form.submit, {
+                        label: 'Search',
+                        'attr': {
+                            'class': 'fs-4 mt-3 bg-darkgreen text-gold'
+                        },
+                    }) }}
+                    {{ form_row(form.search_all, {
+                        'attr': {
+                            'class': 'fs-2 mt-5 bg-darkgreen text-gold'
+                        },
+                    }) }}
+
+                    {{ form_end(form) }}
                 </div>
                 <div class="col-2"></div>
             </div>
-            <select class="form-select form-select-sm w-25" aria-label="User select">
+            <hr class="border border-dark border-4 opacity-75 w-100">
+            <select class="form-select form-select-md w-25" aria-label="User select">
                 <option selected>No selected</option>
                 <hr>
                 <hr>
