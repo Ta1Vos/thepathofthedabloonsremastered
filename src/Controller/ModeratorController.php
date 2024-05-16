@@ -38,10 +38,11 @@ class ModeratorController extends AbstractController
         if ($searchForm->isSubmitted() && $searchForm->isValid()) {
             $result = $searchForm->getData();
             $searchQueryResult = $result['username'];
+
             if (strlen($searchQueryResult) > 0) {
-                $userList = $entityManager->getRepository(User::class)->findNameBySearchQuery($searchQueryResult);
+                return $this->redirectToRoute('app_mod_member_searching', ['query' => $searchQueryResult]);
             } else {
-                $userList = $entityManager->getRepository(User::class)->findAll();//Find all if nothing has been input
+                return $this->redirectToRoute('app_mod_member_searching', ['query' => '!all']);//Find all if nothing has been input
             }
         }
 
@@ -58,7 +59,18 @@ class ModeratorController extends AbstractController
         //If search all
         $selectAllForm->handleRequest($request);
         if ($selectAllForm->isSubmitted() && $selectAllForm->isValid()) {
-            $userList = $entityManager->getRepository(User::class)->findAll();
+            return $this->redirectToRoute('app_mod_member_searching', ['query' => '!all']);
+        }
+
+        //handle GET request and load in the right things
+        if ($request->get('query')) {
+            $query = $request->get('query');
+
+            if ($query == '!all') {
+                $userList = $entityManager->getRepository(User::class)->findAll();
+            } else {
+                $userList = $entityManager->getRepository(User::class)->findNameBySearchQuery($query);
+            }
         }
 
         $selectableUsers = [];
@@ -71,6 +83,7 @@ class ModeratorController extends AbstractController
         $moderateUserForm = $formFactory->createNamedBuilder('moderateUser')
             ->add('select', ChoiceType::class, [
                 'choices' =>  $selectableUsers,
+//                'expanded' => true
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [
@@ -83,7 +96,8 @@ class ModeratorController extends AbstractController
 //        dd($moderateUserForm->getData());
         //Double verify if user id is valid, then send User to moderation page.
         if ($moderateUserForm->isSubmitted() && $moderateUserForm->isValid()) {
-            $userId = $moderateUserForm->getData();
+            $userId = $moderateUserForm->getData()['select'];
+
             //Check if exist
             if ($entityManager->getRepository(User::class)->find($userId)) {
                 return $this->redirectToRoute('app_mod_member_editing', ['id' => $userId]);
