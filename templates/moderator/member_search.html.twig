@@ -32,17 +32,7 @@
                 <div class="col-2"></div>
             </div>
             <hr class="border border-dark border-4 opacity-75 w-100">
-            <select class="form-select form-select-md w-25" aria-label="User select">
-                <option selected>No selected</option>
-                <hr>
-                <hr>
-                <hr>
-                {% for user in users %}
-                    {% set name = user.username %}
-                    <option value="{{ name }}">{{ name }}</option>
-                    <hr>
-                {% endfor %}
-            </select>
+            {{ form(moderateUserForm) }}
         </div>
         <div class="col-1"></div>
     </div>
