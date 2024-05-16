@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -24,28 +25,17 @@ class ModeratorController extends AbstractController
     }
 
     #[Route('/moderator/member-search', name: 'app_mod_member_searching')]
-    public function modMemberSearch(Request $request, EntityManagerInterface $entityManager): Response
+    public function modMemberSearch(FormFactoryInterface $formFactory, Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         $userList = [];
 
-        $searchForm = $this->createForm(UsernameType::class);
-        $selectAllForm = $this->createFormBuilder()
-            ->add('search_all', SubmitType::class, [
-                'attr' => [
-                    'label' => 'Search all'
-                ]
-            ])
-            ->getForm();
+        //Create named builder to prevent duplicate error.
+        $searchForm = $formFactory->createNamedBuilder('SearchQuery', UsernameType::class)->getForm();
 
         $searchForm->handleRequest($request);
-        $selectAllForm->handleRequest($request);
-
-        //If search all
-        if ($selectAllForm->isSubmitted() && $selectAllForm->isValid()) {
-            $userList = $entityManager->getRepository(User::class)->findAll();
-        } else if ($searchForm->isSubmitted() && $searchForm->isValid()) {
-            //If search one
+        //If search query
+        if ($searchForm->isSubmitted() && $searchForm->isValid()) {
             $result = $searchForm->getData();
             $searchQueryResult = $result['username'];
             if (strlen($searchQueryResult) > 0) {
@@ -55,27 +45,43 @@ class ModeratorController extends AbstractController
             }
         }
 
+        //Create named builder to prevent duplicate error.
+        $selectAllForm = $formFactory->createNamedBuilder('SearchAll')
+            ->add('search_all', SubmitType::class, [
+                'attr' => [
+                    'label' => 'Search all'
+                ]
+            ])
+            ->getForm();
+        ;
+
+        //If search all
+        $selectAllForm->handleRequest($request);
+        if ($selectAllForm->isSubmitted() && $selectAllForm->isValid()) {
+            $userList = $entityManager->getRepository(User::class)->findAll();
+        }
+
         $selectableUsers = [];
 
         foreach ($userList as $user) {
             $selectableUsers[$user->getUsername()] = $user->getId();
         }
 
-        $moderateUserForm = $this->createFormBuilder()
+        //Create named builder to prevent duplicate error.
+        $moderateUserForm = $formFactory->createNamedBuilder('moderateUser')
             ->add('select', ChoiceType::class, [
-                'choices' => [
-                    'Members' => $selectableUsers,
-                    'Moderators' => []
-                ],
+                'choices' =>  $selectableUsers,
             ])
-//            ->add('submit', SubmitType::class, [
-//                'attr' => [
-//                    'label' => 'Moderate User'
-//                ]
-//            ])
+            ->add('submit', SubmitType::class, [
+                'attr' => [
+                    'label' => 'Moderate User'
+                ]
+            ])
             ->getForm();
         $moderateUserForm->handleRequest($request);
 
+//        dd($moderateUserForm->getData());
+        //Double verify if user id is valid, then send User to moderation page.
         if ($moderateUserForm->isSubmitted() && $moderateUserForm->isValid()) {
             $userId = $moderateUserForm->getData();
             //Check if exist
