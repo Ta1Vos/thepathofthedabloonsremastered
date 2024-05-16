@@ -119,11 +119,19 @@ class ModeratorController extends AbstractController
     }
 
     #[Route('/moderator/member-edit/{id}', name: 'app_mod_member_editing')]
-    public function modMemberEdit(int $id): Response
+    public function modMemberEdit(EntityManagerInterface $entityManager, int $id = null): Response
     {
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
+        if (!is_int($id)) {
+            $this->addFlash('warning', 'Please select an User before proceeding.');
+            return $this->redirectToRoute('app_mod_member_searching');
+        }
+
+        $user = $entityManager->getRepository(User::class)->find($id);
+
         return $this->render('moderator/member_editing.html.twig', [
             'bannerTitle' => "TPOTDR | MODERATE",
+            'user', $user
         ]);
     }
 }
