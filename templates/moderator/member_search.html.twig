@@ -9,23 +9,25 @@
             <div class="row">
                 <div class="col-2"></div>
                 <div class="col-8">
-                    {{ form_errors(form) }}
+                    {{ form_errors(searchForm) }}
 
-                    {{ form_start(form) }}
-                    {{ form_row(form.username) }}
-                    {{ form_row(form.submit, {
+                    {{ form_start(searchForm) }}
+                    {{ form_row(searchForm.username) }}
+                    {{ form_row(searchForm.submit, {
                         label: 'Search',
                         'attr': {
                             'class': 'fs-4 mt-3 bg-darkgreen text-gold'
                         },
                     }) }}
-                    {{ form_row(form.search_all, {
+
+                    {{ form_end(searchForm) }}
+                    {{ form_start(searchAllForm) }}
+                    {{ form_row(searchAllForm.search_all, {
                         'attr': {
                             'class': 'fs-2 mt-5 bg-darkgreen text-gold'
                         },
                     }) }}
-
-                    {{ form_end(form) }}
+                    {{ form_end(searchAllForm) }}
                 </div>
                 <div class="col-2"></div>
             </div>

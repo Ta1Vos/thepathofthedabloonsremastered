@@ -28,24 +28,32 @@ class ModeratorController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
         $userList = [];
 
-        $form = $this->createForm(UsernameType::class);
-        $form->add('search_all', SubmitType::class, [
-            'attr' => [
-                'label' => 'Search all'
-            ]
-        ]);
-        $form->handleRequest($request);
+        $searchForm = $this->createForm(UsernameType::class);
+        $selectAllForm = $this->createFormBuilder()
+            ->add('search_all', SubmitType::class, [
+                'attr' => [
+                    'label' => 'Search all'
+                ]
+            ])
+            ->getForm();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            //If search all
+        $searchForm->handleRequest($request);
+        $selectAllForm->handleRequest($request);
+
+        //If search all
+        if ($selectAllForm->isSubmitted() && $selectAllForm->isValid()) {
             $userList = $entityManager->getRepository(User::class)->findAll();
+        } else if ($searchForm->isSubmitted() && $searchForm->isValid()) {
             //If search one
+            $result = $searchForm->getData();
+            $userList = $entityManager->getRepository(User::class)->findBy(['username' => $result['username']]);
         }
 
         return $this->render('moderator/member_search.html.twig', [
             'bannerTitle' => "TPOTDR | SEARCH",
             'users' => $userList,
-            'form' => $form
+            'searchForm' => $searchForm,
+            'searchAllForm' => $selectAllForm,
         ]);
     }
 
