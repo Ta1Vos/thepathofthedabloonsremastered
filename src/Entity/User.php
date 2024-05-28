@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -60,6 +61,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Player::class, mappedBy: 'user')]
     private Collection $players;
+    
+    #[ORM\Column]
+    private ?bool $isDisabled = false;
+
+    #[Assert\DateTime]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $deactivationTime = null;
 
     public function __construct()
     {
@@ -179,6 +187,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $players->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isDisabled(): ?bool
+    {
+        return $this->isDisabled;
+    }
+
+    public function setDisabled(bool $isDisabled): static
+    {
+        $this->isDisabled = $isDisabled;
+
+        return $this;
+    }
+
+    public function getDeactivationTime(): ?\DateTimeInterface
+    {
+        return $this->deactivationTime;
+    }
+
+    public function setDeactivationTime(?\DateTimeInterface $deactivationTime): static
+    {
+        $this->deactivationTime = $deactivationTime;
 
         return $this;
     }
