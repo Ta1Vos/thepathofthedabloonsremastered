@@ -2,17 +2,88 @@
 
 namespace App\Controller;
 
+use App\Entity\Dialogue;
+use App\Entity\Effect;
+use App\Entity\Event;
+use App\Entity\Item;
+use App\Entity\Quest;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class AdminController extends AbstractController
 {
-    #[Route('/admin', name: 'app_admin')]
-    public function index(): Response
+    #[Route('/admin/dashboard', name: 'app_admin_dashboard')]
+    public function dashboard(): Response
     {
-        return $this->render('admin/index.html.twig', [
-            'controller_name' => 'AdminController',
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        return $this->render('admin/dashboard.html.twig', [
+            'bannerTitle' => "TPOTDR | Creator Dashboard "
+        ]);
+    }
+
+    #[Route('/admin/dashboard/dialogue', name: 'app_admin_dashboard_dialogues')]
+    public function dialogues(EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dialogues = $entityManager->getRepository(Dialogue::class)->findAll();
+
+
+        return $this->render('admin/dialogues.html.twig', [
+            'bannerTitle' => "TPOTDR | Dialogue Editor",
+            'dialogues' => $dialogues
+        ]);
+    }
+
+    #[Route('/admin/dashboard/event', name: 'app_admin_dashboard_events')]
+    public function events(EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $events = $entityManager->getRepository(Event::class)->findAll();
+        $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / EVENTS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
+
+        return $this->render('admin/events.html.twig', [
+            'bannerTitle' => "TPOTDR | Event Editor",
+            'events' => $events
+        ]);
+    }
+
+    #[Route('/admin/dashboard/item', name: 'app_admin_dashboard_items')]
+    public function items(EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $items = $entityManager->getRepository(Item::class)->findAll();
+        $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / ITEMS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
+
+        return $this->render('admin/items.html.twig', [
+            'bannerTitle' => "TPOTDR | Item Editor",
+            'items' => $items
+        ]);
+    }
+
+    #[Route('/admin/dashboard/effect', name: 'app_admin_dashboard_effects')]
+    public function effects(EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / EFFECTS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
+        $effects = $entityManager->getRepository(Effect::class)->findAll();
+
+        return $this->render('admin/effects.html.twig', [
+            'bannerTitle' => "TPOTDR | Effect Editor",
+            'effects' => $effects
+        ]);
+    }
+
+    #[Route('/admin/dashboard/quests', name: 'app_admin_dashboard_quests')]
+    public function quests(EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $quests = $entityManager->getRepository(Quest::class)->findAll();
+
+        return $this->render('admin/quests.html.twig', [
+            'bannerTitle' => "TPOTDR | Quest Editor",
+            'quests' => $quests
         ]);
     }
 }

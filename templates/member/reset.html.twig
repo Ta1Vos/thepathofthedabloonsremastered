@@ -1,14 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}TPOTDR | Mod home{% endblock %}
-{% set bannerTitle = "TPOTDR | MOD " ~ app.user.username %}
+{% block title %}TPOTDR | Home{% endblock %}
 
 {% block body %}
     <div class="row wrapper text-center">
         <div class="col-1"></div>
         <div class="col-10">
             <div class="my-3">&nbsp;</div>
-
+            {{ form(form) }}
+            <div class="my-5">&nbsp;</div>
+            <a href="{{ path('app_profile') }}"><button class="bg-lightgreen rounded-3 fs-2 border border-black border-3">Return</button></a>
         </div>
         <div class="col-1"></div>
     </div>

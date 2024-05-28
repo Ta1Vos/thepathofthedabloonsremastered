@@ -1,3 +1,7 @@
+{% include("./nav.html.twig") %}
+{% if bannerTitle is not defined %}
+    {% set bannerTitle = "The Path Of The Dabloons Remastered" %}
+{% endif %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,56 +15,48 @@
 
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+                crossorigin="anonymous"></script>
     {% endblock %}
 </head>
 <body class="bg-mint">
-<nav class="navbar navbar-expand-xl bg-darkgreen mb-5">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{{ path('app_home') }}"><img class="w-75 img-fluid"
-                                                                   src="{{ asset('img/logos/Dabloon.jpg') }}"
-                                                                   alt="dabloon image to home"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="w-100 row gx-6 gy-3 gy-xl-0 navbar-nav text-center px-3 fs-5">
-                {% if app.user is null %}
-                    <li class="nav-item col-12 col-xl-2">
-                        <div class="bg-lightgreen rounded-1">
-                            <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Home</a>
-                        </div>
-                    </li>
-                    <li class="nav-item col-12 col-xl-2">
-                        <div class="bg-lightgreen rounded-1">
-                            <a class="nav-link" href="{{ path('app_guest_settings') }}">Settings</a>
-                        </div>
-                    </li>
-                    <li class="nav-item col-12 col-xl-2">
-                        <div class="bg-lightgreen rounded-1">
-                            <a class="nav-link" href="{{ path('app_about') }}">About</a>
-                        </div>
-                    </li>
-                    <li class="nav-item col-12 col-xl-2">
-                        <div class="bg-lightgreen rounded-1">
-                            {#                        <a class="nav-link disabled" href="#"></a> #}
-                    </li>
-                    <li class="nav-item col-12 col-xl-2">
-                        <div class="bg-lightgreen rounded-1">
-                            <a class="nav-link" aria-disabled="true">Register</a>
-                        </div>
-                    </li>
-                    <li class="nav-item col-12 col-xl-2">
-                        <div class="bg-lightgreen rounded-1">
-                            <a class="nav-link" aria-disabled="true">Login</a>
-                        </div>
-                    </li>
-                {% endif %}
-            </ul>
+{# read and display all flash messages #}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }} alert-dismissible fade show flash-{{ label }}" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+    {% endfor %}
+{% endfor %}
+{% block nav %}{% endblock %}
+{% block banner %}
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <div class="row d-flex align-items-baseline">
+                <div class="col-2">
+                    <img class="img-fluid" src="{{ asset('img/logos/Dabloon.jpg') }}" alt="dabloon image">
+                </div>
+                <div class="col-8">
+                    <div class="title-text text-gold fs-1 fm-courier">
+                        {{ bannerTitle }}
+                    </div>
+                </div>
+                <div class="col-2">
+                    <img class="img-fluid" src="{{ asset('img/logos/Dabloon.jpg') }}" alt="dabloon image">
+                </div>
+            </div>
+        </div>
+        <div class="col-1"></div>
     </div>
-</nav>
-{% block body %}{% endblock %}
+    {% if overrideTitleMargin is not defined %}
+        <div class="my-5">&nbsp;</div>
+    {% endif %}
+{% endblock %}
+{% block body %}
+
+{% endblock %}
 </body>
 </html>
