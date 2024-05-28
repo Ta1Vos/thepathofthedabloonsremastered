@@ -1,6 +1,6 @@
 {% include("./nav.html.twig") %}
 {% if bannerTitle is not defined %}
-{% set bannerTitle = "The Path Of The Dabloons Remastered" %}
+    {% set bannerTitle = "The Path Of The Dabloons Remastered" %}
 {% endif %}
 <!DOCTYPE html>
 <html>
@@ -51,7 +51,9 @@
         </div>
         <div class="col-1"></div>
     </div>
-    <div class="my-5">&nbsp;</div>
+    {% if overrideTitleMargin is not defined %}
+        <div class="my-5">&nbsp;</div>
+    {% endif %}
 {% endblock %}
 {% block body %}
 
