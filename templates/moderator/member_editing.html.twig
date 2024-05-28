@@ -25,6 +25,10 @@
                         {% if user.deactivationTime is not null %}
                             <div class="bg-success fs-3 mb-1 mt-3">
                                 Deactivation time
+                                <hr class="m-0">
+                                <div class="fs-6">
+                                    (Time until account is re-activated)
+                                </div>
                             </div>
                             <div class="bg-darkgreen py-1">
                                 {{ user.deactivationTime|date('Y-m-d | H:i') }}
