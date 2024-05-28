@@ -148,6 +148,20 @@ class ModeratorController extends AbstractController
             ->getForm();
         $userDeactivationForm->handleRequest($request);
 
+        if ($userDeactivationForm->isSubmitted() && $userDeactivationForm->isValid()) {
+            $formData = $userDeactivationForm->getData();
+
+            if ($formData["deactivate-time"] < new \DateTime('now')) {
+                $this->addFlash('danger', 'Time for deactivation cannot be in the past.');
+                return $this->redirectToRoute('app_mod_member_editing', ['id' => $id]);
+            }
+
+            $user->setDeactivationTime($formData["deactivate-time"]);
+            $entityManager->persist($user);
+            $entityManager->flush();
+            $this->addFlash('success', 'User deactivation was successful.');
+        }
+
         if (!$user->isDisabled()) {//If user is NOT disabled
             $userDisableForm = $formFactory->createNamedBuilder('disableUser')
                 ->add('username-retype', TextType::class, [
