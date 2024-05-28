@@ -5,9 +5,12 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UsernameType;
 use Doctrine\ORM\EntityManagerInterface;
+use SebastianBergmann\CodeCoverage\Report\Text;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -119,9 +122,10 @@ class ModeratorController extends AbstractController
     }
 
     #[Route('/moderator/member-edit/{id}', name: 'app_mod_member_editing')]
-    public function modMemberEdit(EntityManagerInterface $entityManager, int $id = null): Response
+    public function modMemberEdit(FormFactoryInterface $formFactory, Request $request, EntityManagerInterface $entityManager, int $id = null): Response
     {
         $this->denyAccessUnlessGranted('ROLE_MODERATOR');
+        //Check if a user has been selected
         if (!is_int($id)) {
             $this->addFlash('warning', 'Please select an User before proceeding.');
             return $this->redirectToRoute('app_mod_member_searching');
@@ -129,10 +133,88 @@ class ModeratorController extends AbstractController
 
         $user = $entityManager->getRepository(User::class)->find($id);
 
+        $userDeactivationForm = $formFactory->createNamedBuilder('deactiveUser')
+            ->add('deactivate-time', DateTimeType::class, [
+                'label' => 'Time for deactivation',
+                'data' => new \DateTime('now'),
+                'widget' => 'single_text'
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Deactivate User',
+                'attr' => [
+                    'class' => 'btn btn-danger mt-2 w-100'
+                ]
+            ])
+            ->getForm();
+        $userDeactivationForm->handleRequest($request);
+
+        if (!$user->isDisabled()) {//If user is NOT disabled
+            $userDisableForm = $formFactory->createNamedBuilder('disableUser')
+                ->add('username-retype', TextType::class, [
+                    'label' => '(Fill in username to confirm disable)',
+                    'attr' => [
+                        'placeholder' => $user->getUsername(),
+                        'autocomplete' => 'off'
+                    ]
+                ])
+                ->add('submit', SubmitType::class, [
+                    'label' => 'Disable User (BAN)',
+                    'attr' => [
+                        'class' => 'btn btn-danger mt-2 mb-4 w-100'
+                    ]
+                ])
+                ->getForm();
+        } else {//If user IS disabled
+            $userDisableForm = $formFactory->createNamedBuilder('disableUser')
+                ->add('username-retype', TextType::class, [
+                    'label' => '(Fill in username to confirm activation)',
+                    'attr' => [
+                        'placeholder' => $user->getUsername(),
+                        'autocomplete' => 'off'
+                    ]
+                ])
+                ->add('submit', SubmitType::class, [
+                    'label' => 'Activate User (unban)',
+                    'attr' => [
+                        'class' => 'btn btn-danger mt-2 mb-4 w-100'
+                    ]
+                ])
+                ->getForm();
+        }
+        $userDisableForm->handleRequest($request);
+
+        if ($userDisableForm->isSubmitted() && $userDisableForm->isValid()) {
+            $formData = $userDisableForm->getData();
+
+            //If username validation fails
+            if ($formData["username-retype"] != $user->getUsername()) {
+                $this->addFlash('warning', 'Invalid username confirmation.');
+            } else {
+                if (!$user->isDisabled()) {//If user IS NOT disabled
+                    //If username validation succeeds
+                    $user->setDisabled(true);
+                    $entityManager->persist($user);
+                    $this->addFlash('success', "User {$user->getUsername()} has been disabled.");
+                } else {
+                    //If user IS disabled
+                    $user->setDisabled(false);
+                    $entityManager->persist($user);
+                    $this->addFlash('success', "User {$user->getUsername()} has been re-activated.");
+                }
+
+                $entityManager->flush();
+            }
+
+            return $this->redirectToRoute('app_mod_member_editing', ['id' => $id]);
+        }
+
         return $this->render('moderator/member_editing.html.twig', [
             'bannerTitle' => "TPOTDR | MODERATE {$user->getUsername()}",
             'user' => $user,
-            'overrideTitleMargin' => true
+            'overrideTitleMargin' => true,
+            'deactivateForm' => $userDeactivationForm,
+            'disableForm' => $userDisableForm,
+            'forceInfoForm' => null,
         ]);
     }
 }
