@@ -130,8 +130,9 @@ class ModeratorController extends AbstractController
         $user = $entityManager->getRepository(User::class)->find($id);
 
         return $this->render('moderator/member_editing.html.twig', [
-            'bannerTitle' => "TPOTDR | MODERATE",
-            'user', $user
+            'bannerTitle' => "TPOTDR | MODERATE {$user->getUsername()}",
+            'user' => $user,
+            'overrideTitleMargin' => true
         ]);
     }
 }

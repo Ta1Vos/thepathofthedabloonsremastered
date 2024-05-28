@@ -3,23 +3,60 @@
 {% block title %}TPOTDR | MODERATE{% endblock %}
 
 {% block body %}
-    <div class="row wrapper text-center">
-        <div class="col-1"></div>
-        <div class="col-10">
-            <div class="row">
-                <div class="col-4"></div>
-                <div class="col-4">
-                    <div class="div">
-                        {{  }}
+    <div class="wrapper text-center pt-5">
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <div class="row">
+                    <div class="col-4"></div>
+                    <div class="col-4 fs-2 text-gold">
+                        <div class="bg-success fs-3 mb-1">
+                            Name
+                        </div>
+                        <div class="bg-darkgreen mb-3 py-1">
+                            {{ user.username }}
+                        </div>
+                        <div class="bg-success fs-3 mb-1">
+                            Email
+                        </div>
+                        <div class="bg-darkgreen mb-5 py-1">
+                            <a href="mailto:{{ user.email }}" class="text-gold">{{ user.email }}</a>
+                        </div>
                     </div>
-                    <div class="div">
-
-                    </div>
+                    <div class="col-4"></div>
                 </div>
-                <div class="col-4"></div>
             </div>
-
+            <div class="col-1"></div>
         </div>
-        <div class="col-1"></div>
+        <div class="row">
+            <div class="col-4">
+                <div class="bg-darkgreen text-gold mt-2">
+                    ACTIONS
+                </div>
+                {# Button form for User Moderation. Be sure to add confirmation before an action is executed. #}
+            </div>
+            {% if 'ROLE_ADMIN' not in app.user.roles %}
+                <div class="col-4"></div>
+            {% endif %}
+            <div class="col-4">
+                <div class="col-4">
+                    <div class="bg-darkgreen text-gold mt-2">
+                        FORCE NEW INFO
+                    </div>
+                    {# Force user info form so anything can be reset. Be sure to add confirmation. #}
+                </div>
+            </div>
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+            <div class="col-4">
+                <div class="col-4">
+                    <div class="bg-darkgreen text-gold mt-2">
+                        SAVE FILES
+                    </div>
+                    {# Save file moderating for admins. Be sure to add confirmation. #}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <a href="{{ path('app_mod_member_searching') }}"><button class="bg-lightgreen rounded-3 border-2 border-black fs-2">Back to member search</button></a>
     </div>
 {% endblock %}
