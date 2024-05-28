@@ -22,6 +22,19 @@
                         <div class="bg-darkgreen py-1">
                             <a href="mailto:{{ user.email }}" class="text-gold">{{ user.email }}</a>
                         </div>
+                        {% if user.deactivationTime is not null %}
+                            <div class="bg-success fs-3 mb-1 mt-3">
+                                Deactivation time
+                            </div>
+                            <div class="bg-darkgreen py-1">
+                                {{ user.deactivationTime|date('Y-m-d | H:i') }}
+                            </div>
+                        {% endif %}
+                        {% if user.disabled == true %}
+                            <div class="bg-danger fs-2 mb-1 mt-3">
+                                ACCOUNT IS DISABLED
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="col-4"></div>
                 </div>
