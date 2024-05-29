@@ -12,19 +12,5 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted("ROLE_USER")]
 class GuestController extends AbstractController
 {
-    #[Route('/aboutme', name: 'app_about')]
-    public function aboutMe(): Response
-    {
-        return $this->render('guest/aboutme.html.twig', [
-            'controller_name' => 'GuestController',
-        ]);
-    }
 
-    #[Route('/settings', name: 'app_guest_settings')]
-    public function guestSettings(): Response
-    {
-        return $this->render('guest/settings.html.twig', [
-            'controller_name' => 'GuestController',
-        ]);
-    }
 }
