@@ -11,7 +11,11 @@ class LandingController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {
-        if ($this->isGranted('ROLE_USER')) {//Check if user is logged in
+        if ($this->isGranted('ROLE_DISABLED')) {//Check if account is banned
+
+        } else if ($this->isGranted('ROLE_DEACTIVATED')) {//Check if account is temporarily banned
+
+        } else if ($this->isGranted('ROLE_USER')) {//Check if user is logged in
             //Check for any special roles
             if ($this->isGranted('ROLE_MODERATOR')) {
                 return $this->render('guest/index.html.twig', [
@@ -49,29 +53,23 @@ class LandingController extends AbstractController
         ]);
     }
 
-    #[Route('/banned', name: 'app_banned')]
-    public function banned(): Response
+    #[Route('/deactivated', name: 'app_deactivated')]
+    public function deactivated(): Response
     {
+        $user = $this->getUser();
 
-//        if ($this->isGranted('ROLE_USER')) {//Check if user is logged in
-//            //Check for any special roles
-//            if ($this->isGranted('ROLE_MODERATOR')) {
-//                return $this->render('guest/index.html.twig', [
-//
-//                ]);
-//            } else if ($this->isGranted('ROLE_ADMIN')) {
-//                return $this->render('guest/index.html.twig', [
-//
-//                ]);
-//            }
-//
-//            return $this->render('guest/index.html.twig', [
-//
-//            ]);
-//        }
+        return $this->render('landing/deactivated.twig', [
+            'user' => $user,
+        ]);
+    }
 
-        return $this->render('guest/index.html.twig', [
-            'controller_name' => 'GuestController',
+    #[Route('/disabled', name: 'app_disabled')]
+    public function disabled(): Response
+    {
+        $user = $this->getUser();
+
+        return $this->render('landing/disabled.twig', [
+            'user' => $user,
         ]);
     }
 }
