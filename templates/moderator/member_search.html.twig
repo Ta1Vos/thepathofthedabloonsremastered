@@ -32,7 +32,14 @@
                 <div class="col-2"></div>
             </div>
             <hr class="border border-dark border-4 opacity-75 w-100">
-            {{ form(moderateUserForm) }}
+            {{ form_start(moderateUserForm) }}
+            {{ form_row(moderateUserForm.select) }}
+            {{ form_row(moderateUserForm.submit, {
+                'attr': {
+                    'class': 'fs-2 mt-3 bg-darkgreen text-gold',
+                },
+            }) }}
+            {{ form_end(moderateUserForm) }}
         </div>
         <div class="col-1"></div>
     </div>
