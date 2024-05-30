@@ -14,7 +14,6 @@ class UserEmailType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('submit', SubmitType::class)
         ;
     }
 
