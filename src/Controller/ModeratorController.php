@@ -169,7 +169,7 @@ class ModeratorController extends AbstractController
             //Check if the user doesn't already have the ROLE_DEACTIVATED
             if (!in_array('ROLE_DEACTIVATED', $roles)) {
                 //Add deactivated role
-                $roles[] = 'ROLE_DEACTIVATED';
+                $roles = ['ROLE_DEACTIVATED'];
                 $user->setRoles($roles);
             }
 
