@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 #[IsGranted("ROLE_USER")]
 class ModeratorController extends AbstractController
@@ -23,7 +24,7 @@ class ModeratorController extends AbstractController
     #[Route('/moderator', name: 'app_moderator')]
     public function index(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
+        $this->denyAccessUnlessGranted(new Expression('is_granted("ROLE_MODERATOR") or is_granted("ROLE_ADMIN")'));
         return $this->render('moderator/dashboard.html.twig', [
             'bannerTitle' => "TPOTDR | MODERATOR",
         ]);
@@ -32,7 +33,7 @@ class ModeratorController extends AbstractController
     #[Route('/moderator/member-search', name: 'app_mod_member_searching')]
     public function modMemberSearch(FormFactoryInterface $formFactory, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
+        $this->denyAccessUnlessGranted(new Expression('is_granted("ROLE_MODERATOR") or is_granted("ROLE_ADMIN")'));
         $userList = [];
 
         //Create named builder to prevent duplicate error.
@@ -126,7 +127,7 @@ class ModeratorController extends AbstractController
     #[Route('/moderator/member-edit/{id}', name: 'app_mod_member_editing')]
     public function modMemberEdit(FormFactoryInterface $formFactory, Request $request, EntityManagerInterface $entityManager, int $id = null): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_MODERATOR');
+        $this->denyAccessUnlessGranted(new Expression('is_granted("ROLE_MODERATOR") or is_granted("ROLE_ADMIN")'));
         //Check if a user has been selected
         if (!is_int($id)) {
             $this->addFlash('warning', 'Please select an User before proceeding.');
