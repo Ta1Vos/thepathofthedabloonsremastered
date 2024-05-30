@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 28 mei 2024 om 13:15
+-- Gegenereerd op: 30 mei 2024 om 08:38
 -- Serverversie: 10.4.32-MariaDB
 -- PHP-versie: 8.2.12
 
@@ -308,8 +308,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `roles`, `password`, `email`, `is_disabled`, `deactivation_time`) VALUES
-(1, 'moderator', '[\"ROLE_MODERATOR\"]', '$2y$13$iLnXw0.o8Q./IuyDkaEDYe4FEmDsehwL/osphnDOZhNMJlbQOQ3yS', 'moderator@TPOTDR.com', 0, NULL),
-(2, 'admin', '[\"ROLE_ADMIN\"]', '$2y$13$02JQqn5emWqiI7c7a1g7yeFZi1qaaTFfH1oPOXdQkuaiDYEH8RnTS', 'admin@TPOTDR.com', 0, NULL);
+(1, 'moderator', '[\"ROLE_USER\", \"ROLE_MODERATOR\"]', '$2y$13$iLnXw0.o8Q./IuyDkaEDYe4FEmDsehwL/osphnDOZhNMJlbQOQ3yS', 'moderator@TPOTDR.com', 0, NULL),
+(2, 'admin', '[\"ROLE_USER\", \"ROLE_ADMIN\"]', '$2y$13$02JQqn5emWqiI7c7a1g7yeFZi1qaaTFfH1oPOXdQkuaiDYEH8RnTS', 'admin@TPOTDR.com', 0, NULL),
+(3, 'Arentvos', '[\"ROLE_USER\"]', '$2y$13$6aN.fkAogFgf5fyY8wz1OeT0pYvuT2MiCctatW3fcj6vXevtJiSM.', 'arentvos@outlook.com', 0, NULL),
+(4, 'testing', '[\"ROLE_USER\"]', '$2y$13$rn7fOjy6A6yAvzsmWHe/ee/TrIRjVhk6a96fP5n6OiFgtGMWDWk/S', 'test@test.test', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -553,7 +555,7 @@ ALTER TABLE `rarity`
 -- AUTO_INCREMENT voor een tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT voor een tabel `world`
