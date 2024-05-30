@@ -115,6 +115,7 @@ class MemberController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
         $loggedInUser = $this->getUser();
         $form = $this->createForm(UserPasswordType::class, $loggedInUser);
+        $form->add('submit', SubmitType::class);
         $form->handleRequest($request);
 
         if (!$loggedInUser->getRoles()) {
