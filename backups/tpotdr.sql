@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 26 apr 2024 om 11:16
+-- Gegenereerd op: 30 mei 2024 om 08:38
 -- Serverversie: 10.4.32-MariaDB
 -- PHP-versie: 8.2.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `tpotdr`
 --
-CREATE DATABASE IF NOT EXISTS `tpotdr` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `tpotdr`;
 
 -- --------------------------------------------------------
 
@@ -50,13 +48,6 @@ CREATE TABLE `dialogue` (
   `name` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Gegevens worden geëxporteerd voor tabel `dialogue`
---
-
-INSERT INTO `dialogue` (`id`, `dialogue_text`, `name`) VALUES
-(1, 'This is a big test dialogue heheheheheha', 'E');
-
 -- --------------------------------------------------------
 
 --
@@ -75,10 +66,12 @@ CREATE TABLE `doctrine_migration_versions` (
 --
 
 INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
-('DoctrineMigrations\\Version20240417104828', '2024-04-26 09:57:35', 87),
-('DoctrineMigrations\\Version20240424102111', '2024-04-26 09:57:35', 9),
-('DoctrineMigrations\\Version20240426075216', '2024-04-26 09:57:35', 655),
-('DoctrineMigrations\\Version20240426091136', '2024-04-26 11:11:41', 129);
+('DoctrineMigrations\\Version20240417104828', '2024-05-28 13:12:33', 331),
+('DoctrineMigrations\\Version20240424102111', '2024-05-28 13:12:33', 38),
+('DoctrineMigrations\\Version20240426075216', '2024-05-28 13:12:33', 2342),
+('DoctrineMigrations\\Version20240426091136', '2024-05-28 13:12:36', 432),
+('DoctrineMigrations\\Version20240426094421', '2024-05-28 13:12:36', 15),
+('DoctrineMigrations\\Version20240528111215', '2024-05-28 13:12:36', 10);
 
 -- --------------------------------------------------------
 
@@ -95,13 +88,6 @@ CREATE TABLE `effect` (
   `debuffs` longtext NOT NULL COMMENT '(DC2Type:array)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Gegevens worden geëxporteerd voor tabel `effect`
---
-
-INSERT INTO `effect` (`id`, `name`, `debuff_severity`, `debuff_duration`, `debuffs`) VALUES
-(1, 'Damage', '', 1, '');
-
 -- --------------------------------------------------------
 
 --
@@ -111,15 +97,9 @@ INSERT INTO `effect` (`id`, `name`, `debuff_severity`, `debuff_duration`, `debuf
 DROP TABLE IF EXISTS `event`;
 CREATE TABLE `event` (
   `id` int(11) NOT NULL,
-  `event_text` longtext NOT NULL
+  `event_text` longtext NOT NULL,
+  `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Gegevens worden geëxporteerd voor tabel `event`
---
-
-INSERT INTO `event` (`id`, `event_text`) VALUES
-(1, 'You stumble over a rock');
 
 -- --------------------------------------------------------
 
@@ -183,13 +163,6 @@ CREATE TABLE `game_option` (
   `player_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Gegevens worden geëxporteerd voor tabel `game_option`
---
-
-INSERT INTO `game_option` (`id`, `luck_enabled`, `dialogue_skips`, `player_id`) VALUES
-(2, 1, 1, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -223,13 +196,6 @@ CREATE TABLE `item` (
   `debuff_duration` int(11) DEFAULT NULL,
   `rarity_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Gegevens worden geëxporteerd voor tabel `item`
---
-
-INSERT INTO `item` (`id`, `name`, `price`, `is_weapon`, `description`, `debuff_severity`, `debuff_duration`, `rarity_id`) VALUES
-(3, 'Twig', 4, 1, 'A very cheap and very unreliable weapon. It is very not advised to use this in fights unless you have great accuracy.', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -291,13 +257,6 @@ CREATE TABLE `player` (
   `world_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Gegevens worden geëxporteerd voor tabel `player`
---
-
-INSERT INTO `player` (`id`, `health`, `dabloons`, `distance`, `inventory_max`, `last_save`, `user_id`, `world_id`) VALUES
-(1, 100, 150, 50, 12, '2024-04-26 10:58:21', 2, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -327,13 +286,6 @@ CREATE TABLE `rarity` (
   `chance_in` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Gegevens worden geëxporteerd voor tabel `rarity`
---
-
-INSERT INTO `rarity` (`id`, `name`, `chance_in`) VALUES
-(1, 'COMMON', 5);
-
 -- --------------------------------------------------------
 
 --
@@ -346,17 +298,20 @@ CREATE TABLE `user` (
   `username` varchar(180) NOT NULL,
   `roles` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '(DC2Type:json)' CHECK (json_valid(`roles`)),
   `password` varchar(255) NOT NULL,
-  `email` varchar(180) NOT NULL
+  `email` varchar(180) NOT NULL,
+  `is_disabled` tinyint(1) NOT NULL,
+  `deactivation_time` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Gegevens worden geëxporteerd voor tabel `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `roles`, `password`, `email`) VALUES
-(1, 'M. Kleijwegt', '[]', '$2y$13$YtyeCceAPQloKF0lzlbPGO8S3/g5.evA.5fp7F4ae5ACpQVVg4FmO', 'kleiwegt@rocmondriaan.nl'),
-(2, 'admin', '[\"ROLE_ADMIN\", \"ROLE_MODERATOR\"]', '$2y$13$dW8MnLc/MOqyxae9ctyVUuA3oXpzJJfNX0bfKQA9RjCR1tvExZv8q', 'admin@TPOTDR.com'),
-(3, 'moderator', '[\"ROLE_MODERATOR\"]', '$2y$13$ChutEeM3kLAxUrlMi768g.gn0.UrfHBjxD0sA81gr5GmvQ7sH4iYe', 'moderator@TPOTDR.com');
+INSERT INTO `user` (`id`, `username`, `roles`, `password`, `email`, `is_disabled`, `deactivation_time`) VALUES
+(1, 'moderator', '[\"ROLE_USER\", \"ROLE_MODERATOR\"]', '$2y$13$iLnXw0.o8Q./IuyDkaEDYe4FEmDsehwL/osphnDOZhNMJlbQOQ3yS', 'moderator@TPOTDR.com', 0, NULL),
+(2, 'admin', '[\"ROLE_USER\", \"ROLE_ADMIN\"]', '$2y$13$02JQqn5emWqiI7c7a1g7yeFZi1qaaTFfH1oPOXdQkuaiDYEH8RnTS', 'admin@TPOTDR.com', 0, NULL),
+(3, 'Arentvos', '[\"ROLE_USER\"]', '$2y$13$6aN.fkAogFgf5fyY8wz1OeT0pYvuT2MiCctatW3fcj6vXevtJiSM.', 'arentvos@outlook.com', 0, NULL),
+(4, 'testing', '[\"ROLE_USER\"]', '$2y$13$rn7fOjy6A6yAvzsmWHe/ee/TrIRjVhk6a96fP5n6OiFgtGMWDWk/S', 'test@test.test', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -534,25 +489,25 @@ ALTER TABLE `accepted_quest`
 -- AUTO_INCREMENT voor een tabel `dialogue`
 --
 ALTER TABLE `dialogue`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT voor een tabel `effect`
 --
 ALTER TABLE `effect`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT voor een tabel `event`
 --
 ALTER TABLE `event`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT voor een tabel `game_option`
 --
 ALTER TABLE `game_option`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT voor een tabel `inventory_slot`
@@ -564,7 +519,7 @@ ALTER TABLE `inventory_slot`
 -- AUTO_INCREMENT voor een tabel `item`
 --
 ALTER TABLE `item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT voor een tabel `messenger_messages`
@@ -582,7 +537,7 @@ ALTER TABLE `option`
 -- AUTO_INCREMENT voor een tabel `player`
 --
 ALTER TABLE `player`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT voor een tabel `quest`
@@ -594,13 +549,13 @@ ALTER TABLE `quest`
 -- AUTO_INCREMENT voor een tabel `rarity`
 --
 ALTER TABLE `rarity`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT voor een tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT voor een tabel `world`

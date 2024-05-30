@@ -7,11 +7,18 @@ use App\Entity\Effect;
 use App\Entity\Event;
 use App\Entity\Item;
 use App\Entity\Quest;
+use App\Form\CreateSubmitType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted("ROLE_USER")]
 class AdminController extends AbstractController
 {
     #[Route('/admin/dashboard', name: 'app_admin_dashboard')]
@@ -24,15 +31,22 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin/dashboard/dialogue', name: 'app_admin_dashboard_dialogues')]
-    public function dialogues(EntityManagerInterface $entityManager): Response
+    public function dialogues(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $dialogues = $entityManager->getRepository(Dialogue::class)->findAll();
 
+        $createBtn = $this->createForm(CreateSubmitType::class);
+        $createBtn->handleRequest($request);
+
+        if ($createBtn->isSubmitted() && $createBtn->isValid()) {
+
+        }
 
         return $this->render('admin/dialogues.html.twig', [
             'bannerTitle' => "TPOTDR | Dialogue Editor",
-            'dialogues' => $dialogues
+            'dialogues' => $dialogues,
+            'createBtn' => $createBtn,
         ]);
     }
 

@@ -6,6 +6,7 @@
     <div class="row wrapper text-center">
     <div class="col-1"></div>
     <div class="col-10 fs-3">
+        {{ form(createBtn) }}
         <div class="my-3">&nbsp;</div>
         {% if dialogues is not defined or dialogues|length <= 0 %}
         <span class="text-danger fs-3">Nothing to see here but us chickens</span>

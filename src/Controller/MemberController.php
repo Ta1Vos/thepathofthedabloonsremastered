@@ -14,7 +14,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted("ROLE_USER")]
 class MemberController extends AbstractController
 {
     #[Route('/profile', name: 'app_profile')]
@@ -77,6 +79,7 @@ class MemberController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
         $loggedInUser = $this->getUser();
         $form = $this->createForm(UserEmailType::class, $loggedInUser);
+        $form->add('submit', SubmitType::class);//Email
         $form->handleRequest($request);
 
         if (!$loggedInUser->getRoles()) {//Extra check to see if there are no duplicates
@@ -113,6 +116,7 @@ class MemberController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
         $loggedInUser = $this->getUser();
         $form = $this->createForm(UserPasswordType::class, $loggedInUser);
+        $form->add('submit', SubmitType::class);
         $form->handleRequest($request);
 
         if (!$loggedInUser->getRoles()) {
