@@ -153,8 +153,12 @@ class ModeratorController extends AbstractController
         if ($userDeactivationForm->isSubmitted() && $userDeactivationForm->isValid()) {
             $formData = $userDeactivationForm->getData();
 
+            if (in_array('ROLE_ADMIN', $user->getRoles())) {
+                $this->addFlash('danger', 'WARNING! Cannot deactivate Administrators.');
+                return $this->redirectToRoute('app_mod_member_editing', ['id' => $id]);
+            }
             //Check if the deactivation date is not in the past
-            if ($formData['deactivate-time'] < new \DateTime('now')) {
+            else if ($formData['deactivate-time'] < new \DateTime('now')) {
                 $this->addFlash('danger', 'Time for deactivation cannot be in the past.');
                 return $this->redirectToRoute('app_mod_member_editing', ['id' => $id]);
             }
@@ -215,6 +219,11 @@ class ModeratorController extends AbstractController
 
         if ($userDisableForm->isSubmitted() && $userDisableForm->isValid()) {
             $formData = $userDisableForm->getData();
+
+            if (in_array('ROLE_ADMIN', $user->getRoles())) {
+                $this->addFlash('danger', 'WARNING! Cannot disable Administrators.');
+                return $this->redirectToRoute('app_mod_member_editing', ['id' => $id]);
+            }
 
             //If username validation fails
             if ($formData["username-retype"] != $user->getUsername()) {
