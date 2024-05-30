@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -9,13 +10,28 @@ use Symfony\Component\Routing\Attribute\Route;
 class LandingController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(): Response
+    public function index(EntityManagerInterface $entityManager): Response
     {
         if ($this->isGranted('ROLE_DISABLED')) {//Check if account is banned
 
         } else if ($this->isGranted('ROLE_DEACTIVATED')) {//Check if account is temporarily banned
+            $user = $this->getUser();
 
+            //Check if the User deactivation time has passed yet (so their deactivation time would be in the past)
+            if ($user->getDeactivationTime() < new \DateTime('now')) {
+                $roles = ['ROLE_USER'];
+                $user->setRoles($roles);
+                $user->setDeactivationTime(null);
+
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_home');
+            }
+
+            return $this->redirectToRoute('app_deactivated');
         } else if ($this->isGranted('ROLE_USER')) {//Check if user is logged in
+            $user = $this->getUser();
             //Check for any special roles
             if ($this->isGranted('ROLE_MODERATOR')) {
                 return $this->render('guest/index.html.twig', [
@@ -56,6 +72,7 @@ class LandingController extends AbstractController
     #[Route('/deactivated', name: 'app_deactivated')]
     public function deactivated(): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_DEACTIVATED');
         $user = $this->getUser();
 
         return $this->render('landing/deactivated.twig', [
@@ -66,6 +83,7 @@ class LandingController extends AbstractController
     #[Route('/disabled', name: 'app_disabled')]
     public function disabled(): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_DISABLED');
         $user = $this->getUser();
 
         return $this->render('landing/disabled.twig', [

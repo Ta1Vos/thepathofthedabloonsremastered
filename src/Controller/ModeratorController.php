@@ -153,12 +153,26 @@ class ModeratorController extends AbstractController
         if ($userDeactivationForm->isSubmitted() && $userDeactivationForm->isValid()) {
             $formData = $userDeactivationForm->getData();
 
-            if ($formData["deactivate-time"] < new \DateTime('now')) {
+            //Check if the deactivation date is not in the past
+            if ($formData['deactivate-time'] < new \DateTime('now')) {
                 $this->addFlash('danger', 'Time for deactivation cannot be in the past.');
                 return $this->redirectToRoute('app_mod_member_editing', ['id' => $id]);
             }
 
-            $user->setDeactivationTime($formData["deactivate-time"]);
+            $user->setDeactivationTime($formData['deactivate-time']);
+
+            $roles = $user->getRoles();
+            //Check if the user has the ROLE_USER and remove it if the user has it so they get denied from most pages.
+            if (in_array('ROLE_USER', $roles)) {
+                unset($roles[array_search("ROLE_USER", $roles)]);
+            }
+            //Check if the user doesn't already have the ROLE_DEACTIVATED
+            if (!in_array('ROLE_DEACTIVATED', $roles)) {
+                //Add deactivated role
+                $roles[] = 'ROLE_DEACTIVATED';
+                $user->setRoles($roles);
+            }
+
             $entityManager->persist($user);
             $entityManager->flush();
             $this->addFlash('success', 'User deactivation was successful.');
