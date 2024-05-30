@@ -3,20 +3,26 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserEmailType;
 use App\Form\UsernameType;
+use App\Form\UserPasswordType;
 use Doctrine\ORM\EntityManagerInterface;
 use SebastianBergmann\CodeCoverage\Report\Text;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[IsGranted("ROLE_USER")]
 class ModeratorController extends AbstractController
@@ -59,8 +65,7 @@ class ModeratorController extends AbstractController
                     'label' => 'Search all'
                 ]
             ])
-            ->getForm();
-        ;
+            ->getForm();;
 
         //If search all
         $selectAllForm->handleRequest($request);
@@ -88,7 +93,7 @@ class ModeratorController extends AbstractController
         //Create named builder to prevent duplicate error.
         $moderateUserForm = $formFactory->createNamedBuilder('moderateUser')
             ->add('select', ChoiceType::class, [
-                'choices' =>  $selectableUsers,
+                'choices' => $selectableUsers,
 //                'expanded' => true
             ])
             ->add('submit', SubmitType::class, [
@@ -125,7 +130,7 @@ class ModeratorController extends AbstractController
     }
 
     #[Route('/moderator/member-edit/{id}', name: 'app_mod_member_editing')]
-    public function modMemberEdit(FormFactoryInterface $formFactory, Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    public function modMemberEdit(FormFactoryInterface $formFactory, Request $request,  UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, int $id = null): Response
     {
         $this->denyAccessUnlessGranted(new Expression('is_granted("ROLE_MODERATOR") or is_granted("ROLE_ADMIN")'));
         //Check if a user has been selected
@@ -157,8 +162,7 @@ class ModeratorController extends AbstractController
             if (in_array('ROLE_ADMIN', $user->getRoles())) {
                 $this->addFlash('danger', 'WARNING! Cannot deactivate Administrators.');
                 return $this->redirectToRoute('app_mod_member_editing', ['id' => $id]);
-            }
-            //Check if the deactivation date is not in the past
+            } //Check if the deactivation date is not in the past
             else if ($formData['deactivate-time'] < new \DateTime('now')) {
                 $this->addFlash('danger', 'Time for deactivation cannot be in the past.');
                 return $this->redirectToRoute('app_mod_member_editing', ['id' => $id]);
@@ -254,13 +258,87 @@ class ModeratorController extends AbstractController
             return $this->redirectToRoute('app_mod_member_editing', ['id' => $id]);
         }
 
+        $forceInfoForm = $formFactory->createNamedBuilder('userInfoChange')
+            ->add('username', TextType::class, [
+                'attr' => [
+                    'placeholder' => $user->getUsername()
+                ],
+                'required' => false,
+                'constraints' => [
+                    new Length([
+                        'min' => 0,
+                        'minMessage' => 'Your username should be at least {{ limit }} characters',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 180,
+                    ]),
+                ],
+            ])
+            ->add('email', TextType::class, [
+                'attr' => [
+                    'placeholder' => $user->getEmail()
+                ],
+                'required' => false,
+                'constraints' => [
+                    new Length([
+                        'min' => 0,
+                        'minMessage' => 'Your email should be at least {{ limit }} characters',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 180,
+                    ]),
+                ],
+            ])
+            ->add('password', PasswordType::class, [
+                'label' => 'Password'
+            ])
+            ->add('submitChange', SubmitType::class, [
+                'label' => 'Change info',
+                'attr' => [
+                    'class' => 'btn btn-danger mt-2 w-100'
+                ]
+            ])
+            ->getForm();
+        $forceInfoForm->handleRequest($request);
+
+        if ($forceInfoForm->isSubmitted() && $forceInfoForm->isValid()) {
+            $formData = $forceInfoForm->getData();
+
+            if (isset($formData['username']) && strlen($formData['username']) > 1) {
+                $username = $formData['username'];//Fetch username
+
+                $foundUsername = $entityManager->getRepository(User::class)->findBy(['username' => $username]);//Search for duplicates
+
+                if (count($foundUsername) > 0) {//Extra check to see if there are no duplicates
+                    $this->addFlash('warning', 'This username already exists!');
+                    return $this->redirectToRoute('app_mod_member_editing', ['id' => $id]);
+                } else {
+                    $user->setUsername($username);
+                }
+            }
+
+            if (isset($formData['email']) && strlen($formData['email']) > 1) {
+                $user->setEmail($formData['email']);
+            }
+
+            if (isset($formData['password']) && strlen($formData['password']) > 1) {
+                $user->setPassword($userPasswordHasher->hashPassword(
+                    $user,
+                    $formData['password']
+                ));
+            }
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+            $this->addFlash('success', "User {$user->getUsername()}'s info has successfully been changed!");
+            return $this->redirectToRoute('app_mod_member_editing', ['id' => $id]);
+        }
+
         return $this->render('moderator/member_editing.html.twig', [
             'bannerTitle' => "TPOTDR | MODERATE {$user->getUsername()}",
             'user' => $user,
             'overrideTitleMargin' => true,
             'deactivateForm' => $userDeactivationForm,
             'disableForm' => $userDisableForm,
-            'forceInfoForm' => null,
+            'forceInfoForm' => $forceInfoForm,
         ]);
     }
 }

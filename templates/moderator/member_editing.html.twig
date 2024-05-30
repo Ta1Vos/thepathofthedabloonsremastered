@@ -62,7 +62,9 @@
                 <div class="bg-darkgreen text-gold mt-2 fs-3">
                     FORCE NEW INFO
                 </div>
+                <small class="text-muted">(Leave fields empty to not change them)</small>
                 {# Force user info form so anything can be reset. Be sure to add confirmation. #}
+                {{ form(forceInfoForm) }}
             </div>
             {% if 'ROLE_ADMIN' in app.user.roles %}
                 <div class="col-4 bg-lightgreen rounded-3">

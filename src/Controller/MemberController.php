@@ -79,7 +79,7 @@ class MemberController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
         $loggedInUser = $this->getUser();
         $form = $this->createForm(UserEmailType::class, $loggedInUser);
-        $form->add('submit', SubmitType::class);
+        $form->add('submit', SubmitType::class);//Email
         $form->handleRequest($request);
 
         if (!$loggedInUser->getRoles()) {//Extra check to see if there are no duplicates
