@@ -223,11 +223,17 @@ class ModeratorController extends AbstractController
                 if (!$user->isDisabled()) {//If user IS NOT disabled
                     //If username validation succeeds
                     $user->setDisabled(true);
+
+                    $user->setRoles(['ROLE_DISABLED']);
+
                     $entityManager->persist($user);
                     $this->addFlash('success', "User {$user->getUsername()} has been disabled.");
                 } else {
                     //If user IS disabled
                     $user->setDisabled(false);
+
+                    $user->setRoles(['ROLE_USER']);
+
                     $entityManager->persist($user);
                     $this->addFlash('success', "User {$user->getUsername()} has been re-activated.");
                 }

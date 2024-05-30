@@ -13,7 +13,7 @@ class LandingController extends AbstractController
     public function index(EntityManagerInterface $entityManager): Response
     {
         if ($this->isGranted('ROLE_DISABLED')) {//Check if account is banned
-
+            return $this->redirectToRoute('app_disabled');
         } else if ($this->isGranted('ROLE_DEACTIVATED')) {//Check if account is temporarily banned
             $user = $this->getUser();
 
