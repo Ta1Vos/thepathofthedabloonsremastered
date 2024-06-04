@@ -33,9 +33,11 @@ class Item
     private ?int $price = null;
 
     #[Assert\NotNull]
-    #[Assert\Type(
-        type: 'boolean',
-        message: 'The value {{ value }} is not a valid {{ type }}. Use \'true\' or \'false\'.',
+    #[Assert\Length(
+        min: 0,
+        max: 1,
+        minMessage: 'Use 0 for false, {{ limit }} is too low.',
+        maxMessage: 'Use 1 for true, {{ limit }} is too high.'
     )]
     #[ORM\Column]
     private ?bool $isWeapon = null;
