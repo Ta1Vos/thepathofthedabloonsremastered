@@ -6,6 +6,7 @@ use App\Repository\RarityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RarityRepository::class)]
 class Rarity
@@ -15,9 +16,18 @@ class Rarity
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 1,
+        max: 50,
+        minMessage: 'Rarity name must be at least {{ limit }} characters long',
+        maxMessage: 'Rarity name cannot be longer than {{ limit }} characters'
+    )]
     #[ORM\Column(length: 50)]
     private ?string $name = null;
 
+    #[Assert\NotNull]
+    #[Assert\PositiveOrZero]
     #[ORM\Column]
     private ?int $chanceIn = null;
 
