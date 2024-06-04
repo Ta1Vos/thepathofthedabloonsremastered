@@ -94,7 +94,7 @@ class AdminController extends AbstractController
 
         //Check if an id has been selected
         if (!$id) {
-            $this->addFlash('warning', 'Please select an item before deleting.');
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before deleting.");
             return $this->redirectToRoute('app_admin_dashboard');
         }
 
@@ -102,7 +102,7 @@ class AdminController extends AbstractController
 
         //Check if an entity has been selected
         if (!$dialogue) {
-            $this->addFlash('warning', 'Please select an existing item before deleting.');
+            $this->addFlash('warning', "Please select an existing $dashboardType before deleting.");
             return $this->redirectToRoute('app_admin_dashboard');
         }
 
@@ -174,6 +174,43 @@ class AdminController extends AbstractController
         ]);
     }
 
+    #[Route('/admin/dashboard/event/delete/{id}', name: 'app_admin_dashboard_events_delete')]
+    public function eventsDelete(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Event';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $event = $entityManager->getRepository(Event::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$event) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $deleteBtn = $this->createForm(DeleteSubmitType::class);
+        $deleteBtn->handleRequest($request);
+
+        if ($deleteBtn->isSubmitted() && $deleteBtn->isValid()) {
+            $entityManager->remove($event);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully deleted $dashboardType");
+            return $this->redirectToRoute('app_admin_dashboard_dialogues');
+        }
+
+        return $this->render('admin/delete.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'dashboardItem' => $event,
+            'confirmBtn' => $deleteBtn,
+        ]);
+    }
+
     /*
      *  ITEM CRUD
      */
@@ -222,6 +259,43 @@ class AdminController extends AbstractController
         return $this->render('admin/create.html.twig', [
             'bannerTitle' => "TPOTDR | $dashboardType Editor",
             'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/item/delete/{id}', name: 'app_admin_dashboard_items_delete')]
+    public function itemsDelete(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Item';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $item = $entityManager->getRepository(Item::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$item) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $deleteBtn = $this->createForm(DeleteSubmitType::class);
+        $deleteBtn->handleRequest($request);
+
+        if ($deleteBtn->isSubmitted() && $deleteBtn->isValid()) {
+            $entityManager->remove($item);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully deleted $dashboardType");
+            return $this->redirectToRoute('app_admin_dashboard_dialogues');
+        }
+
+        return $this->render('admin/delete.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'dashboardItem' => $item,
+            'confirmBtn' => $deleteBtn,
         ]);
     }
 
@@ -276,6 +350,43 @@ class AdminController extends AbstractController
         ]);
     }
 
+    #[Route('/admin/dashboard/effect/delete/{id}', name: 'app_admin_dashboard_effects_delete')]
+    public function effectsDelete(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Effect';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $effect = $entityManager->getRepository(Effect::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$effect) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $deleteBtn = $this->createForm(DeleteSubmitType::class);
+        $deleteBtn->handleRequest($request);
+
+        if ($deleteBtn->isSubmitted() && $deleteBtn->isValid()) {
+            $entityManager->remove($effect);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully deleted $dashboardType");
+            return $this->redirectToRoute('app_admin_dashboard_dialogues');
+        }
+
+        return $this->render('admin/delete.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'dashboardItem' => $effect,
+            'confirmBtn' => $deleteBtn,
+        ]);
+    }
+
     /*
      *  QUEST CRUD
      */
@@ -283,7 +394,7 @@ class AdminController extends AbstractController
     #[Route('/admin/dashboard/quests', name: 'app_admin_dashboard_quests')]
     public function quests(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_NONE');
         $quests = $entityManager->getRepository(Quest::class)->findAll();
 
         $createBtn = $this->createForm(CreateSubmitType::class);
@@ -324,6 +435,43 @@ class AdminController extends AbstractController
         return $this->render('admin/create.html.twig', [
             'bannerTitle' => "TPOTDR | $dashboardType Editor",
             'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/quest/delete/{id}', name: 'app_admin_dashboard_quests_delete')]
+    public function questsDelete(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_NONE');
+        $dashboardType = 'Quest';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $quest = $entityManager->getRepository(Quest::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$quest) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $deleteBtn = $this->createForm(DeleteSubmitType::class);
+        $deleteBtn->handleRequest($request);
+
+        if ($deleteBtn->isSubmitted() && $deleteBtn->isValid()) {
+            $entityManager->remove($quest);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully deleted $dashboardType");
+            return $this->redirectToRoute('app_admin_dashboard_dialogues');
+        }
+
+        return $this->render('admin/delete.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'dashboardItem' => $quest,
+            'confirmBtn' => $deleteBtn,
         ]);
     }
 }
