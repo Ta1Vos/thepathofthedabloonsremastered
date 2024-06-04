@@ -8,6 +8,7 @@ use App\Entity\Event;
 use App\Entity\Item;
 use App\Entity\Quest;
 use App\Form\CreateSubmitType;
+use App\Form\DeleteSubmitType;
 use App\Form\DialogueType;
 use App\Form\EffectType;
 use App\Form\EventType;
@@ -82,6 +83,43 @@ class AdminController extends AbstractController
         return $this->render('admin/create.html.twig', [
             'bannerTitle' => "TPOTDR | $dashboardType Editor",
             'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/dialogue/delete/{id}', name: 'app_admin_dashboard_dialogues_delete')]
+    public function dialoguesDelete(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Dialogue';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', 'Please select an item before deleting.');
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $dialogue = $entityManager->getRepository(Dialogue::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$dialogue) {
+            $this->addFlash('warning', 'Please select an existing item before deleting.');
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $deleteBtn = $this->createForm(DeleteSubmitType::class);
+        $deleteBtn->handleRequest($request);
+
+        if ($deleteBtn->isSubmitted() && $deleteBtn->isValid()) {
+            $entityManager->remove($dialogue);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully deleted $dashboardType");
+            return $this->redirectToRoute('app_admin_dashboard_dialogues');
+        }
+
+        return $this->render('admin/delete.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'dashboardItem' => $dialogue,
+            'confirmBtn' => $deleteBtn,
         ]);
     }
 

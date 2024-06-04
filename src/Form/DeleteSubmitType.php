@@ -7,15 +7,15 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CreateSubmitType extends AbstractType
+class DeleteSubmitType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('submit', SubmitType::class, [
-                'label' => '+ Create',
+                'label' => '- Delete',
                 'attr' => [
-                    'class' => 'fs-2 fw-bold bg-darkgreen text-white',
+                    'class' => 'fw-bold bg-danger text-white',
                 ]
             ])
         ;
