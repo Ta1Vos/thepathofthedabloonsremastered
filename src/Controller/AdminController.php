@@ -35,6 +35,10 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /*
+     *  DIALOGUE CRUD
+     */
+
     #[Route('/admin/dashboard/dialogue', name: 'app_admin_dashboard_dialogues')]
     public function dialogues(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -80,6 +84,10 @@ class AdminController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    /*
+     *  EVENT CRUD
+     */
 
     #[Route('/admin/dashboard/event', name: 'app_admin_dashboard_events')]
     public function events(Request $request, EntityManagerInterface $entityManager): Response
@@ -128,6 +136,10 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /*
+     *  ITEM CRUD
+     */
+
     #[Route('/admin/dashboard/item', name: 'app_admin_dashboard_items')]
     public function items(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -175,6 +187,10 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /*
+     *  EFFECT CRUD
+     */
+
     #[Route('/admin/dashboard/effect', name: 'app_admin_dashboard_effects')]
     public function effects(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -221,6 +237,10 @@ class AdminController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    /*
+     *  QUEST CRUD
+     */
 
     #[Route('/admin/dashboard/quests', name: 'app_admin_dashboard_quests')]
     public function quests(Request $request, EntityManagerInterface $entityManager): Response
