@@ -21,11 +21,15 @@ class ItemType extends AbstractType
             ->add('description')
             ->add('rarity', EntityType::class, [
                 'class' => Rarity::class,
-                'choice_label' => 'name',
+                'choice_label' => function (Rarity $entity) {
+                    return $entity->getId() . ': ' . $entity->getName();
+                },
             ])
             ->add('effects', EntityType::class, [
                 'class' => Effect::class,
-                'choice_label' => 'name',
+                'choice_label' => function (Effect $entity) {
+                    return $entity->getId() . ': ' . $entity->getName();
+                },
                 'multiple' => true,
             ])
         ;

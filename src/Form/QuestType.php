@@ -20,7 +20,9 @@ class QuestType extends AbstractType
             ->add('singleCompletion')
             ->add('rewardedItem', EntityType::class, [
                 'class' => Item::class,
-                'choice_label' => 'name',
+                'choice_label' => function (Item $entity) {
+                    return $entity->getId() . ': ' . $entity->getName();
+                },
             ])
         ;
     }

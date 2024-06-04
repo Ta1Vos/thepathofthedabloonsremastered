@@ -21,12 +21,16 @@ class EffectType extends AbstractType
             ->add('debuffs')
             ->add('items', EntityType::class, [
                 'class' => Item::class,
-                'choice_label' => 'name',
+                'choice_label' => function (Item $entity) {
+                    return $entity->getId() . ': ' . $entity->getName();
+                },
                 'multiple' => true,
             ])
             ->add('events', EntityType::class, [
                 'class' => Event::class,
-                'choice_label' => 'name',
+                'choice_label' => function (Event $entity) {
+                    return $entity->getId() . ': ' . $entity->getName();
+                },
                 'multiple' => true,
             ])
         ;
