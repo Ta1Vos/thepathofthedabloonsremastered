@@ -44,9 +44,9 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_admin_dashboard_dialogues_create');
         }
 
-        return $this->render('admin/dialogues.html.twig', [
+        return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Dialogue Editor",
-            'dialogues' => $dialogues,
+            'dashboardItems' => $dialogues,
             'createBtn' => $createBtn,
         ]);
     }
@@ -71,7 +71,7 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_admin_dashboard_dialogues');
         }
 
-        return $this->render('admin/admin_create.html.twig', [
+        return $this->render('admin/create.html.twig', [
             'bannerTitle' => "TPOTDR | Dialogue Editor",
             'dialogues' => $dialogues,
             'form' => $form,
@@ -85,7 +85,7 @@ class AdminController extends AbstractController
         $events = $entityManager->getRepository(Event::class)->findAll();
         $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / EVENTS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
 
-        return $this->render('admin/events.html.twig', [
+        return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Event Editor",
             'events' => $events
         ]);
@@ -98,7 +98,7 @@ class AdminController extends AbstractController
         $items = $entityManager->getRepository(Item::class)->findAll();
         $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / ITEMS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
 
-        return $this->render('admin/items.html.twig', [
+        return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Item Editor",
             'items' => $items
         ]);
@@ -111,7 +111,7 @@ class AdminController extends AbstractController
         $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / EFFECTS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
         $effects = $entityManager->getRepository(Effect::class)->findAll();
 
-        return $this->render('admin/effects.html.twig', [
+        return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Effect Editor",
             'effects' => $effects
         ]);
@@ -123,7 +123,7 @@ class AdminController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $quests = $entityManager->getRepository(Quest::class)->findAll();
 
-        return $this->render('admin/quests.html.twig', [
+        return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Quest Editor",
             'quests' => $quests
         ]);
