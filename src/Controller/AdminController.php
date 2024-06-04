@@ -9,6 +9,7 @@ use App\Entity\Item;
 use App\Entity\Quest;
 use App\Form\CreateSubmitType;
 use App\Form\DialogueType;
+use App\Form\EventType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -55,11 +56,11 @@ class AdminController extends AbstractController
     public function dialoguesCreate(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $dialogues = $entityManager->getRepository(Dialogue::class)->findAll();
+        $dashboardType = 'Dialogue';
 
         $form = $this->createForm(DialogueType::class);
         $form->add('submit', SubmitType::class, [
-            'label' => 'Create Dialogue'
+            'label' => "Create {$dashboardType}"
         ]);
         $form->handleRequest($request);
 
@@ -67,23 +68,29 @@ class AdminController extends AbstractController
             $formData = $form->getData();
             $entityManager->persist($formData);
             $entityManager->flush();
-            $this->addFlash('success', 'Successfully added dialogue!');
+            $this->addFlash('success', "Successfully added {$dashboardType}!");
             return $this->redirectToRoute('app_admin_dashboard_dialogues');
         }
 
         return $this->render('admin/create.html.twig', [
-            'bannerTitle' => "TPOTDR | Dialogue Editor",
-            'dialogues' => $dialogues,
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
             'form' => $form,
         ]);
     }
 
     #[Route('/admin/dashboard/event', name: 'app_admin_dashboard_events')]
-    public function events(EntityManagerInterface $entityManager): Response
+    public function events(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $events = $entityManager->getRepository(Event::class)->findAll();
         $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / EVENTS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
+
+        $createBtn = $this->createForm(CreateSubmitType::class);
+        $createBtn->handleRequest($request);
+
+        if ($createBtn->isSubmitted() && $createBtn->isValid()) {
+            return $this->redirectToRoute('app_admin_dashboard_dialogues_create');
+        }
 
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Event Editor",
@@ -91,12 +98,45 @@ class AdminController extends AbstractController
         ]);
     }
 
+    #[Route('/admin/dashboard/event/create', name: 'app_admin_dashboard_events_create')]
+    public function eventsCreate(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Event';
+
+        $form = $this->createForm(EventType::class);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Create {$dashboardType}"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully added {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_' . $dashboardType);
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
     #[Route('/admin/dashboard/item', name: 'app_admin_dashboard_items')]
-    public function items(EntityManagerInterface $entityManager): Response
+    public function items(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $items = $entityManager->getRepository(Item::class)->findAll();
         $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / ITEMS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
+
+        $createBtn = $this->createForm(CreateSubmitType::class);
+        $createBtn->handleRequest($request);
+
+        if ($createBtn->isSubmitted() && $createBtn->isValid()) {
+            return $this->redirectToRoute('app_admin_dashboard_dialogues_create');
+        }
 
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Item Editor",
@@ -105,11 +145,18 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin/dashboard/effect', name: 'app_admin_dashboard_effects')]
-    public function effects(EntityManagerInterface $entityManager): Response
+    public function effects(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / EFFECTS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
         $effects = $entityManager->getRepository(Effect::class)->findAll();
+
+        $createBtn = $this->createForm(CreateSubmitType::class);
+        $createBtn->handleRequest($request);
+
+        if ($createBtn->isSubmitted() && $createBtn->isValid()) {
+            return $this->redirectToRoute('app_admin_dashboard_dialogues_create');
+        }
 
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Effect Editor",
@@ -118,10 +165,17 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin/dashboard/quests', name: 'app_admin_dashboard_quests')]
-    public function quests(EntityManagerInterface $entityManager): Response
+    public function quests(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $quests = $entityManager->getRepository(Quest::class)->findAll();
+
+        $createBtn = $this->createForm(CreateSubmitType::class);
+        $createBtn->handleRequest($request);
+
+        if ($createBtn->isSubmitted() && $createBtn->isValid()) {
+            return $this->redirectToRoute('app_admin_dashboard_dialogues_create');
+        }
 
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Quest Editor",
