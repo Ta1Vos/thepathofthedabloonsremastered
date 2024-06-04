@@ -13,6 +13,17 @@
             {% if dashboardItems is not defined or dashboardItems|length <= 0 %}
             <span class="text-danger fs-3">Nothing to see here but us chickens</span>
             {% elseif dashboardItems|length > 0 %}
+            <div class="row bg-lightgreen border border-black border-3 fw-bold">
+                <div class="col-1">
+                    Id
+                </div>
+                <div class="col-5">
+                    Name
+                </div>
+                <div class="col-6">
+                    Actions
+                </div>
+            </div>
             {% for dashboardItem in dashboardItems %}
             {% if dashboardItem.id % 2 == 1 %}
             <div class="row bg-lightolive border border-black border-1">
