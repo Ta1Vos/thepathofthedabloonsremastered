@@ -94,7 +94,7 @@ class AdminController extends AbstractController
 
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Event Editor",
-            'events' => $events,
+            'dashboardItems' => $events,
             'createBtn' => $createBtn,
         ]);
     }
@@ -103,7 +103,7 @@ class AdminController extends AbstractController
     public function eventsCreate(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $dashboardType = 'Event';
+        $dashboardType = 'events';
 
         $form = $this->createForm(EventType::class);
         $form->add('submit', SubmitType::class, [
@@ -141,7 +141,7 @@ class AdminController extends AbstractController
 
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Item Editor",
-            'items' => $items,
+            'dashboardItems' => $items,
             'createBtn' => $createBtn,
         ]);
     }
@@ -162,7 +162,7 @@ class AdminController extends AbstractController
 
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Effect Editor",
-            'effects' => $effects,
+            'dashboardItems' => $effects,
             'createBtn' => $createBtn,
         ]);
     }
@@ -182,7 +182,7 @@ class AdminController extends AbstractController
 
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Quest Editor",
-            'quests' => $quests,
+            'dashboardItems' => $quests,
             'createBtn' => $createBtn,
         ]);
     }
