@@ -42,7 +42,7 @@ class AdminController extends AbstractController
         $createBtn->handleRequest($request);
 
         if ($createBtn->isSubmitted() && $createBtn->isValid()) {
-            return $this->redirectToRoute('app_admin_dashboard_dialogues_create');
+            return $this->redirectToRoute('app_admin_dashboard_'. 'dialogues' .'_create');
         }
 
         return $this->render('admin/read.html.twig', [
@@ -89,12 +89,13 @@ class AdminController extends AbstractController
         $createBtn->handleRequest($request);
 
         if ($createBtn->isSubmitted() && $createBtn->isValid()) {
-            return $this->redirectToRoute('app_admin_dashboard_dialogues_create');
+            return $this->redirectToRoute('app_admin_dashboard_'. 'events' .'_create');
         }
 
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Event Editor",
-            'events' => $events
+            'events' => $events,
+            'createBtn' => $createBtn,
         ]);
     }
 
@@ -135,12 +136,13 @@ class AdminController extends AbstractController
         $createBtn->handleRequest($request);
 
         if ($createBtn->isSubmitted() && $createBtn->isValid()) {
-            return $this->redirectToRoute('app_admin_dashboard_dialogues_create');
+            return $this->redirectToRoute('app_admin_dashboard_'. 'items' .'_create');
         }
 
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Item Editor",
-            'items' => $items
+            'items' => $items,
+            'createBtn' => $createBtn,
         ]);
     }
 
@@ -155,12 +157,13 @@ class AdminController extends AbstractController
         $createBtn->handleRequest($request);
 
         if ($createBtn->isSubmitted() && $createBtn->isValid()) {
-            return $this->redirectToRoute('app_admin_dashboard_dialogues_create');
+            return $this->redirectToRoute('app_admin_dashboard_'. 'effects' .'_create');
         }
 
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Effect Editor",
-            'effects' => $effects
+            'effects' => $effects,
+            'createBtn' => $createBtn,
         ]);
     }
 
@@ -174,12 +177,13 @@ class AdminController extends AbstractController
         $createBtn->handleRequest($request);
 
         if ($createBtn->isSubmitted() && $createBtn->isValid()) {
-            return $this->redirectToRoute('app_admin_dashboard_dialogues_create');
+            return $this->redirectToRoute('app_admin_dashboard_'. 'quests' .'_create');
         }
 
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Quest Editor",
-            'quests' => $quests
+            'quests' => $quests,
+            'createBtn' => $createBtn,
         ]);
     }
 }
