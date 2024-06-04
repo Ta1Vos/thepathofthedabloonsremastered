@@ -8,6 +8,7 @@ use App\Entity\Event;
 use App\Entity\Item;
 use App\Entity\Quest;
 use App\Form\CreateSubmitType;
+use App\Form\DialogueType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -40,13 +41,40 @@ class AdminController extends AbstractController
         $createBtn->handleRequest($request);
 
         if ($createBtn->isSubmitted() && $createBtn->isValid()) {
-
+            return $this->redirectToRoute('app_admin_dashboard_dialogues_create');
         }
 
         return $this->render('admin/dialogues.html.twig', [
             'bannerTitle' => "TPOTDR | Dialogue Editor",
             'dialogues' => $dialogues,
             'createBtn' => $createBtn,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/dialogue/create', name: 'app_admin_dashboard_dialogues_create')]
+    public function dialoguesCreate(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dialogues = $entityManager->getRepository(Dialogue::class)->findAll();
+
+        $form = $this->createForm(DialogueType::class);
+        $form->add('submit', SubmitType::class, [
+            'label' => 'Create Dialogue'
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', 'Successfully added dialogue!');
+            return $this->redirectToRoute('app_admin_dashboard_dialogues');
+        }
+
+        return $this->render('admin/admin_create.html.twig', [
+            'bannerTitle' => "TPOTDR | Dialogue Editor",
+            'dialogues' => $dialogues,
+            'form' => $form,
         ]);
     }
 
