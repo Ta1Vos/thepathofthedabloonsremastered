@@ -21,22 +21,22 @@ class EventType extends AbstractType
             ->add('name')
             ->add('effects', EntityType::class, [
                 'class' => Effect::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
                 'multiple' => true,
             ])
             ->add('dialogues', EntityType::class, [
                 'class' => Dialogue::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
                 'multiple' => true,
             ])
             ->add('options', EntityType::class, [
                 'class' => Option::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
                 'multiple' => true,
             ])
             ->add('worlds', EntityType::class, [
                 'class' => World::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
                 'multiple' => true,
             ])
         ;

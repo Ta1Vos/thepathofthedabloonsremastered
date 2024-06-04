@@ -9,7 +9,10 @@ use App\Entity\Item;
 use App\Entity\Quest;
 use App\Form\CreateSubmitType;
 use App\Form\DialogueType;
+use App\Form\EffectType;
 use App\Form\EventType;
+use App\Form\ItemType;
+use App\Form\QuestType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -103,7 +106,7 @@ class AdminController extends AbstractController
     public function eventsCreate(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $dashboardType = 'events';
+        $dashboardType = 'Event';
 
         $form = $this->createForm(EventType::class);
         $form->add('submit', SubmitType::class, [
@@ -116,7 +119,7 @@ class AdminController extends AbstractController
             $entityManager->persist($formData);
             $entityManager->flush();
             $this->addFlash('success', "Successfully added {$dashboardType}!");
-            return $this->redirectToRoute('app_admin_dashboard_' . $dashboardType);
+            return $this->redirectToRoute('app_admin_dashboard_events');
         }
 
         return $this->render('admin/create.html.twig', [
@@ -146,6 +149,32 @@ class AdminController extends AbstractController
         ]);
     }
 
+    #[Route('/admin/dashboard/item/create', name: 'app_admin_dashboard_items_create')]
+    public function itemsCreate(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Item';
+
+        $form = $this->createForm(ItemType::class);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Create {$dashboardType}"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully added {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_items');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
     #[Route('/admin/dashboard/effect', name: 'app_admin_dashboard_effects')]
     public function effects(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -167,6 +196,32 @@ class AdminController extends AbstractController
         ]);
     }
 
+    #[Route('/admin/dashboard/effect/create', name: 'app_admin_dashboard_effects_create')]
+    public function effectCreate(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Effect';
+
+        $form = $this->createForm(EffectType::class);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Create {$dashboardType}"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully added {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_effects');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
     #[Route('/admin/dashboard/quests', name: 'app_admin_dashboard_quests')]
     public function quests(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -184,6 +239,33 @@ class AdminController extends AbstractController
             'bannerTitle' => "TPOTDR | Quest Editor",
             'dashboardItems' => $quests,
             'createBtn' => $createBtn,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/quest/create', name: 'app_admin_dashboard_quests_create')]
+    public function questCreate(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_NONE');
+        $dashboardType = 'Quest';
+        $this->addFlash('warning', 'THIS PAGE IS NOT IN USE. NOT EVERYTHING WILL WORK ACCORDINGLY');
+
+        $form = $this->createForm(QuestType::class);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Create {$dashboardType}"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully added {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_quests');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
         ]);
     }
 }
