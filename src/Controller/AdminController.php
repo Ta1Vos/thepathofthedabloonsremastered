@@ -8,6 +8,8 @@ use App\Entity\Event;
 use App\Entity\Item;
 use App\Entity\Option;
 use App\Entity\Quest;
+use App\Entity\Rarity;
+use App\Entity\World;
 use App\Form\CreateSubmitType;
 use App\Form\DeleteSubmitType;
 use App\Form\DialogueType;
@@ -16,6 +18,8 @@ use App\Form\EventType;
 use App\Form\ItemType;
 use App\Form\OptionType;
 use App\Form\QuestType;
+use App\Form\RarityType;
+use App\Form\WorldType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -407,6 +411,129 @@ class AdminController extends AbstractController
     }
 
     /*
+     * WORLD CRUD
+     */
+
+    #[Route('/admin/dashboard/world', name: 'app_admin_dashboard_worlds')]
+    public function worlds(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'World';
+        $options = $entityManager->getRepository(World::class)->findAll();
+
+        return $this->render('admin/read.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'dashboardItems' => $options,
+            'deleteName' => 'app_admin_dashboard_worlds_delete',
+            'editName' => 'app_admin_dashboard_worlds_edit',
+            'createName' => 'app_admin_dashboard_worlds_create'
+        ]);
+    }
+
+    #[Route('/admin/dashboard/world/create', name: 'app_admin_dashboard_worlds_create')]
+    public function worldsCreate(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'World';
+
+        $form = $this->createForm(WorldType::class);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Create {$dashboardType}"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully added {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_worlds');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/world/edit/{id}', name: 'app_admin_dashboard_worlds_edit')]
+    public function worldsEdit(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'World';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $world = $entityManager->getRepository(World::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$world) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $form = $this->createForm(WorldType::class, $world);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Edit $dashboardType"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully edited {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_worlds');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/world/delete/{id}', name: 'app_admin_dashboard_worlds_delete')]
+    public function worldsDelete(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'World';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $world = $entityManager->getRepository(World::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$world) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $deleteBtn = $this->createForm(DeleteSubmitType::class);
+        $deleteBtn->handleRequest($request);
+
+        if ($deleteBtn->isSubmitted() && $deleteBtn->isValid()) {
+            $entityManager->remove($world);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully deleted $dashboardType");
+            return $this->redirectToRoute('app_admin_dashboard_worlds');
+        }
+
+        return $this->render('admin/delete.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'dashboardItem' => $world,
+            'confirmBtn' => $deleteBtn,
+        ]);
+    }
+
+    /*
      *  ITEM CRUD
      */
 
@@ -648,6 +775,129 @@ class AdminController extends AbstractController
         return $this->render('admin/delete.html.twig', [
             'bannerTitle' => "TPOTDR | $dashboardType Editor",
             'dashboardItem' => $effect,
+            'confirmBtn' => $deleteBtn,
+        ]);
+    }
+
+    /*
+     * RARITY CRUD
+     */
+
+    #[Route('/admin/dashboard/rarity', name: 'app_admin_dashboard_rarities')]
+    public function rarity(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Rarity';
+        $options = $entityManager->getRepository(Rarity::class)->findAll();
+
+        return $this->render('admin/read.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'dashboardItems' => $options,
+            'deleteName' => 'app_admin_dashboard_rarities_delete',
+            'editName' => 'app_admin_dashboard_rarities_edit',
+            'createName' => 'app_admin_dashboard_rarities_create'
+        ]);
+    }
+
+    #[Route('/admin/dashboard/rarity/create', name: 'app_admin_dashboard_rarities_create')]
+    public function rarityCreate(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Rarity';
+
+        $form = $this->createForm(RarityType::class);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Create {$dashboardType}"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully added {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_rarities');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/rarity/edit/{id}', name: 'app_admin_dashboard_rarities_edit')]
+    public function raritiesEdit(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Rarity';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $rarity = $entityManager->getRepository(Rarity::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$rarity) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $form = $this->createForm(RarityType::class, $rarity);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Edit $dashboardType"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully edited {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_rarities');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/rarity/delete/{id}', name: 'app_admin_dashboard_rarities_delete')]
+    public function raritiesDelete(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Rarity';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $rarity = $entityManager->getRepository(Rarity::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$rarity) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $deleteBtn = $this->createForm(DeleteSubmitType::class);
+        $deleteBtn->handleRequest($request);
+
+        if ($deleteBtn->isSubmitted() && $deleteBtn->isValid()) {
+            $entityManager->remove($rarity);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully deleted $dashboardType");
+            return $this->redirectToRoute('app_admin_dashboard_rarities');
+        }
+
+        return $this->render('admin/delete.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'dashboardItem' => $rarity,
             'confirmBtn' => $deleteBtn,
         ]);
     }
