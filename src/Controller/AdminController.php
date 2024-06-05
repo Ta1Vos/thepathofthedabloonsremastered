@@ -48,19 +48,12 @@ class AdminController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $dialogues = $entityManager->getRepository(Dialogue::class)->findAll();
 
-        $createBtn = $this->createForm(CreateSubmitType::class);
-        $createBtn->handleRequest($request);
-
-        if ($createBtn->isSubmitted() && $createBtn->isValid()) {
-            return $this->redirectToRoute('app_admin_dashboard_'. 'dialogues' .'_create');
-        }
-
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Dialogue Editor",
             'dashboardItems' => $dialogues,
-            'createBtn' => $createBtn,
             'deleteName' => 'app_admin_dashboard_dialogues_delete',
-            'editName' => 'app_admin_dashboard_dialogues_edit'
+            'editName' => 'app_admin_dashboard_dialogues_edit',
+            'createName' => 'app_admin_dashboard_dialogues_create'
         ]);
     }
 
@@ -178,19 +171,12 @@ class AdminController extends AbstractController
         $events = $entityManager->getRepository(Event::class)->findAll();
         $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / EVENTS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
 
-        $createBtn = $this->createForm(CreateSubmitType::class);
-        $createBtn->handleRequest($request);
-
-        if ($createBtn->isSubmitted() && $createBtn->isValid()) {
-            return $this->redirectToRoute('app_admin_dashboard_'. 'events' .'_create');
-        }
-
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Event Editor",
             'dashboardItems' => $events,
-            'createBtn' => $createBtn,
             'deleteName' => 'app_admin_dashboard_events_delete',
-            'editName' => 'app_admin_dashboard_events_edit'
+            'editName' => 'app_admin_dashboard_events_edit',
+            'createName' => 'app_admin_dashboard_events_create'
         ]);
     }
 
@@ -306,21 +292,14 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $dashboardType = 'Option';
-        $dialogues = $entityManager->getRepository(Option::class)->findAll();
-
-        $createBtn = $this->createForm(CreateSubmitType::class);
-        $createBtn->handleRequest($request);
-
-        if ($createBtn->isSubmitted() && $createBtn->isValid()) {
-            return $this->redirectToRoute('app_admin_dashboard_'. 'options' .'_create');
-        }
+        $options = $entityManager->getRepository(Option::class)->findAll();
 
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | $dashboardType Editor",
-            'dashboardItems' => $dialogues,
-            'createBtn' => $createBtn,
+            'dashboardItems' => $options,
             'deleteName' => 'app_admin_dashboard_options_delete',
-            'editName' => 'app_admin_dashboard_options_edit'
+            'editName' => 'app_admin_dashboard_options_edit',
+            'createName' => 'app_admin_dashboard_options_create'
         ]);
     }
 
@@ -438,19 +417,12 @@ class AdminController extends AbstractController
         $items = $entityManager->getRepository(Item::class)->findAll();
         $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / ITEMS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
 
-        $createBtn = $this->createForm(CreateSubmitType::class);
-        $createBtn->handleRequest($request);
-
-        if ($createBtn->isSubmitted() && $createBtn->isValid()) {
-            return $this->redirectToRoute('app_admin_dashboard_'. 'items' .'_create');
-        }
-
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Item Editor",
             'dashboardItems' => $items,
-            'createBtn' => $createBtn,
             'deleteName' => 'app_admin_dashboard_items_delete',
-            'editName' => 'app_admin_dashboard_items_edit'
+            'editName' => 'app_admin_dashboard_items_edit',
+            'createName' => 'app_admin_dashboard_items_create'
         ]);
     }
 
@@ -568,19 +540,12 @@ class AdminController extends AbstractController
         $this->addFlash('danger', 'WARNING: COMPLETELY NEW FEATURES / EFFECTS WILL HAVE TO BE IMPLEMENTED INTO THE PROJECT. CONTACT A DEVELOPER IF THAT IS THE CASE.');
         $effects = $entityManager->getRepository(Effect::class)->findAll();
 
-        $createBtn = $this->createForm(CreateSubmitType::class);
-        $createBtn->handleRequest($request);
-
-        if ($createBtn->isSubmitted() && $createBtn->isValid()) {
-            return $this->redirectToRoute('app_admin_dashboard_'. 'effects' .'_create');
-        }
-
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Effect Editor",
             'dashboardItems' => $effects,
-            'createBtn' => $createBtn,
             'deleteName' => 'app_admin_dashboard_effects_delete',
-            'editName' => 'app_admin_dashboard_effects_edit'
+            'editName' => 'app_admin_dashboard_effects_edit',
+            'createName' => 'app_admin_dashboard_effects_create'
         ]);
     }
 
@@ -697,19 +662,12 @@ class AdminController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $quests = $entityManager->getRepository(Quest::class)->findAll();
 
-        $createBtn = $this->createForm(CreateSubmitType::class);
-        $createBtn->handleRequest($request);
-
-        if ($createBtn->isSubmitted() && $createBtn->isValid()) {
-            return $this->redirectToRoute('app_admin_dashboard_'. 'quests' .'_create');
-        }
-
         return $this->render('admin/read.html.twig', [
             'bannerTitle' => "TPOTDR | Quest Editor",
             'dashboardItems' => $quests,
-            'createBtn' => $createBtn,
             'deleteName' => 'app_admin_dashboard_quests_delete',
-            'editName' => 'app_admin_dashboard_quests_edit'
+            'editName' => 'app_admin_dashboard_quests_edit',
+            'createName' => 'app_admin_dashboard_quests_create'
         ]);
     }
 

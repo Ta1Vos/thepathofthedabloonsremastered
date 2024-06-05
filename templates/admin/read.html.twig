@@ -6,8 +6,12 @@
     <div class="row wrapper text-center">
         <div class="col-1"></div>
         <div class="col-10">
-            {% if createBtn is defined %}
-                {{ form(createBtn) }}
+            {% if createName is defined %}
+                <a href="{{ path(createName) }}">
+                    <div class="btn btn-success fs-2 fw-bold bg-darkgreen text-white">
+                        + Create
+                    </div>
+                </a>
             {% endif %}
             <div class="my-3">&nbsp;</div>
             {% if dashboardItems is not defined or dashboardItems|length <= 0 %}
