@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TPOTDR | Editor{% endblock %}
+
+{% block body %}
+    <div class="row wrapper text-center">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <h2 class="text-danger fw-bold">Are you sure you want to delete this?</h2>
+            <div class="my-3">&nbsp;</div>
+            {{ form(confirmBtn) }}
+        </div>
+        <div class="col-1"></div>
+    </div>
+{% endblock %}

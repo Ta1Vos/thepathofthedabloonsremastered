@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestRepository::class)]
 class Quest
@@ -19,6 +20,10 @@ class Quest
     #[ORM\Column(type: Types::TEXT)]
     private ?string $questText = null;
 
+    #[Assert\Type(
+        type: 'integer',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[ORM\Column]
     private ?int $dabloonReward = null;
 
@@ -40,6 +45,10 @@ class Quest
     #[ORM\ManyToOne(inversedBy: 'quests')]
     private ?Item $rewardedItem = null;
 
+    #[Assert\Type(
+        type: 'boolean',
+        message: 'The value {{ value }} is not a valid {{ type }}. Use \'true\' or \'false\'.',
+    )]
     #[ORM\Column]
     private ?bool $singleCompletion = null;
 

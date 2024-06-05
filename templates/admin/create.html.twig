@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TPOTDR | Dialogue Editor{% endblock %}
+
+{% block body %}
+    <div class="row wrapper text-center">
+    <div class="col-1"></div>
+    <div class="col-10 fs-3">
+        <div class="my-3">&nbsp;</div>
+        {% if form is defined %}
+            {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {% endif %}
+        <div class="col-1"></div>
+    </div>
+{% endblock %}

@@ -6,6 +6,7 @@ use App\Repository\WorldRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: WorldRepository::class)]
 class World
@@ -15,9 +16,21 @@ class World
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 1,
+        max: 150,
+        minMessage: 'World name must be at least {{ limit }} characters long',
+        maxMessage: 'World name cannot be longer than {{ limit }} characters'
+    )]
     #[ORM\Column(length: 150)]
     private ?string $name = null;
 
+    #[Assert\NotNull]
+    #[Assert\Type(
+        type: 'boolean',
+        message: 'The value {{ value }} is not a valid {{ type }}. Use \'true\' or \'false\'.',
+    )]
     #[ORM\Column]
     private ?int $distanceLimit = null;
 
