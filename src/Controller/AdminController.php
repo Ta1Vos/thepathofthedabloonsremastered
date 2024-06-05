@@ -6,6 +6,7 @@ use App\Entity\Dialogue;
 use App\Entity\Effect;
 use App\Entity\Event;
 use App\Entity\Item;
+use App\Entity\Option;
 use App\Entity\Quest;
 use App\Form\CreateSubmitType;
 use App\Form\DeleteSubmitType;
@@ -13,6 +14,7 @@ use App\Form\DialogueType;
 use App\Form\EffectType;
 use App\Form\EventType;
 use App\Form\ItemType;
+use App\Form\OptionType;
 use App\Form\QuestType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -291,6 +293,136 @@ class AdminController extends AbstractController
         return $this->render('admin/delete.html.twig', [
             'bannerTitle' => "TPOTDR | $dashboardType Editor",
             'dashboardItem' => $event,
+            'confirmBtn' => $deleteBtn,
+        ]);
+    }
+
+    /*
+     * OPTION CRUD
+     */
+
+    #[Route('/admin/dashboard/option', name: 'app_admin_dashboard_options')]
+    public function options(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Option';
+        $dialogues = $entityManager->getRepository(Option::class)->findAll();
+
+        $createBtn = $this->createForm(CreateSubmitType::class);
+        $createBtn->handleRequest($request);
+
+        if ($createBtn->isSubmitted() && $createBtn->isValid()) {
+            return $this->redirectToRoute('app_admin_dashboard_'. 'options' .'_create');
+        }
+
+        return $this->render('admin/read.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'dashboardItems' => $dialogues,
+            'createBtn' => $createBtn,
+            'deleteName' => 'app_admin_dashboard_options_delete',
+            'editName' => 'app_admin_dashboard_options_edit'
+        ]);
+    }
+
+    #[Route('/admin/dashboard/option/create', name: 'app_admin_dashboard_options_create')]
+    public function optionsCreate(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Option';
+
+        $form = $this->createForm(OptionType::class);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Create {$dashboardType}"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully added {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_options');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/option/edit/{id}', name: 'app_admin_dashboard_options_edit')]
+    public function optionsEdit(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Option';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $option = $entityManager->getRepository(Option::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$option) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $form = $this->createForm(OptionType::class, $option);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Edit $dashboardType"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully edited {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_options');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/option/delete/{id}', name: 'app_admin_dashboard_options_delete')]
+    public function optionsDelete(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Option';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $option = $entityManager->getRepository(Option::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$option) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $deleteBtn = $this->createForm(DeleteSubmitType::class);
+        $deleteBtn->handleRequest($request);
+
+        if ($deleteBtn->isSubmitted() && $deleteBtn->isValid()) {
+            $entityManager->remove($option);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully deleted $dashboardType");
+            return $this->redirectToRoute('app_admin_dashboard_options');
+        }
+
+        return $this->render('admin/delete.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'dashboardItem' => $option,
             'confirmBtn' => $deleteBtn,
         ]);
     }
