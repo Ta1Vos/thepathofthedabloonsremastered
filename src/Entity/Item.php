@@ -35,8 +35,9 @@ class Item
     #[ORM\Column(type: 'boolean')]
     private ?bool $isWeapon = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
+    private ?string $description;
 
     /**
      * @var Collection<int, InventorySlot>

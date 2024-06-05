@@ -20,6 +20,7 @@ class Quest
     #[ORM\Column(type: Types::TEXT)]
     private ?string $questText = null;
 
+    #[Assert\NotNull]
     #[Assert\Type(
         type: 'integer',
         message: 'The value {{ value }} is not a valid {{ type }}.',

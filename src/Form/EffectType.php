@@ -17,7 +17,9 @@ class EffectType extends AbstractType
         $builder
             ->add('name')
             ->add('debuffSeverity')
-            ->add('debuffDuration')
+            ->add('debuffDuration', null, [
+                'label' => 'Debuff duration (amount of events passed)'
+            ])
             ->add('debuffs')
             ->add('items', EntityType::class, [
                 'class' => Item::class,

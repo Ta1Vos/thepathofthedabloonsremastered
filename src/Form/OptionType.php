@@ -18,12 +18,17 @@ class OptionType extends AbstractType
             ->add('name')
             ->add('events', EntityType::class, [
                 'class' => Event::class,
-                'choice_label' => 'id',
+                'choice_label' => function (Event $entity) {
+                    return $entity->getId() . ': ' . $entity->getName();
+                },
                 'multiple' => true,
             ])
             ->add('quests', EntityType::class, [
                 'class' => Quest::class,
-                'choice_label' => 'id',
+                'choice_label' => function (Quest $entity) {
+                    return $entity->getId() . ': ' . $entity->getName();
+                },
+                'label' => 'Quest'
             ])
         ;
     }
