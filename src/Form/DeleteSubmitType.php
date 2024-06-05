@@ -15,7 +15,7 @@ class DeleteSubmitType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => '- Delete',
                 'attr' => [
-                    'class' => 'fw-bold bg-danger text-white',
+                    'class' => 'btn btn-danger fw-bold bg-danger text-white',
                 ]
             ])
         ;

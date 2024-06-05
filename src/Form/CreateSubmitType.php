@@ -15,7 +15,7 @@ class CreateSubmitType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => '+ Create',
                 'attr' => [
-                    'class' => 'fs-2 fw-bold bg-darkgreen text-white',
+                    'class' => 'btn btn-success fs-2 fw-bold bg-darkgreen text-white',
                 ]
             ])
         ;
