@@ -562,7 +562,7 @@ class AdminController extends AbstractController
     #[Route('/admin/dashboard/quests', name: 'app_admin_dashboard_quests')]
     public function quests(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_NONE');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $quests = $entityManager->getRepository(Quest::class)->findAll();
 
         $createBtn = $this->createForm(CreateSubmitType::class);
@@ -584,7 +584,7 @@ class AdminController extends AbstractController
     #[Route('/admin/dashboard/quest/create', name: 'app_admin_dashboard_quests_create')]
     public function questCreate(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_NONE');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $dashboardType = 'Quest';
         $this->addFlash('warning', 'THIS PAGE IS NOT IN USE. NOT EVERYTHING WILL WORK ACCORDINGLY');
 
@@ -651,7 +651,7 @@ class AdminController extends AbstractController
     #[Route('/admin/dashboard/quest/delete/{id}', name: 'app_admin_dashboard_quests_delete')]
     public function questsDelete(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_NONE');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $dashboardType = 'Quest';
 
         //Check if an id has been selected

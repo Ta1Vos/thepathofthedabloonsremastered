@@ -28,7 +28,7 @@ class Quest
     private ?int $dabloonReward = null;
 
     #[ORM\Column]
-    private ?bool $isCompleted = null;
+    private ?bool $isCompleted = false;
 
     /**
      * @var Collection<int, Option>
@@ -51,6 +51,16 @@ class Quest
     )]
     #[ORM\Column]
     private ?bool $singleCompletion = null;
+
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 1,
+        max: 255,
+        minMessage: 'Quest name must be at least {{ limit }} characters long',
+        maxMessage: 'Quest name cannot be longer than {{ limit }} characters'
+    )]
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
 
     public function __construct()
     {
@@ -179,6 +189,18 @@ class Quest
     public function setSingleCompletion(bool $singleCompletion): static
     {
         $this->singleCompletion = $singleCompletion;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }
