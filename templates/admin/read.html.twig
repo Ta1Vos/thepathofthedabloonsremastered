@@ -30,17 +30,23 @@
                 {% else %}
                 <div class="row bg-lightgreen border border-black border-1">
                     {% endif %}
-                    <div class="col-1">
+                    <div class="col-1 fs-4">
                         {{ dashboardItem.id }}
                     </div>
-                    <div class="col-5">
+                    <div class="col-5 fs-4">
                         {{ dashboardItem.name }}
                     </div>
-                    <div class="col-3">
+                    <div class="col-3 fs-4">
                         Edit
                     </div>
                     <div class="col-3">
-                        Delete
+                        {% set currentPath = path(app.request.attributes.get('_route'),
+                            app.request.attributes.get('_route_params')) %}
+                        <a href="{{ path(deleteName, {'id': dashboardItem.id}) }}">
+                            <div class="btn btn-danger fw-bold bg-danger text-white">
+                                - Delete
+                            </div>
+                        </a>
                     </div>
                 </div>
                 {% endfor %}

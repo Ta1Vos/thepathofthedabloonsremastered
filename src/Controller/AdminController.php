@@ -57,6 +57,7 @@ class AdminController extends AbstractController
             'bannerTitle' => "TPOTDR | Dialogue Editor",
             'dashboardItems' => $dialogues,
             'createBtn' => $createBtn,
+            'deleteName' => 'app_admin_dashboard_dialogues_delete'
         ]);
     }
 
@@ -145,6 +146,7 @@ class AdminController extends AbstractController
             'bannerTitle' => "TPOTDR | Event Editor",
             'dashboardItems' => $events,
             'createBtn' => $createBtn,
+            'deleteName' => 'app_admin_dashboard_events_delete'
         ]);
     }
 
@@ -233,6 +235,7 @@ class AdminController extends AbstractController
             'bannerTitle' => "TPOTDR | Item Editor",
             'dashboardItems' => $items,
             'createBtn' => $createBtn,
+            'deleteName' => 'app_admin_dashboard_items_delete'
         ]);
     }
 
@@ -321,6 +324,7 @@ class AdminController extends AbstractController
             'bannerTitle' => "TPOTDR | Effect Editor",
             'dashboardItems' => $effects,
             'createBtn' => $createBtn,
+            'deleteName' => 'app_admin_dashboard_effects_delete'
         ]);
     }
 
@@ -408,6 +412,7 @@ class AdminController extends AbstractController
             'bannerTitle' => "TPOTDR | Quest Editor",
             'dashboardItems' => $quests,
             'createBtn' => $createBtn,
+            'deleteName' => 'app_admin_dashboard_quests_delete'
         ]);
     }
 
