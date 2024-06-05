@@ -37,13 +37,15 @@
                         {{ dashboardItem.name }}
                     </div>
                     <div class="col-3 fs-4">
-                        Edit
+                        <a href="{{ path(editName, {'id': dashboardItem.id}) }}">
+                            <div class="btn btn-warning fw-bold text-white">
+                                +/- Edit
+                            </div>
+                        </a>
                     </div>
                     <div class="col-3">
-                        {% set currentPath = path(app.request.attributes.get('_route'),
-                            app.request.attributes.get('_route_params')) %}
                         <a href="{{ path(deleteName, {'id': dashboardItem.id}) }}">
-                            <div class="btn btn-danger fw-bold bg-danger text-white">
+                            <div class="btn btn-danger fw-bold text-white">
                                 - Delete
                             </div>
                         </a>

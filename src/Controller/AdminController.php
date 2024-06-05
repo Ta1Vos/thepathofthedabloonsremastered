@@ -57,7 +57,8 @@ class AdminController extends AbstractController
             'bannerTitle' => "TPOTDR | Dialogue Editor",
             'dashboardItems' => $dialogues,
             'createBtn' => $createBtn,
-            'deleteName' => 'app_admin_dashboard_dialogues_delete'
+            'deleteName' => 'app_admin_dashboard_dialogues_delete',
+            'editName' => 'app_admin_dashboard_dialogues_edit'
         ]);
     }
 
@@ -78,6 +79,46 @@ class AdminController extends AbstractController
             $entityManager->persist($formData);
             $entityManager->flush();
             $this->addFlash('success', "Successfully added {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_dialogues');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/dialogue/edit/{id}', name: 'app_admin_dashboard_dialogues_edit')]
+    public function dialoguesEdit(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Dialogue';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $dialogue = $entityManager->getRepository(Dialogue::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$dialogue) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $form = $this->createForm(DialogueType::class, $dialogue);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Edit $dashboardType"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully edited {$dashboardType}!");
             return $this->redirectToRoute('app_admin_dashboard_dialogues');
         }
 
