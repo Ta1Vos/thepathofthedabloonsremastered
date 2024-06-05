@@ -187,7 +187,8 @@ class AdminController extends AbstractController
             'bannerTitle' => "TPOTDR | Event Editor",
             'dashboardItems' => $events,
             'createBtn' => $createBtn,
-            'deleteName' => 'app_admin_dashboard_events_delete'
+            'deleteName' => 'app_admin_dashboard_events_delete',
+            'editName' => 'app_admin_dashboard_events_edit'
         ]);
     }
 
@@ -208,6 +209,46 @@ class AdminController extends AbstractController
             $entityManager->persist($formData);
             $entityManager->flush();
             $this->addFlash('success', "Successfully added {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_events');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/event/edit/{id}', name: 'app_admin_dashboard_events_edit')]
+    public function eventsEdit(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Event';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $event = $entityManager->getRepository(Event::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$event) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $form = $this->createForm(EventType::class, $event);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Edit $dashboardType"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully edited {$dashboardType}!");
             return $this->redirectToRoute('app_admin_dashboard_events');
         }
 
@@ -276,7 +317,8 @@ class AdminController extends AbstractController
             'bannerTitle' => "TPOTDR | Item Editor",
             'dashboardItems' => $items,
             'createBtn' => $createBtn,
-            'deleteName' => 'app_admin_dashboard_items_delete'
+            'deleteName' => 'app_admin_dashboard_items_delete',
+            'editName' => 'app_admin_dashboard_items_edit'
         ]);
     }
 
@@ -297,6 +339,46 @@ class AdminController extends AbstractController
             $entityManager->persist($formData);
             $entityManager->flush();
             $this->addFlash('success', "Successfully added {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_items');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/item/edit/{id}', name: 'app_admin_dashboard_items_edit')]
+    public function itemsEdit(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Item';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $item = $entityManager->getRepository(Item::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$item) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $form = $this->createForm(ItemType::class, $item);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Edit $dashboardType"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully edited {$dashboardType}!");
             return $this->redirectToRoute('app_admin_dashboard_items');
         }
 
@@ -365,7 +447,8 @@ class AdminController extends AbstractController
             'bannerTitle' => "TPOTDR | Effect Editor",
             'dashboardItems' => $effects,
             'createBtn' => $createBtn,
-            'deleteName' => 'app_admin_dashboard_effects_delete'
+            'deleteName' => 'app_admin_dashboard_effects_delete',
+            'editName' => 'app_admin_dashboard_effects_edit'
         ]);
     }
 
@@ -386,6 +469,46 @@ class AdminController extends AbstractController
             $entityManager->persist($formData);
             $entityManager->flush();
             $this->addFlash('success', "Successfully added {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_effects');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/effect/edit/{id}', name: 'app_admin_dashboard_effects_edit')]
+    public function effectsEdit(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Effect';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $effect = $entityManager->getRepository(Effect::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$effect) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $form = $this->createForm(EffectType::class, $effect);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Edit $dashboardType"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully edited {$dashboardType}!");
             return $this->redirectToRoute('app_admin_dashboard_effects');
         }
 
@@ -453,7 +576,8 @@ class AdminController extends AbstractController
             'bannerTitle' => "TPOTDR | Quest Editor",
             'dashboardItems' => $quests,
             'createBtn' => $createBtn,
-            'deleteName' => 'app_admin_dashboard_quests_delete'
+            'deleteName' => 'app_admin_dashboard_quests_delete',
+            'editName' => 'app_admin_dashboard_quests_edit'
         ]);
     }
 
@@ -475,6 +599,46 @@ class AdminController extends AbstractController
             $entityManager->persist($formData);
             $entityManager->flush();
             $this->addFlash('success', "Successfully added {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_quests');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/quest/edit/{id}', name: 'app_admin_dashboard_quests_edit')]
+    public function questsEdit(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Quest';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $quest = $entityManager->getRepository(Quest::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$quest) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $form = $this->createForm(QuestType::class, $quest);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Edit $dashboardType"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully edited {$dashboardType}!");
             return $this->redirectToRoute('app_admin_dashboard_quests');
         }
 
