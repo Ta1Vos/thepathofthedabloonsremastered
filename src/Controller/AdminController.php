@@ -203,7 +203,7 @@ class AdminController extends AbstractController
             $entityManager->remove($event);
             $entityManager->flush();
             $this->addFlash('success', "Successfully deleted $dashboardType");
-            return $this->redirectToRoute('app_admin_dashboard_dialogues');
+            return $this->redirectToRoute('app_admin_dashboard_events');
         }
 
         return $this->render('admin/delete.html.twig', [
@@ -292,7 +292,7 @@ class AdminController extends AbstractController
             $entityManager->remove($item);
             $entityManager->flush();
             $this->addFlash('success', "Successfully deleted $dashboardType");
-            return $this->redirectToRoute('app_admin_dashboard_dialogues');
+            return $this->redirectToRoute('app_admin_dashboard_items');
         }
 
         return $this->render('admin/delete.html.twig', [
@@ -381,7 +381,7 @@ class AdminController extends AbstractController
             $entityManager->remove($effect);
             $entityManager->flush();
             $this->addFlash('success', "Successfully deleted $dashboardType");
-            return $this->redirectToRoute('app_admin_dashboard_dialogues');
+            return $this->redirectToRoute('app_admin_dashboard_effects');
         }
 
         return $this->render('admin/delete.html.twig', [
@@ -470,7 +470,7 @@ class AdminController extends AbstractController
             $entityManager->remove($quest);
             $entityManager->flush();
             $this->addFlash('success', "Successfully deleted $dashboardType");
-            return $this->redirectToRoute('app_admin_dashboard_dialogues');
+            return $this->redirectToRoute('app_admin_dashboard_quests');
         }
 
         return $this->render('admin/delete.html.twig', [
