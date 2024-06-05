@@ -32,14 +32,7 @@ class Item
     #[ORM\Column(nullable: true)]
     private ?int $price = null;
 
-    #[Assert\NotNull]
-    #[Assert\Length(
-        min: 0,
-        max: 1,
-        minMessage: 'Use 0 for false, {{ limit }} is too low.',
-        maxMessage: 'Use 1 for true, {{ limit }} is too high.'
-    )]
-    #[ORM\Column]
+    #[ORM\Column(type: 'boolean')]
     private ?bool $isWeapon = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -107,7 +100,7 @@ class Item
         return $this->isWeapon;
     }
 
-    public function setWeapon(bool $isWeapon): static
+    public function setIsWeapon(bool $isWeapon): self
     {
         $this->isWeapon = $isWeapon;
 
