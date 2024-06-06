@@ -52,10 +52,17 @@ class Player
     #[ORM\OneToMany(targetEntity: AcceptedQuest::class, mappedBy: 'player')]
     private Collection $acceptedQuests;
 
+    /**
+     * @var Collection<int, PlayerEffect>
+     */
+    #[ORM\OneToMany(targetEntity: PlayerEffect::class, mappedBy: 'player')]
+    private Collection $playerEffects;
+
     public function __construct()
     {
         $this->inventorySlots = new ArrayCollection();
         $this->acceptedQuests = new ArrayCollection();
+        $this->playerEffects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -218,6 +225,36 @@ class Player
             // set the owning side to null (unless already changed)
             if ($acceptedQuest->getPlayer() === $this) {
                 $acceptedQuest->setPlayer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PlayerEffect>
+     */
+    public function getPlayerEffects(): Collection
+    {
+        return $this->playerEffects;
+    }
+
+    public function addPlayerEffect(PlayerEffect $playerEffect): static
+    {
+        if (!$this->playerEffects->contains($playerEffect)) {
+            $this->playerEffects->add($playerEffect);
+            $playerEffect->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlayerEffect(PlayerEffect $playerEffect): static
+    {
+        if ($this->playerEffects->removeElement($playerEffect)) {
+            // set the owning side to null (unless already changed)
+            if ($playerEffect->getPlayer() === $this) {
+                $playerEffect->setPlayer(null);
             }
         }
 

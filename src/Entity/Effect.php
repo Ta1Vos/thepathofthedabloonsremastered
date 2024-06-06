@@ -54,10 +54,17 @@ class Effect
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'effects')]
     private Collection $events;
 
+    /**
+     * @var Collection<int, PlayerEffect>
+     */
+    #[ORM\OneToMany(targetEntity: PlayerEffect::class, mappedBy: 'effect')]
+    private Collection $playerEffects;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
         $this->events = new ArrayCollection();
+        $this->playerEffects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -150,6 +157,36 @@ class Effect
     {
         if ($this->events->removeElement($event)) {
             $event->removeEffect($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PlayerEffect>
+     */
+    public function getPlayerEffects(): Collection
+    {
+        return $this->playerEffects;
+    }
+
+    public function addPlayerEffect(PlayerEffect $playerEffect): static
+    {
+        if (!$this->playerEffects->contains($playerEffect)) {
+            $this->playerEffects->add($playerEffect);
+            $playerEffect->setEffect($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlayerEffect(PlayerEffect $playerEffect): static
+    {
+        if ($this->playerEffects->removeElement($playerEffect)) {
+            // set the owning side to null (unless already changed)
+            if ($playerEffect->getEffect() === $this) {
+                $playerEffect->setEffect(null);
+            }
         }
 
         return $this;
