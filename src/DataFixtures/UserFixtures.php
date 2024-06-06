@@ -20,12 +20,14 @@ class UserFixtures extends Fixture
         $user->setRoles(["ROLE_USER", "ROLE_ADMIN"]);
         $manager->persist($user);
 
+        $user = new User();
         $user->setUsername('moderator');
         $user->setEmail('moderator@TPOTDR.com');
         $user->setPassword('$2y$13$iLnXw0.o8Q./IuyDkaEDYe4FEmDsehwL/osphnDOZhNMJlbQOQ3yS');
         $user->setRoles(["ROLE_USER", "ROLE_MODERATOR"]);
         $manager->persist($user);
 
+        $user = new User();
         $user->setUsername('test user');
         $user->setEmail('test@TPOTDR.com');
         $user->setPassword('$2y$13$rn7fOjy6A6yAvzsmWHe/ee/TrIRjVhk6a96fP5n6OiFgtGMWDWk/S');
