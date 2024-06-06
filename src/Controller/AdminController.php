@@ -20,6 +20,7 @@ use App\Form\ItemType;
 use App\Form\OptionType;
 use App\Form\QuestType;
 use App\Form\RarityType;
+use App\Form\ShopType;
 use App\Form\WorldType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -913,123 +914,123 @@ class AdminController extends AbstractController
      * SHOP CRUD
      */
 
-//    #[Route('/admin/dashboard/shops', name: 'app_admin_dashboard_shops')]
-//    public function shops(Request $request, EntityManagerInterface $entityManager): Response
-//    {
-//        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-//        $shops = $entityManager->getRepository(Shop::class)->findAll();
-//
-//        return $this->render('admin/read.html.twig', [
-//            'bannerTitle' => "TPOTDR | Quest Editor",
-//            'dashboardItems' => $shops,
-//            'deleteName' => '',
-//            'editName' => '',
-//            'createName' => ''
-//        ]);
-//    }
-//
-//    #[Route('/admin/dashboard/shop/create', name: 'app_admin_dashboard_shops_create')]
-//    public function shopsCreate(Request $request, EntityManagerInterface $entityManager): Response
-//    {
-//        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-//        $dashboardType = 'Shop';
-//
-//        $form = $this->createForm(ShopType::class);
-//        $form->add('submit', SubmitType::class, [
-//            'label' => "Create {$dashboardType}"
-//        ]);
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $formData = $form->getData();
-//            $entityManager->persist($formData);
-//            $entityManager->flush();
-//            $this->addFlash('success', "Successfully added {$dashboardType}!");
-//            return $this->redirectToRoute('app_admin_dashboard_quests');
-//        }
-//
-//        return $this->render('admin/create.html.twig', [
-//            'bannerTitle' => "TPOTDR | $dashboardType Editor",
-//            'form' => $form,
-//        ]);
-//    }
-//
-//    #[Route('/admin/dashboard/shop/edit/{id}', name: 'app_admin_dashboard_shops_edit')]
-//    public function shopsEdit(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
-//    {
-//        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-//        $dashboardType = 'Shop';
-//
-//        //Check if an id has been selected
-//        if (!$id) {
-//            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before editing.");
-//            return $this->redirectToRoute('app_admin_dashboard');
-//        }
-//
-//        $shop = $entityManager->getRepository(Shop::class)->find($id);
-//
-//        //Check if an entity has been selected
-//        if (!$quest) {
-//            $this->addFlash('warning', "Please select an existing $dashboardType before editing.");
-//            return $this->redirectToRoute('app_admin_dashboard');
-//        }
-//
-//        $form = $this->createForm(QuestType::class, $shop);
-//        $form->add('submit', SubmitType::class, [
-//            'label' => "Edit $dashboardType"
-//        ]);
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $formData = $form->getData();
-//            $entityManager->persist($formData);
-//            $entityManager->flush();
-//            $this->addFlash('success', "Successfully edited {$dashboardType}!");
-//            return $this->redirectToRoute('app_admin_dashboard_quests');
-//        }
-//
-//        return $this->render('admin/create.html.twig', [
-//            'bannerTitle' => "TPOTDR | $dashboardType Editor",
-//            'form' => $form,
-//        ]);
-//    }
-//
-//    #[Route('/admin/dashboard/quest/delete/{id}', name: 'app_admin_dashboard_quests_delete')]
-//    public function questsDelete(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
-//    {
-//        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-//        $dashboardType = 'Quest';
-//
-//        //Check if an id has been selected
-//        if (!$id) {
-//            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before deleting.");
-//            return $this->redirectToRoute('app_admin_dashboard');
-//        }
-//
-//        $quest = $entityManager->getRepository(Quest::class)->find($id);
-//
-//        //Check if an entity has been selected
-//        if (!$quest) {
-//            $this->addFlash('warning', "Please select an existing $dashboardType before deleting.");
-//            return $this->redirectToRoute('app_admin_dashboard');
-//        }
-//
-//        $deleteBtn = $this->createForm(DeleteSubmitType::class);
-//        $deleteBtn->handleRequest($request);
-//
-//        if ($deleteBtn->isSubmitted() && $deleteBtn->isValid()) {
-//            $entityManager->remove($quest);
-//            $entityManager->flush();
-//            $this->addFlash('success', "Successfully deleted $dashboardType");
-//            return $this->redirectToRoute('app_admin_dashboard_quests');
-//        }
-//
-//        return $this->render('admin/delete.html.twig', [
-//            'bannerTitle' => "TPOTDR | $dashboardType Editor",
-//            'dashboardItem' => $quest,
-//            'confirmBtn' => $deleteBtn,
-//        ]);
-//    }
+    #[Route('/admin/dashboard/shop', name: 'app_admin_dashboard_shops')]
+    public function shops(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $shops = $entityManager->getRepository(Shop::class)->findAll();
+
+        return $this->render('admin/read.html.twig', [
+            'bannerTitle' => "TPOTDR | Quest Editor",
+            'dashboardItems' => $shops,
+            'deleteName' => 'app_admin_dashboard_shops_delete',
+            'editName' => 'app_admin_dashboard_shops_edit',
+            'createName' => 'app_admin_dashboard_shops_create'
+        ]);
+    }
+
+    #[Route('/admin/dashboard/shop/create', name: 'app_admin_dashboard_shops_create')]
+    public function shopsCreate(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Shop';
+
+        $form = $this->createForm(ShopType::class);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Create {$dashboardType}"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully added {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_shops');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/shop/edit/{id}', name: 'app_admin_dashboard_shops_edit')]
+    public function shopsEdit(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Shop';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $shop = $entityManager->getRepository(Shop::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$shop) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before editing.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $form = $this->createForm(ShopType::class, $shop);
+        $form->add('submit', SubmitType::class, [
+            'label' => "Edit $dashboardType"
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $entityManager->persist($formData);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully edited {$dashboardType}!");
+            return $this->redirectToRoute('app_admin_dashboard_shops');
+        }
+
+        return $this->render('admin/create.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/dashboard/shop/delete/{id}', name: 'app_admin_dashboard_shops_delete')]
+    public function shopsDelete(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $dashboardType = 'Shop';
+
+        //Check if an id has been selected
+        if (!$id) {
+            $this->addFlash('warning', "Please select a valid $dashboardType identifier (ID) before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $shop = $entityManager->getRepository(Shop::class)->find($id);
+
+        //Check if an entity has been selected
+        if (!$shop) {
+            $this->addFlash('warning', "Please select an existing $dashboardType before deleting.");
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        $deleteBtn = $this->createForm(DeleteSubmitType::class);
+        $deleteBtn->handleRequest($request);
+
+        if ($deleteBtn->isSubmitted() && $deleteBtn->isValid()) {
+            $entityManager->remove($shop);
+            $entityManager->flush();
+            $this->addFlash('success', "Successfully deleted $dashboardType");
+            return $this->redirectToRoute('app_admin_dashboard_shops');
+        }
+
+        return $this->render('admin/delete.html.twig', [
+            'bannerTitle' => "TPOTDR | $dashboardType Editor",
+            'dashboardItem' => $shop,
+            'confirmBtn' => $deleteBtn,
+        ]);
+    }
 
     /*
      *  QUEST CRUD

@@ -14,7 +14,7 @@ class RarityType extends AbstractType
         $builder
             ->add('name')
             ->add('chanceIn', null, [
-                'label' => 'Chance in (1 in ...)'
+                'label' => 'Chance in (... in 100)'
             ])
         ;
     }
