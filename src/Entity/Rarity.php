@@ -27,7 +27,11 @@ class Rarity
     private ?string $name = null;
 
     #[Assert\NotNull]
-    #[Assert\PositiveOrZero]
+    #[Assert\Range(
+        notInRangeMessage: 'Minimum chance is {{ min }}% and maximum chance is {{ max }}%',
+        min: 0,
+        max: 100
+    )]
     #[ORM\Column]
     private ?int $chanceIn = null;
 

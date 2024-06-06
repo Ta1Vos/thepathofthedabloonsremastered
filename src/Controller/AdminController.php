@@ -845,7 +845,13 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_admin_dashboard');
         }
 
+        $chanceIn = $rarity->getChanceIn();
+
         $form = $this->createForm(RarityType::class, $rarity);
+        $form->remove('chanceIn');
+        $form->add('chanceIn', null, [
+            'label' => "Chance in ($chanceIn in 100) ($chanceIn%)"
+        ]);
         $form->add('submit', SubmitType::class, [
             'label' => "Edit $dashboardType"
         ]);
