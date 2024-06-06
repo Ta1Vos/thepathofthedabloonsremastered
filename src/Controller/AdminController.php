@@ -921,7 +921,7 @@ class AdminController extends AbstractController
         $shops = $entityManager->getRepository(Shop::class)->findAll();
 
         return $this->render('admin/read.html.twig', [
-            'bannerTitle' => "TPOTDR | Quest Editor",
+            'bannerTitle' => "TPOTDR | Shop Editor",
             'dashboardItems' => $shops,
             'deleteName' => 'app_admin_dashboard_shops_delete',
             'editName' => 'app_admin_dashboard_shops_edit',

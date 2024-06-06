@@ -21,11 +21,15 @@ class ShopType extends AbstractType
             ->add('itemAmount')
             ->add('rarity', EntityType::class, [
                 'class' => Rarity::class,
-                'choice_label' => 'id',
+                'choice_label' => function (Rarity $entity) {
+                    return $entity->getId() . ': ' . $entity->getName();
+                },
             ])
             ->add('guaranteedItems', EntityType::class, [
                 'class' => Item::class,
-                'choice_label' => 'id',
+                'choice_label' => function (Item $entity) {
+                    return $entity->getId() . ': ' . $entity->getName();
+                },
                 'multiple' => true,
             ])
         ;
