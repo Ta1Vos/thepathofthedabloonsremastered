@@ -22,6 +22,7 @@ class ItemType extends AbstractType
                 'required' => false,
                 'label' => 'Is Weapon'
             ])
+            ->add('defeatChance')
             ->add('description')
             ->add('rarity', EntityType::class, [
                 'class' => Rarity::class,

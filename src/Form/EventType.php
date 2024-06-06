@@ -40,6 +40,7 @@ class EventType extends AbstractType
                 },
                 'multiple' => true,
             ])
+            ->add('shop')
             ->add('worlds', EntityType::class, [
                 'class' => World::class,
                 'choice_label' => function (World $entity) {

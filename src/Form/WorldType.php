@@ -17,8 +17,8 @@ class WorldType extends AbstractType
             ->add('name')
             ->add('distanceLimit')
             ->add('events', EntityType::class, [
-                'class' => World::class,
-                'choice_label' => function (World $entity) {
+                'class' => Event::class,
+                'choice_label' => function (Event $entity) {
                     return $entity->getId() . ': ' . $entity->getName();
                 },
                 'multiple' => true,

@@ -23,6 +23,9 @@ class DialogueType extends AbstractType
                 },
                 'multiple' => true,
             ])
+            ->add('nextEvent', null, [
+                'label' => 'Force event'
+            ])
         ;
     }
 

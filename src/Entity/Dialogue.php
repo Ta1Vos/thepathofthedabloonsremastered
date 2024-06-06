@@ -36,6 +36,9 @@ class Dialogue
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'dialogues')]
     private Collection $events;
 
+    #[ORM\ManyToOne(inversedBy: 'previousForcedDialogue')]
+    private ?Event $nextEvent = null;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
@@ -93,6 +96,18 @@ class Dialogue
         if ($this->events->removeElement($event)) {
             $event->removeDialogue($this);
         }
+
+        return $this;
+    }
+
+    public function getNextEvent(): ?Event
+    {
+        return $this->nextEvent;
+    }
+
+    public function setNextEvent(?Event $nextEvent): static
+    {
+        $this->nextEvent = $nextEvent;
 
         return $this;
     }

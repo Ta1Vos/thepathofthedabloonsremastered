@@ -20,7 +20,6 @@ class EffectType extends AbstractType
             ->add('debuffDuration', null, [
                 'label' => 'Debuff duration (amount of events passed)'
             ])
-            ->add('debuffs')
             ->add('items', EntityType::class, [
                 'class' => Item::class,
                 'choice_label' => function (Item $entity) {

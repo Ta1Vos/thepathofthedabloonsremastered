@@ -63,11 +63,18 @@ class Item
     #[ORM\Column(nullable: true)]
     private ?int $defeatChance = null;
 
+    /**
+     * @var Collection<int, Shop>
+     */
+    #[ORM\ManyToMany(targetEntity: Shop::class, mappedBy: 'guaranteedItems')]
+    private Collection $shops;
+
     public function __construct()
     {
         $this->inventorySlots = new ArrayCollection();
         $this->effects = new ArrayCollection();
         $this->quests = new ArrayCollection();
+        $this->shops = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -227,6 +234,33 @@ class Item
     public function setDefeatChance(?int $defeatChance): static
     {
         $this->defeatChance = $defeatChance;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Shop>
+     */
+    public function getShops(): Collection
+    {
+        return $this->shops;
+    }
+
+    public function addShop(Shop $shop): static
+    {
+        if (!$this->shops->contains($shop)) {
+            $this->shops->add($shop);
+            $shop->addGuaranteedItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeShop(Shop $shop): static
+    {
+        if ($this->shops->removeElement($shop)) {
+            $shop->removeGuaranteedItem($this);
+        }
 
         return $this;
     }
