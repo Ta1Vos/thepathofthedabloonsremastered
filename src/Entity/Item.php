@@ -60,6 +60,9 @@ class Item
     #[ORM\OneToMany(targetEntity: Quest::class, mappedBy: 'rewardedItem')]
     private Collection $quests;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $defeatChance = null;
+
     public function __construct()
     {
         $this->inventorySlots = new ArrayCollection();
@@ -212,6 +215,18 @@ class Item
                 $quest->setRewardedItem(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDefeatChance(): ?int
+    {
+        return $this->defeatChance;
+    }
+
+    public function setDefeatChance(?int $defeatChance): static
+    {
+        $this->defeatChance = $defeatChance;
 
         return $this;
     }

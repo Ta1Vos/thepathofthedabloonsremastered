@@ -42,10 +42,6 @@ class Effect
     #[ORM\Column]
     private ?int $debuffDuration = null;
 
-    //THERE HAS TO BE A DIRECT LINK WITH PLAYER PROPERTIES, ASK THE TEACHER HOW TO LINK IT THROUGH A VARIABLE.
-    #[ORM\Column(type: Types::ARRAY)]
-    private array $debuffs = [];
-
     /**
      * @var Collection<int, Item>
      */
@@ -101,18 +97,6 @@ class Effect
     public function setDebuffDuration(int $debuffDuration): static
     {
         $this->debuffDuration = $debuffDuration;
-
-        return $this;
-    }
-
-    public function getDebuffs(): array
-    {
-        return $this->debuffs;
-    }
-
-    public function setDebuffs(array $debuffs): static
-    {
-        $this->debuffs = $debuffs;
 
         return $this;
     }

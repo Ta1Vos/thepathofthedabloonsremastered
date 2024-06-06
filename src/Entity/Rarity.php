@@ -41,6 +41,15 @@ class Rarity
     #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'rarity')]
     private Collection $items;
 
+    #[Assert\NotNull]
+    #[Assert\Type(
+        type: 'integer',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
+    #[Assert\Unique]
+    #[ORM\Column]
+    private ?int $priority = null;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -101,6 +110,18 @@ class Rarity
                 $item->setRarity(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPriority(): ?int
+    {
+        return $this->priority;
+    }
+
+    public function setPriority(int $priority): static
+    {
+        $this->priority = $priority;
 
         return $this;
     }

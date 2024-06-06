@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240605080903 extends AbstractMigration
+final class Version20240606100202 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,14 +20,14 @@ final class Version20240605080903 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE item DROP debuff_severity, DROP debuff_duration');
-        $this->addSql('ALTER TABLE quest ADD name VARCHAR(255) NOT NULL, CHANGE is_completed is_completed TINYINT(1) NOT NULL');
+        $this->addSql('ALTER TABLE item ADD defeat_chance INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE rarity ADD priority INT NOT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE item ADD debuff_severity VARCHAR(10) DEFAULT NULL, ADD debuff_duration INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE quest DROP name, CHANGE is_completed is_completed TINYINT(1) DEFAULT NULL');
+        $this->addSql('ALTER TABLE item DROP defeat_chance');
+        $this->addSql('ALTER TABLE rarity DROP priority');
     }
 }
