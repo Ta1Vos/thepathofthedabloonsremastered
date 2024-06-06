@@ -40,6 +40,16 @@ class Shop
     #[ORM\ManyToMany(targetEntity: Item::class, inversedBy: 'shops')]
     private Collection $guaranteedItems;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 1,
+        max: 255,
+        minMessage: 'Quest name must be at least {{ limit }} characters long',
+        maxMessage: 'Quest name cannot be longer than {{ limit }} characters'
+    )]
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->linkedEvents = new ArrayCollection();
@@ -149,6 +159,18 @@ class Shop
     public function removeGuaranteedItem(Item $guaranteedItem): static
     {
         $this->guaranteedItems->removeElement($guaranteedItem);
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }
