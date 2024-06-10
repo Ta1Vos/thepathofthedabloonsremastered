@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Effect;
 use App\Entity\Item;
 use App\Entity\Rarity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -13,7 +14,7 @@ class ItemFixtures extends Fixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $common = $manager->getRepository(Rarity::class)->findOneBy(['name' => 'Common']);
-        $heal10 = $manager->getRepository(Rarity::class)->findOneBy(['name' => 'heal 10 hp']);
+        $heal10 = $manager->getRepository(Effect::class)->findOneBy(['name' => 'heal 10hp']);
 
          $item = new Item();
          $item->setName('Twig');
@@ -31,7 +32,7 @@ class ItemFixtures extends Fixture implements OrderedFixtureInterface
         $item->setIsWeapon(false);
 //        $item->setDefeatChance(30);
         $item->setRarity($common);
-         $item->addEffect($heal10);
+        $item->addEffect($heal10);
         $item->setDescription("Heal {$heal10->getDebuffSeverity()} hp. Yummy!");
         $manager->persist($item);
 
@@ -40,6 +41,6 @@ class ItemFixtures extends Fixture implements OrderedFixtureInterface
 
     public function getOrder(): int
     {
-        return 10; // This will be loaded first
+        return 5;
     }
 }
