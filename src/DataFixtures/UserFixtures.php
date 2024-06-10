@@ -4,9 +4,10 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class UserFixtures extends Fixture
+class UserFixtures extends Fixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -35,5 +36,10 @@ class UserFixtures extends Fixture
         $manager->persist($user);
 
         $manager->flush();
+    }
+
+    public function getOrder(): int
+    {
+        return 1; // This will be loaded first
     }
 }

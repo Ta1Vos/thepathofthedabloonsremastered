@@ -4,9 +4,10 @@ namespace App\DataFixtures;
 
 use App\Entity\Rarity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class RarityFixtures extends Fixture
+class RarityFixtures extends Fixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -43,5 +44,10 @@ class RarityFixtures extends Fixture
         $manager->persist($rarity);
 
         $manager->flush();
+    }
+
+    public function getOrder(): int
+    {
+        return 1; // This will be loaded first
     }
 }

@@ -4,9 +4,10 @@ namespace App\DataFixtures;
 
 use App\Entity\World;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class WorldFixtures extends Fixture
+class WorldFixtures extends Fixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -78,5 +79,10 @@ class WorldFixtures extends Fixture
         $manager->persist($world);
 
         $manager->flush();
+    }
+
+    public function getOrder(): int
+    {
+        return 1; // This will be loaded first
     }
 }
