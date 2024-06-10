@@ -6,9 +6,11 @@ use App\Repository\RarityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RarityRepository::class)]
+#[UniqueEntity(fields: ['priority'], message: 'This priority is already in use.')]
 class Rarity
 {
     #[ORM\Id]
@@ -46,9 +48,8 @@ class Rarity
         type: 'integer',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
-    #[Assert\Unique]
-    #[ORM\Column]
-    private ?int $priority = null;
+    #[ORM\Column(unique: true)]
+    private ?int $priority;
 
     /**
      * @var Collection<int, Shop>
@@ -126,7 +127,7 @@ class Rarity
         return $this->priority;
     }
 
-    public function setPriority(int $priority): static
+    public function setPriority(int $priority): self
     {
         $this->priority = $priority;
 
