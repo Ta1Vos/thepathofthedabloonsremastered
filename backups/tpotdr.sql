@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 30 mei 2024 om 08:38
+-- Gegenereerd op: 10 jun 2024 om 13:36
 -- Serverversie: 10.4.32-MariaDB
 -- PHP-versie: 8.2.12
 
@@ -45,7 +45,8 @@ DROP TABLE IF EXISTS `dialogue`;
 CREATE TABLE `dialogue` (
   `id` int(11) NOT NULL,
   `dialogue_text` longtext NOT NULL,
-  `name` varchar(255) DEFAULT NULL
+  `name` varchar(255) DEFAULT NULL,
+  `next_event_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -71,7 +72,8 @@ INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_
 ('DoctrineMigrations\\Version20240426075216', '2024-05-28 13:12:33', 2342),
 ('DoctrineMigrations\\Version20240426091136', '2024-05-28 13:12:36', 432),
 ('DoctrineMigrations\\Version20240426094421', '2024-05-28 13:12:36', 15),
-('DoctrineMigrations\\Version20240528111215', '2024-05-28 13:12:36', 10);
+('DoctrineMigrations\\Version20240528111215', '2024-05-28 13:12:36', 10),
+('DoctrineMigrations\\Version20240610113623', '2024-06-10 13:36:28', 1010);
 
 -- --------------------------------------------------------
 
@@ -84,8 +86,7 @@ CREATE TABLE `effect` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `debuff_severity` varchar(10) NOT NULL,
-  `debuff_duration` int(11) NOT NULL,
-  `debuffs` longtext NOT NULL COMMENT '(DC2Type:array)'
+  `debuff_duration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -98,7 +99,8 @@ DROP TABLE IF EXISTS `event`;
 CREATE TABLE `event` (
   `id` int(11) NOT NULL,
   `event_text` longtext NOT NULL,
-  `name` varchar(255) NOT NULL
+  `name` varchar(255) NOT NULL,
+  `shop_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -192,8 +194,7 @@ CREATE TABLE `item` (
   `price` int(11) DEFAULT NULL,
   `is_weapon` tinyint(1) NOT NULL,
   `description` longtext NOT NULL,
-  `debuff_severity` varchar(10) DEFAULT NULL,
-  `debuff_duration` int(11) DEFAULT NULL,
+  `defeat_chance` int(11) DEFAULT NULL,
   `rarity_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -260,6 +261,20 @@ CREATE TABLE `player` (
 -- --------------------------------------------------------
 
 --
+-- Tabelstructuur voor tabel `player_effect`
+--
+
+DROP TABLE IF EXISTS `player_effect`;
+CREATE TABLE `player_effect` (
+  `id` int(11) NOT NULL,
+  `player_id` int(11) DEFAULT NULL,
+  `effect_id` int(11) DEFAULT NULL,
+  `debuff_duration` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Tabelstructuur voor tabel `quest`
 --
 
@@ -270,7 +285,8 @@ CREATE TABLE `quest` (
   `dabloon_reward` int(11) NOT NULL,
   `is_completed` tinyint(1) NOT NULL,
   `rewarded_item_id` int(11) DEFAULT NULL,
-  `single_completion` tinyint(1) NOT NULL
+  `single_completion` tinyint(1) NOT NULL,
+  `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -283,7 +299,36 @@ DROP TABLE IF EXISTS `rarity`;
 CREATE TABLE `rarity` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `chance_in` int(11) NOT NULL
+  `chance_in` int(11) NOT NULL,
+  `priority` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `shop`
+--
+
+DROP TABLE IF EXISTS `shop`;
+CREATE TABLE `shop` (
+  `id` int(11) NOT NULL,
+  `rarity_id` int(11) NOT NULL,
+  `additional_luck` int(11) NOT NULL,
+  `additional_price` int(11) NOT NULL,
+  `item_amount` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `shop_item`
+--
+
+DROP TABLE IF EXISTS `shop_item`;
+CREATE TABLE `shop_item` (
+  `shop_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -342,7 +387,8 @@ ALTER TABLE `accepted_quest`
 -- Indexen voor tabel `dialogue`
 --
 ALTER TABLE `dialogue`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_F18A1C3949EDA465` (`next_event_id`);
 
 --
 -- Indexen voor tabel `doctrine_migration_versions`
@@ -360,7 +406,8 @@ ALTER TABLE `effect`
 -- Indexen voor tabel `event`
 --
 ALTER TABLE `event`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_3BAE0AA74D16C4DD` (`shop_id`);
 
 --
 -- Indexen voor tabel `event_dialogue`
@@ -449,6 +496,14 @@ ALTER TABLE `player`
   ADD KEY `IDX_98197A658925311C` (`world_id`);
 
 --
+-- Indexen voor tabel `player_effect`
+--
+ALTER TABLE `player_effect`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_2960072C99E6F5DF` (`player_id`),
+  ADD KEY `IDX_2960072CF5E9B83B` (`effect_id`);
+
+--
 -- Indexen voor tabel `quest`
 --
 ALTER TABLE `quest`
@@ -460,6 +515,21 @@ ALTER TABLE `quest`
 --
 ALTER TABLE `rarity`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexen voor tabel `shop`
+--
+ALTER TABLE `shop`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_AC6A4CA2F3747573` (`rarity_id`);
+
+--
+-- Indexen voor tabel `shop_item`
+--
+ALTER TABLE `shop_item`
+  ADD PRIMARY KEY (`shop_id`,`item_id`),
+  ADD KEY `IDX_DEE9C3654D16C4DD` (`shop_id`),
+  ADD KEY `IDX_DEE9C365126F525E` (`item_id`);
 
 --
 -- Indexen voor tabel `user`
@@ -540,6 +610,12 @@ ALTER TABLE `player`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT voor een tabel `player_effect`
+--
+ALTER TABLE `player_effect`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT voor een tabel `quest`
 --
 ALTER TABLE `quest`
@@ -549,6 +625,12 @@ ALTER TABLE `quest`
 -- AUTO_INCREMENT voor een tabel `rarity`
 --
 ALTER TABLE `rarity`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT voor een tabel `shop`
+--
+ALTER TABLE `shop`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -573,6 +655,18 @@ ALTER TABLE `world`
 ALTER TABLE `accepted_quest`
   ADD CONSTRAINT `FK_C90641CA209E9EF4` FOREIGN KEY (`quest_id`) REFERENCES `quest` (`id`),
   ADD CONSTRAINT `FK_C90641CA99E6F5DF` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`);
+
+--
+-- Beperkingen voor tabel `dialogue`
+--
+ALTER TABLE `dialogue`
+  ADD CONSTRAINT `FK_F18A1C3949EDA465` FOREIGN KEY (`next_event_id`) REFERENCES `event` (`id`);
+
+--
+-- Beperkingen voor tabel `event`
+--
+ALTER TABLE `event`
+  ADD CONSTRAINT `FK_3BAE0AA74D16C4DD` FOREIGN KEY (`shop_id`) REFERENCES `shop` (`id`);
 
 --
 -- Beperkingen voor tabel `event_dialogue`
@@ -642,10 +736,30 @@ ALTER TABLE `player`
   ADD CONSTRAINT `FK_98197A65A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
+-- Beperkingen voor tabel `player_effect`
+--
+ALTER TABLE `player_effect`
+  ADD CONSTRAINT `FK_2960072C99E6F5DF` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`),
+  ADD CONSTRAINT `FK_2960072CF5E9B83B` FOREIGN KEY (`effect_id`) REFERENCES `effect` (`id`);
+
+--
 -- Beperkingen voor tabel `quest`
 --
 ALTER TABLE `quest`
   ADD CONSTRAINT `FK_4317F817843BB51E` FOREIGN KEY (`rewarded_item_id`) REFERENCES `item` (`id`);
+
+--
+-- Beperkingen voor tabel `shop`
+--
+ALTER TABLE `shop`
+  ADD CONSTRAINT `FK_AC6A4CA2F3747573` FOREIGN KEY (`rarity_id`) REFERENCES `rarity` (`id`);
+
+--
+-- Beperkingen voor tabel `shop_item`
+--
+ALTER TABLE `shop_item`
+  ADD CONSTRAINT `FK_DEE9C365126F525E` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_DEE9C3654D16C4DD` FOREIGN KEY (`shop_id`) REFERENCES `shop` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
