@@ -14,12 +14,14 @@ class RarityType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('priority', NumberType::class, [
+                'help_html' => true,
+                'help' => "Priority = The lowest number will be used first. Example: If Common(1) fails, it will try Uncommon(2), then Rare(3), etc. <br> 
+                    <small>Negative numbers will <b>NOT</b> be part of the priority system and can be used to exclude rarities from naturally obtaining.</small>"
+            ])
             ->add('chanceIn', null, [
                 'label' => 'Chance in',
-                'help' => '{Chance}% in 100%'
-            ])
-            ->add('priority', NumberType::class, [
-                'help' => 'Priority = The lowest number will be used first. Example: If Common(1) fails, it will try Uncommon(2), then Rare(3), etc..'
+                'help' => '(... in 100)'
             ])
         ;
     }

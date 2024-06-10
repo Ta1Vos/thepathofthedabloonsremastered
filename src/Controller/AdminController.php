@@ -852,7 +852,8 @@ class AdminController extends AbstractController
         $form = $this->createForm(RarityType::class, $rarity);
         $form->remove('chanceIn');
         $form->add('chanceIn', null, [
-            'label' => "Chance in ($chanceIn in 100) ($chanceIn%)"
+            'label' => 'Chance in',
+            'help' => "($chanceIn in 100) ($chanceIn%)"
         ]);
         $form->add('submit', SubmitType::class, [
             'label' => "Edit $dashboardType"
