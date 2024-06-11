@@ -6,6 +6,7 @@ use App\Entity\Dialogue;
 use App\Entity\Effect;
 use App\Entity\Event;
 use App\Entity\Option;
+use App\Entity\Shop;
 use App\Entity\World;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -40,7 +41,12 @@ class EventType extends AbstractType
                 },
                 'multiple' => true,
             ])
-            ->add('shop')
+            ->add('shop', EntityType::class, [
+                'class' => Shop::class,
+                'choice_label' => function (Shop $entity) {
+                    return $entity->getId() . ': ' . $entity->getName();
+                }
+            ])
             ->add('worlds', EntityType::class, [
                 'class' => World::class,
                 'choice_label' => function (World $entity) {
