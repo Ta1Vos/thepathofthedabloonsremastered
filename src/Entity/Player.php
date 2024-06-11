@@ -246,7 +246,12 @@ class Player
         $playerEffect->setEffect($effect);
         $playerEffect->setDebuffDuration($effect->getDebuffDuration());
 
+        $this->addPlayerEffect($playerEffect);
+        $effect->addPlayerEffect($playerEffect);
+
         $entityManager->persist($playerEffect);
+        $entityManager->persist($this);
+        $entityManager->persist($effect);
 
         return $playerEffect;
     }
@@ -316,10 +321,8 @@ class Player
                 $entityManager->persist($playerEffect);
             }
             $entityManager->persist($player);
-
-            return $player;
         }
 
-        return null;
+        return $player;
     }
 }

@@ -44,10 +44,9 @@ class GameController extends AbstractController
     #[Route('/game/test', name: 'app_testing')]
     public function test(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $players = $this->getUser()->getPlayers();
-        $player = $players[0];
+        $player = $entityManager->getRepository(Player::class)->find(2);
 
-        $effect = $entityManager->getRepository(Effect::class)->find(5);
+        $effect = $entityManager->getRepository(Effect::class)->find(4);
         $player->createPlayerEffect($effect, $entityManager);
         $entityManager->flush();
 
@@ -57,8 +56,7 @@ class GameController extends AbstractController
     #[Route('/game/update', name: 'app_update')]
     public function update(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $players = $this->getUser()->getPlayers();
-        $player = $players[0];
+        $player = $entityManager->getRepository(Player::class)->find(2);
 
         $player->updatePlayerEffects($entityManager);
         $entityManager->flush();
