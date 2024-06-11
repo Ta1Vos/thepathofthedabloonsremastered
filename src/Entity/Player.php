@@ -282,7 +282,7 @@ class Player
      * @param EntityManagerInterface $entityManager
      * @return void
      */
-    public function updatePlayerEffects(EntityManagerInterface $entityManager): void
+    public function updatePlayerEffects(EntityManagerInterface $entityManager): ?Player
     {
         $player = $this;
         foreach ($this->getPlayerEffects() as $playerEffect) {//Loop through Player Effects to apply all effect changes if the duration is longer.
@@ -312,9 +312,14 @@ class Player
 
             if ($debuffDuration <= 0) {//If effect duration reaches 0, remove the effect.
                 $entityManager->remove($playerEffect);
+            } else {
+                $entityManager->persist($playerEffect);
             }
+            $entityManager->persist($player);
 
-            $entityManager->persist($playerEffect);
+            return $player;
         }
+
+        return null;
     }
 }

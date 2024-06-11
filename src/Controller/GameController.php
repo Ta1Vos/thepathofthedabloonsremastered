@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Effect;
 use App\Entity\GameOption;
 use App\Entity\Player;
+use App\Entity\World;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,16 +24,43 @@ class GameController extends AbstractController
 //        $gameOptions->setLuckEnabled(true);
 
         $player = new Player();
+        $world = $entityManager->getRepository(World::class)->findOneBy(['distanceLimit' => 0]);
 
         //Define Player variables
         $player->setUser($this->getUser());
         $player->setInventoryMax(2);
         $player->setHealth(100);
-//        $player->setWorld(0);
+        $player->setWorld($world);
         $player->setDistance(0);
         $player->setDabloons(0);
+        $player->setLastSave(new \DateTime());
 
         $entityManager->persist($player);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/game/test', name: 'app_testing')]
+    public function test(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $players = $this->getUser()->getPlayers();
+        $player = $players[0];
+
+        $effect = $entityManager->getRepository(Effect::class)->find(5);
+        $player->createPlayerEffect($effect, $entityManager);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/game/update', name: 'app_update')]
+    public function update(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $players = $this->getUser()->getPlayers();
+        $player = $players[0];
+
+        $player->updatePlayerEffects($entityManager);
         $entityManager->flush();
 
         return $this->redirectToRoute('app_home');
