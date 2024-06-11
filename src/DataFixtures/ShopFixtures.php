@@ -26,7 +26,7 @@ class ShopFixtures extends Fixture implements OrderedFixtureInterface
     }
     public function getOrder(): int
     {
-        return 10;
+        return 9;
     }
 
 }
