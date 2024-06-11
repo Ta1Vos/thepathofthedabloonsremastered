@@ -281,6 +281,7 @@ class Player
             $debuffDuration = $playerEffect->getDebuffDuration();
 
             //Check through the available changeable properties and change the player.
+            //!!!IF THIS CASE GETS UPDATED, BE SURE TO UPDATE THE EFFECTTYPE FORM PLAYER PROPERTY!!!
             switch ($property) {
                 case 'health':
                     $player->setHealth($player->getHealth() + $changeValue);
