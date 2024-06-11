@@ -240,6 +240,17 @@ class Player
         return $this->playerEffects;
     }
 
+    public function createPlayerEffect(Effect $effect, EntityManagerInterface $entityManager): PlayerEffect {
+        $playerEffect = new PlayerEffect();
+        $playerEffect->setPlayer($this);
+        $playerEffect->setEffect($effect);
+        $playerEffect->setDebuffDuration($effect->getDebuffDuration());
+
+        $entityManager->persist($playerEffect);
+
+        return $playerEffect;
+    }
+
     public function addPlayerEffect(PlayerEffect $playerEffect): static
     {
         if (!$this->playerEffects->contains($playerEffect)) {
