@@ -37,7 +37,8 @@ class EffectType extends AbstractType
                 'label' => 'Debuff duration (amount of events passed)',
                 'attr' => [
                     'value' => 1
-                ]
+                ],
+                'help' => "The effect will affect the player every event. Example: 2 event duration, 2 dabloons, in total 4 dabloons."
             ])
             ->add('items', EntityType::class, [
                 'class' => Item::class,
