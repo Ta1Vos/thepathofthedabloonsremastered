@@ -33,7 +33,7 @@ class ItemFixtures extends Fixture implements OrderedFixtureInterface
 //        $item->setDefeatChance(30);
         $item->setRarity($common);
         $item->addEffect($heal10);
-        $item->setDescription("Heal {$heal10->getDebuffSeverity()} hp. Yummy!");
+        $item->setDescription("Heal {$heal10->getEffectValueSeverity()} hp. Yummy!");
         $manager->persist($item);
 
         $manager->flush();

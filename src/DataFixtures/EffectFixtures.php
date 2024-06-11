@@ -14,7 +14,7 @@ class EffectFixtures extends Fixture implements OrderedFixtureInterface
         $effect = new Effect();
         $effect->setName('heal 10hp');
         $effect->setDebuffDuration(1);
-        $effect->setDebuffSeverity('10');
+        $effect->setEffectValueSeverity(10);
         $manager->persist($effect);
 
         $manager->flush();
