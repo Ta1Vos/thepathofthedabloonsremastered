@@ -27,15 +27,7 @@ class Effect
     #[ORM\Column(length: 100)]
     private ?string $name = null;
 
-    #[Assert\NotBlank]
-    #[Assert\Length(
-        min: 1,
-        max: 10,
-        minMessage: 'Debuff severity must be at least {{ limit }} characters long',
-        maxMessage: 'Debuff severity cannot be longer than {{ limit }} characters'
-    )]
-    #[ORM\Column(length: 10)]
-    private ?string $debuffSeverity = null;
+    //TRY TO IMPLEMENT PLAYERSTAT TYPE IN HERE INSTEAD OF USING SEPARATE ENTITY
 
     #[Assert\NotNull]
     #[Assert\PositiveOrZero]
@@ -60,11 +52,11 @@ class Effect
     #[ORM\OneToMany(targetEntity: PlayerEffect::class, mappedBy: 'effect')]
     private Collection $playerEffects;
 
-    /**
-     * @var Collection<int, PropertyChanges>
-     */
-    #[ORM\ManyToMany(targetEntity: PropertyChanges::class, mappedBy: 'effects')]
-    private Collection $propertyChanges;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $affectedPlayerProperty = null;
+
+    #[ORM\Column]
+    private ?int $effectValueSeverity = null;
 
     public function __construct()
     {
@@ -87,18 +79,6 @@ class Effect
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getDebuffSeverity(): ?string
-    {
-        return $this->debuffSeverity;
-    }
-
-    public function setDebuffSeverity(string $debuffSeverity): static
-    {
-        $this->debuffSeverity = $debuffSeverity;
 
         return $this;
     }
@@ -199,29 +179,26 @@ class Effect
         return $this;
     }
 
-    /**
-     * @return Collection<int, PropertyChanges>
-     */
-    public function getPropertyChanges(): Collection
+    public function getAffectedPlayerProperty(): ?string
     {
-        return $this->propertyChanges;
+        return $this->affectedPlayerProperty;
     }
 
-    public function addPropertyChange(PropertyChanges $propertyChange): static
+    public function setAffectedPlayerProperty(?string $affectedPlayerProperty): static
     {
-        if (!$this->propertyChanges->contains($propertyChange)) {
-            $this->propertyChanges->add($propertyChange);
-            $propertyChange->addEffect($this);
-        }
+        $this->affectedPlayerProperty = $affectedPlayerProperty;
 
         return $this;
     }
 
-    public function removePropertyChange(PropertyChanges $propertyChange): static
+    public function getEffectValueSeverity(): ?int
     {
-        if ($this->propertyChanges->removeElement($propertyChange)) {
-            $propertyChange->removeEffect($this);
-        }
+        return $this->effectValueSeverity;
+    }
+
+    public function setEffectValueSeverity(int $effectValueSeverity): static
+    {
+        $this->effectValueSeverity = $effectValueSeverity;
 
         return $this;
     }
