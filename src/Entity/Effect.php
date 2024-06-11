@@ -60,11 +60,18 @@ class Effect
     #[ORM\OneToMany(targetEntity: PlayerEffect::class, mappedBy: 'effect')]
     private Collection $playerEffects;
 
+    /**
+     * @var Collection<int, PropertyChanges>
+     */
+    #[ORM\ManyToMany(targetEntity: PropertyChanges::class, mappedBy: 'effects')]
+    private Collection $propertyChanges;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
         $this->events = new ArrayCollection();
         $this->playerEffects = new ArrayCollection();
+        $this->propertyChanges = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -187,6 +194,33 @@ class Effect
             if ($playerEffect->getEffect() === $this) {
                 $playerEffect->setEffect(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PropertyChanges>
+     */
+    public function getPropertyChanges(): Collection
+    {
+        return $this->propertyChanges;
+    }
+
+    public function addPropertyChange(PropertyChanges $propertyChange): static
+    {
+        if (!$this->propertyChanges->contains($propertyChange)) {
+            $this->propertyChanges->add($propertyChange);
+            $propertyChange->addEffect($this);
+        }
+
+        return $this;
+    }
+
+    public function removePropertyChange(PropertyChanges $propertyChange): static
+    {
+        if ($this->propertyChanges->removeElement($propertyChange)) {
+            $propertyChange->removeEffect($this);
         }
 
         return $this;
