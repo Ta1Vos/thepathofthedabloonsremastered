@@ -18,6 +18,14 @@ class GameController extends AbstractController
     public function saveFileCreate(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+        $user = $this->getUser();
+
+        $players = $user->getPlayers();
+
+        if (count($players) >= 3) {
+            $this->addFlash('warning', 'You cannot have more than 3 save files. Delete one in order to create another one.');
+            return $this->redirectToRoute('app_home');
+        }
 
 //        $gameOptions = new GameOption();
 //        $gameOptions->setDialogueSkips(false);
