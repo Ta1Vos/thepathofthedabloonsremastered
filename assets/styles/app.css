@@ -67,4 +67,12 @@ body {
     height: 40vh;
 }
 
+.vh-50 {
+    height: 50vh;
+}
+
+.vh-60 {
+    height: 60vh;
+}
+
 /* Override classes */

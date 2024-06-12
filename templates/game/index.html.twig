@@ -1,20 +1,49 @@
 {% extends 'base.html.twig' %}
 
+{% block banner %}{% endblock %}
 {% block title %}Hello GameController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/xampp/htdocs/sd22-p08-symfony-project-x-Ta1Vos/src/Controller/GameController.php</code></li>
-        <li>Your template at <code>C:/xampp/htdocs/sd22-p08-symfony-project-x-Ta1Vos/templates/game/index.html.twig</code></li>
-    </ul>
-</div>
+    <div class="row mb-5">
+        <div class="col-3">
+            <div class="dabloon-counter">
+                <img class="img-fluid" src="{{ asset('img/logos/Dabloon.jpg') }}" alt="dabloon image">
+                <span class="dabloon-amount fs-2 fw-bold">[Number]</span>
+            </div>
+        </div>
+    </div>
+    <div class="row border border-5 border-black p-0 m-0">
+        <div class="col-12 col-lg-5 m-0 p-0">
+            <div class="w-100 h-75 dialog-box bg-darkgreen border border-2 border-black">
+                a
+            </div>
+            <div class="w-100 h-25 option-box bg-lightgreen border border-2 border-black">
+                a
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 m-0 p-0">
+            <div class="image-display">
+                <img class="img-fluid h-100" src="{{ asset('img/environments/forest-path.jpg') }}" alt="forest">
+            </div>
+        </div>
+        <div class="col-12 col-lg-3 m-0 p-0">
+            <div class="game-stats bg-darkgreen h-100">
+                <p class="luck">
+                    Luck: <span class="luck-counter">[Number]</span>
+                </p>
+                <p class="health">
+                    Health: <span class="health-counter">[Number]</span>
+                </p>
+                <p class="regeneration">
+                    Regeneration: <span class="regen-counter">[Number]</span>
+                </p>
+                <p class="poison">
+                    Poison: <span class="poison-counter">[Number]</span>
+                </p>
+                <p class="distance">
+                    Distance: <span class="distance-counter">[Number]</span>
+                </p>
+            </div>
+        </div>
+    </div>
 {% endblock %}

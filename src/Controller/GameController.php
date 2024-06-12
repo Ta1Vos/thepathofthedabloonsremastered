@@ -44,7 +44,9 @@ class GameController extends AbstractController
     #[Route('/game/ingame', name: 'app_game')]
     public function game(Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('game/index.html.twig');
+        return $this->render('game/index.html.twig', [
+            'overrideTitleMargin' => true
+        ]);
     }
 
     #[Route('/game/test', name: 'app_testing')]
