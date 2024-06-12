@@ -32,18 +32,12 @@ class Item
     #[ORM\Column(nullable: true)]
     private ?int $price = null;
 
-    #[Assert\NotNull]
-    #[Assert\Length(
-        min: 0,
-        max: 1,
-        minMessage: 'Use 0 for false, {{ limit }} is too low.',
-        maxMessage: 'Use 1 for true, {{ limit }} is too high.'
-    )]
-    #[ORM\Column]
+    #[ORM\Column(type: 'boolean')]
     private ?bool $isWeapon = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
+    private ?string $description;
 
     /**
      * @var Collection<int, InventorySlot>
@@ -66,11 +60,21 @@ class Item
     #[ORM\OneToMany(targetEntity: Quest::class, mappedBy: 'rewardedItem')]
     private Collection $quests;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $defeatChance = null;
+
+    /**
+     * @var Collection<int, Shop>
+     */
+    #[ORM\ManyToMany(targetEntity: Shop::class, mappedBy: 'guaranteedItems')]
+    private Collection $shops;
+
     public function __construct()
     {
         $this->inventorySlots = new ArrayCollection();
         $this->effects = new ArrayCollection();
         $this->quests = new ArrayCollection();
+        $this->shops = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -107,7 +111,7 @@ class Item
         return $this->isWeapon;
     }
 
-    public function setWeapon(bool $isWeapon): static
+    public function setIsWeapon(bool $isWeapon): self
     {
         $this->isWeapon = $isWeapon;
 
@@ -217,6 +221,45 @@ class Item
             if ($quest->getRewardedItem() === $this) {
                 $quest->setRewardedItem(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getDefeatChance(): ?int
+    {
+        return $this->defeatChance;
+    }
+
+    public function setDefeatChance(?int $defeatChance): static
+    {
+        $this->defeatChance = $defeatChance;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Shop>
+     */
+    public function getShops(): Collection
+    {
+        return $this->shops;
+    }
+
+    public function addShop(Shop $shop): static
+    {
+        if (!$this->shops->contains($shop)) {
+            $this->shops->add($shop);
+            $shop->addGuaranteedItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeShop(Shop $shop): static
+    {
+        if ($this->shops->removeElement($shop)) {
+            $shop->removeGuaranteedItem($this);
         }
 
         return $this;

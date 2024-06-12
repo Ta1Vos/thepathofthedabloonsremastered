@@ -11,6 +11,7 @@ use SebastianBergmann\CodeCoverage\Report\Text;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -21,6 +22,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -273,12 +275,15 @@ class ModeratorController extends AbstractController
                     ]),
                 ],
             ])
-            ->add('email', TextType::class, [
+            ->add('email', EmailType::class, [
                 'attr' => [
                     'placeholder' => $user->getEmail()
                 ],
                 'required' => false,
                 'constraints' => [
+                    new Email([
+                        'message' => 'The email {{ value }} is not a valid email.',
+                    ]),
                     new Length([
                         'min' => 0,
                         'minMessage' => 'Your email should be at least {{ limit }} characters',
@@ -288,7 +293,11 @@ class ModeratorController extends AbstractController
                 ],
             ])
             ->add('password', PasswordType::class, [
-                'label' => 'Password'
+                'label' => 'Password',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => '[Password]'
+                ]
             ])
             ->add('submitChange', SubmitType::class, [
                 'label' => 'Change info',
@@ -301,6 +310,15 @@ class ModeratorController extends AbstractController
 
         if ($forceInfoForm->isSubmitted() && $forceInfoForm->isValid()) {
             $formData = $forceInfoForm->getData();
+            $roles = $user->getRoles();
+
+            //Check if selected user is admin and if the moderator has admin permissions. Otherwise they cannot change info.
+            if (in_array('ROLE_ADMIN', $roles)) {
+                if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+                    $this->addFlash('danger', "WARNING! Insufficient permissions to change {$user->getUsername()}'s credentials.");
+                    return $this->redirectToRoute('app_mod_member_editing', ['id' => $id]);
+                }
+            }
 
             if (isset($formData['username']) && strlen($formData['username']) > 1) {
                 $username = $formData['username'];//Fetch username

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 30 mei 2024 om 08:38
+-- Gegenereerd op: 12 jun 2024 om 11:28
 -- Serverversie: 10.4.32-MariaDB
 -- PHP-versie: 8.2.12
 
@@ -44,9 +44,17 @@ CREATE TABLE `accepted_quest` (
 DROP TABLE IF EXISTS `dialogue`;
 CREATE TABLE `dialogue` (
   `id` int(11) NOT NULL,
+  `next_event_id` int(11) DEFAULT NULL,
   `dialogue_text` longtext NOT NULL,
   `name` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `dialogue`
+--
+
+INSERT INTO `dialogue` (`id`, `next_event_id`, `dialogue_text`, `name`) VALUES
+(1, NULL, 'Hello there dear traveler! How fortunate we cross eachother\'s path! Here are 2 dabloons as a gift! Lets hope we will meet again sometime!', 'traveler-dabloon2');
 
 -- --------------------------------------------------------
 
@@ -66,12 +74,7 @@ CREATE TABLE `doctrine_migration_versions` (
 --
 
 INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
-('DoctrineMigrations\\Version20240417104828', '2024-05-28 13:12:33', 331),
-('DoctrineMigrations\\Version20240424102111', '2024-05-28 13:12:33', 38),
-('DoctrineMigrations\\Version20240426075216', '2024-05-28 13:12:33', 2342),
-('DoctrineMigrations\\Version20240426091136', '2024-05-28 13:12:36', 432),
-('DoctrineMigrations\\Version20240426094421', '2024-05-28 13:12:36', 15),
-('DoctrineMigrations\\Version20240528111215', '2024-05-28 13:12:36', 10);
+('DoctrineMigrations\\Version20240612092709', '2024-06-12 11:28:02', 1151);
 
 -- --------------------------------------------------------
 
@@ -83,10 +86,17 @@ DROP TABLE IF EXISTS `effect`;
 CREATE TABLE `effect` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `debuff_severity` varchar(10) NOT NULL,
   `debuff_duration` int(11) NOT NULL,
-  `debuffs` longtext NOT NULL COMMENT '(DC2Type:array)'
+  `affected_player_property` varchar(255) DEFAULT NULL,
+  `effect_value_severity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `effect`
+--
+
+INSERT INTO `effect` (`id`, `name`, `debuff_duration`, `affected_player_property`, `effect_value_severity`) VALUES
+(1, 'heal 10hp', 1, NULL, 10);
 
 -- --------------------------------------------------------
 
@@ -97,9 +107,17 @@ CREATE TABLE `effect` (
 DROP TABLE IF EXISTS `event`;
 CREATE TABLE `event` (
   `id` int(11) NOT NULL,
+  `shop_id` int(11) DEFAULT NULL,
   `event_text` longtext NOT NULL,
   `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `event`
+--
+
+INSERT INTO `event` (`id`, `shop_id`, `event_text`, `name`) VALUES
+(1, NULL, 'You\'ve received 2 dabloons!', 'traveler1-dabloon2');
 
 -- --------------------------------------------------------
 
@@ -112,6 +130,13 @@ CREATE TABLE `event_dialogue` (
   `event_id` int(11) NOT NULL,
   `dialogue_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `event_dialogue`
+--
+
+INSERT INTO `event_dialogue` (`event_id`, `dialogue_id`) VALUES
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -137,6 +162,13 @@ CREATE TABLE `event_option` (
   `option_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Gegevens worden geëxporteerd voor tabel `event_option`
+--
+
+INSERT INTO `event_option` (`event_id`, `option_id`) VALUES
+(1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -158,9 +190,9 @@ CREATE TABLE `event_world` (
 DROP TABLE IF EXISTS `game_option`;
 CREATE TABLE `game_option` (
   `id` int(11) NOT NULL,
+  `player_id` int(11) NOT NULL,
   `luck_enabled` tinyint(1) NOT NULL,
-  `dialogue_skips` tinyint(1) NOT NULL,
-  `player_id` int(11) NOT NULL
+  `dialogue_skips` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -172,11 +204,11 @@ CREATE TABLE `game_option` (
 DROP TABLE IF EXISTS `inventory_slot`;
 CREATE TABLE `inventory_slot` (
   `id` int(11) NOT NULL,
+  `player_id` int(11) DEFAULT NULL,
+  `item_id` int(11) DEFAULT NULL,
   `effect_is_active` tinyint(1) NOT NULL,
   `debuff_severity` varchar(10) NOT NULL,
-  `debuff_duration` int(11) NOT NULL,
-  `player_id` int(11) DEFAULT NULL,
-  `item_id` int(11) DEFAULT NULL
+  `debuff_duration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -188,14 +220,21 @@ CREATE TABLE `inventory_slot` (
 DROP TABLE IF EXISTS `item`;
 CREATE TABLE `item` (
   `id` int(11) NOT NULL,
+  `rarity_id` int(11) DEFAULT NULL,
   `name` varchar(100) NOT NULL,
   `price` int(11) DEFAULT NULL,
   `is_weapon` tinyint(1) NOT NULL,
   `description` longtext NOT NULL,
-  `debuff_severity` varchar(10) DEFAULT NULL,
-  `debuff_duration` int(11) DEFAULT NULL,
-  `rarity_id` int(11) DEFAULT NULL
+  `defeat_chance` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `item`
+--
+
+INSERT INTO `item` (`id`, `rarity_id`, `name`, `price`, `is_weapon`, `description`, `defeat_chance`) VALUES
+(1, 1, 'Twig', 5, 1, '30% chance to fend off enemies. But seriously, it\'s literally a twig.', 30),
+(2, 1, 'Sandwich', 2, 0, 'Heal 10 hp. Yummy!', NULL);
 
 -- --------------------------------------------------------
 
@@ -208,6 +247,13 @@ CREATE TABLE `item_effect` (
   `item_id` int(11) NOT NULL,
   `effect_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `item_effect`
+--
+
+INSERT INTO `item_effect` (`item_id`, `effect_id`) VALUES
+(2, 1);
 
 -- --------------------------------------------------------
 
@@ -235,9 +281,16 @@ CREATE TABLE `messenger_messages` (
 DROP TABLE IF EXISTS `option`;
 CREATE TABLE `option` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `quests_id` int(11) DEFAULT NULL
+  `quests_id` int(11) DEFAULT NULL,
+  `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `option`
+--
+
+INSERT INTO `option` (`id`, `quests_id`, `name`) VALUES
+(1, NULL, 'continue');
 
 -- --------------------------------------------------------
 
@@ -248,13 +301,27 @@ CREATE TABLE `option` (
 DROP TABLE IF EXISTS `player`;
 CREATE TABLE `player` (
   `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `world_id` int(11) DEFAULT NULL,
   `health` int(11) NOT NULL,
   `dabloons` int(11) NOT NULL,
   `distance` int(11) NOT NULL,
   `inventory_max` int(11) NOT NULL,
-  `last_save` datetime NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `world_id` int(11) DEFAULT NULL
+  `last_save` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `player_effect`
+--
+
+DROP TABLE IF EXISTS `player_effect`;
+CREATE TABLE `player_effect` (
+  `id` int(11) NOT NULL,
+  `player_id` int(11) DEFAULT NULL,
+  `effect_id` int(11) DEFAULT NULL,
+  `debuff_duration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -266,11 +333,12 @@ CREATE TABLE `player` (
 DROP TABLE IF EXISTS `quest`;
 CREATE TABLE `quest` (
   `id` int(11) NOT NULL,
+  `rewarded_item_id` int(11) DEFAULT NULL,
   `quest_text` longtext NOT NULL,
   `dabloon_reward` int(11) NOT NULL,
   `is_completed` tinyint(1) NOT NULL,
-  `rewarded_item_id` int(11) DEFAULT NULL,
-  `single_completion` tinyint(1) NOT NULL
+  `single_completion` tinyint(1) NOT NULL,
+  `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -283,7 +351,54 @@ DROP TABLE IF EXISTS `rarity`;
 CREATE TABLE `rarity` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `chance_in` int(11) NOT NULL
+  `chance_in` int(11) NOT NULL,
+  `priority` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `rarity`
+--
+
+INSERT INTO `rarity` (`id`, `name`, `chance_in`, `priority`) VALUES
+(1, 'Common', 85, 1),
+(2, 'Uncommon', 65, 2),
+(3, 'Rare', 75, 3),
+(4, 'Unique', 70, 4),
+(5, 'Legendary', 100, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `shop`
+--
+
+DROP TABLE IF EXISTS `shop`;
+CREATE TABLE `shop` (
+  `id` int(11) NOT NULL,
+  `rarity_id` int(11) NOT NULL,
+  `additional_luck` int(11) NOT NULL,
+  `additional_price` int(11) NOT NULL,
+  `item_amount` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `shop`
+--
+
+INSERT INTO `shop` (`id`, `rarity_id`, `additional_luck`, `additional_price`, `item_amount`, `name`) VALUES
+(1, 1, 0, 0, 2, 'Common Shop');
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `shop_item`
+--
+
+DROP TABLE IF EXISTS `shop_item`;
+CREATE TABLE `shop_item` (
+  `shop_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -296,9 +411,9 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `username` varchar(180) NOT NULL,
+  `email` varchar(180) NOT NULL,
   `roles` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '(DC2Type:json)' CHECK (json_valid(`roles`)),
   `password` varchar(255) NOT NULL,
-  `email` varchar(180) NOT NULL,
   `is_disabled` tinyint(1) NOT NULL,
   `deactivation_time` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -307,11 +422,10 @@ CREATE TABLE `user` (
 -- Gegevens worden geëxporteerd voor tabel `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `roles`, `password`, `email`, `is_disabled`, `deactivation_time`) VALUES
-(1, 'moderator', '[\"ROLE_USER\", \"ROLE_MODERATOR\"]', '$2y$13$iLnXw0.o8Q./IuyDkaEDYe4FEmDsehwL/osphnDOZhNMJlbQOQ3yS', 'moderator@TPOTDR.com', 0, NULL),
-(2, 'admin', '[\"ROLE_USER\", \"ROLE_ADMIN\"]', '$2y$13$02JQqn5emWqiI7c7a1g7yeFZi1qaaTFfH1oPOXdQkuaiDYEH8RnTS', 'admin@TPOTDR.com', 0, NULL),
-(3, 'Arentvos', '[\"ROLE_USER\"]', '$2y$13$6aN.fkAogFgf5fyY8wz1OeT0pYvuT2MiCctatW3fcj6vXevtJiSM.', 'arentvos@outlook.com', 0, NULL),
-(4, 'testing', '[\"ROLE_USER\"]', '$2y$13$rn7fOjy6A6yAvzsmWHe/ee/TrIRjVhk6a96fP5n6OiFgtGMWDWk/S', 'test@test.test', 0, NULL);
+INSERT INTO `user` (`id`, `username`, `email`, `roles`, `password`, `is_disabled`, `deactivation_time`) VALUES
+(1, 'admin', 'admin@TPOTDR.com', '[\"ROLE_USER\",\"ROLE_ADMIN\"]', '$2y$13$02JQqn5emWqiI7c7a1g7yeFZi1qaaTFfH1oPOXdQkuaiDYEH8RnTS', 0, NULL),
+(2, 'moderator', 'moderator@TPOTDR.com', '[\"ROLE_USER\",\"ROLE_MODERATOR\"]', '$2y$13$iLnXw0.o8Q./IuyDkaEDYe4FEmDsehwL/osphnDOZhNMJlbQOQ3yS', 0, NULL),
+(3, 'test user', 'test@TPOTDR.com', '[\"ROLE_USER\"]', '$2y$13$rn7fOjy6A6yAvzsmWHe/ee/TrIRjVhk6a96fP5n6OiFgtGMWDWk/S', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -325,6 +439,25 @@ CREATE TABLE `world` (
   `name` varchar(150) NOT NULL,
   `distance_limit` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `world`
+--
+
+INSERT INTO `world` (`id`, `name`, `distance_limit`) VALUES
+(1, 'The Forest', 0),
+(2, 'The Village', 12),
+(3, 'The Dark Forest', 12),
+(4, 'Rolling Hills', 25),
+(5, 'Freezing Taiga', 35),
+(6, 'IceHeart Village', 40),
+(7, 'BlueIce Valley', 45),
+(8, 'Barren Flatlands', 55),
+(9, 'Peaking Mountains', 75),
+(10, 'Traveler\'s Inn.', 85),
+(11, 'Point of No Return', 85),
+(12, 'Ash Hills', 86),
+(13, 'Temple of the Molten Dabloons', 100);
 
 --
 -- Indexen voor geëxporteerde tabellen
@@ -342,7 +475,8 @@ ALTER TABLE `accepted_quest`
 -- Indexen voor tabel `dialogue`
 --
 ALTER TABLE `dialogue`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_F18A1C3949EDA465` (`next_event_id`);
 
 --
 -- Indexen voor tabel `doctrine_migration_versions`
@@ -360,7 +494,8 @@ ALTER TABLE `effect`
 -- Indexen voor tabel `event`
 --
 ALTER TABLE `event`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_3BAE0AA74D16C4DD` (`shop_id`);
 
 --
 -- Indexen voor tabel `event_dialogue`
@@ -449,6 +584,14 @@ ALTER TABLE `player`
   ADD KEY `IDX_98197A658925311C` (`world_id`);
 
 --
+-- Indexen voor tabel `player_effect`
+--
+ALTER TABLE `player_effect`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_2960072C99E6F5DF` (`player_id`),
+  ADD KEY `IDX_2960072CF5E9B83B` (`effect_id`);
+
+--
 -- Indexen voor tabel `quest`
 --
 ALTER TABLE `quest`
@@ -459,15 +602,31 @@ ALTER TABLE `quest`
 -- Indexen voor tabel `rarity`
 --
 ALTER TABLE `rarity`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_B7C0BE4662A6DC27` (`priority`);
+
+--
+-- Indexen voor tabel `shop`
+--
+ALTER TABLE `shop`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_AC6A4CA2F3747573` (`rarity_id`);
+
+--
+-- Indexen voor tabel `shop_item`
+--
+ALTER TABLE `shop_item`
+  ADD PRIMARY KEY (`shop_id`,`item_id`),
+  ADD KEY `IDX_DEE9C3654D16C4DD` (`shop_id`),
+  ADD KEY `IDX_DEE9C365126F525E` (`item_id`);
 
 --
 -- Indexen voor tabel `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `UNIQ_IDENTIFIER_USERNAME` (`username`),
-  ADD UNIQUE KEY `UNIQ_8D93D649E7927C74` (`email`);
+  ADD UNIQUE KEY `UNIQ_8D93D649E7927C74` (`email`),
+  ADD UNIQUE KEY `UNIQ_IDENTIFIER_USERNAME` (`username`);
 
 --
 -- Indexen voor tabel `world`
@@ -489,19 +648,19 @@ ALTER TABLE `accepted_quest`
 -- AUTO_INCREMENT voor een tabel `dialogue`
 --
 ALTER TABLE `dialogue`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `effect`
 --
 ALTER TABLE `effect`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `event`
 --
 ALTER TABLE `event`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `game_option`
@@ -519,7 +678,7 @@ ALTER TABLE `inventory_slot`
 -- AUTO_INCREMENT voor een tabel `item`
 --
 ALTER TABLE `item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT voor een tabel `messenger_messages`
@@ -531,12 +690,18 @@ ALTER TABLE `messenger_messages`
 -- AUTO_INCREMENT voor een tabel `option`
 --
 ALTER TABLE `option`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `player`
 --
 ALTER TABLE `player`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT voor een tabel `player_effect`
+--
+ALTER TABLE `player_effect`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -549,19 +714,25 @@ ALTER TABLE `quest`
 -- AUTO_INCREMENT voor een tabel `rarity`
 --
 ALTER TABLE `rarity`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT voor een tabel `shop`
+--
+ALTER TABLE `shop`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT voor een tabel `world`
 --
 ALTER TABLE `world`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Beperkingen voor geëxporteerde tabellen
@@ -573,6 +744,18 @@ ALTER TABLE `world`
 ALTER TABLE `accepted_quest`
   ADD CONSTRAINT `FK_C90641CA209E9EF4` FOREIGN KEY (`quest_id`) REFERENCES `quest` (`id`),
   ADD CONSTRAINT `FK_C90641CA99E6F5DF` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`);
+
+--
+-- Beperkingen voor tabel `dialogue`
+--
+ALTER TABLE `dialogue`
+  ADD CONSTRAINT `FK_F18A1C3949EDA465` FOREIGN KEY (`next_event_id`) REFERENCES `event` (`id`);
+
+--
+-- Beperkingen voor tabel `event`
+--
+ALTER TABLE `event`
+  ADD CONSTRAINT `FK_3BAE0AA74D16C4DD` FOREIGN KEY (`shop_id`) REFERENCES `shop` (`id`);
 
 --
 -- Beperkingen voor tabel `event_dialogue`
@@ -642,10 +825,30 @@ ALTER TABLE `player`
   ADD CONSTRAINT `FK_98197A65A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
+-- Beperkingen voor tabel `player_effect`
+--
+ALTER TABLE `player_effect`
+  ADD CONSTRAINT `FK_2960072C99E6F5DF` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`),
+  ADD CONSTRAINT `FK_2960072CF5E9B83B` FOREIGN KEY (`effect_id`) REFERENCES `effect` (`id`);
+
+--
 -- Beperkingen voor tabel `quest`
 --
 ALTER TABLE `quest`
   ADD CONSTRAINT `FK_4317F817843BB51E` FOREIGN KEY (`rewarded_item_id`) REFERENCES `item` (`id`);
+
+--
+-- Beperkingen voor tabel `shop`
+--
+ALTER TABLE `shop`
+  ADD CONSTRAINT `FK_AC6A4CA2F3747573` FOREIGN KEY (`rarity_id`) REFERENCES `rarity` (`id`);
+
+--
+-- Beperkingen voor tabel `shop_item`
+--
+ALTER TABLE `shop_item`
+  ADD CONSTRAINT `FK_DEE9C365126F525E` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_DEE9C3654D16C4DD` FOREIGN KEY (`shop_id`) REFERENCES `shop` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -7,6 +7,7 @@ use App\Entity\Item;
 use App\Entity\Rarity;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,7 +18,11 @@ class ItemType extends AbstractType
         $builder
             ->add('name')
             ->add('price')
-            ->add('isWeapon')
+            ->add('isWeapon', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Is Weapon'
+            ])
+            ->add('defeatChance')
             ->add('description')
             ->add('rarity', EntityType::class, [
                 'class' => Rarity::class,

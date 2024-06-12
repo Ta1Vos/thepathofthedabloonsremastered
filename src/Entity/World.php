@@ -28,8 +28,8 @@ class World
 
     #[Assert\NotNull]
     #[Assert\Type(
-        type: 'boolean',
-        message: 'The value {{ value }} is not a valid {{ type }}. Use \'true\' or \'false\'.',
+        type: 'integer',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
     #[ORM\Column]
     private ?int $distanceLimit = null;

@@ -55,12 +55,22 @@ class Event
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\ManyToOne(inversedBy: 'linkedEvents')]
+    private ?Shop $shop = null;
+
+    /**
+     * @var Collection<int, Dialogue>
+     */
+    #[ORM\OneToMany(targetEntity: Dialogue::class, mappedBy: 'nextEvent')]
+    private Collection $previousForcedDialogue;
+
     public function __construct()
     {
         $this->effects = new ArrayCollection();
         $this->dialogues = new ArrayCollection();
         $this->options = new ArrayCollection();
         $this->worlds = new ArrayCollection();
+        $this->previousForcedDialogue = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -184,6 +194,48 @@ class Event
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getShop(): ?Shop
+    {
+        return $this->shop;
+    }
+
+    public function setShop(?Shop $shop): static
+    {
+        $this->shop = $shop;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Dialogue>
+     */
+    public function getPreviousForcedDialogue(): Collection
+    {
+        return $this->previousForcedDialogue;
+    }
+
+    public function addPreviousForcedDialogue(Dialogue $previousForcedDialogue): static
+    {
+        if (!$this->previousForcedDialogue->contains($previousForcedDialogue)) {
+            $this->previousForcedDialogue->add($previousForcedDialogue);
+            $previousForcedDialogue->setNextEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removePreviousForcedDialogue(Dialogue $previousForcedDialogue): static
+    {
+        if ($this->previousForcedDialogue->removeElement($previousForcedDialogue)) {
+            // set the owning side to null (unless already changed)
+            if ($previousForcedDialogue->getNextEvent() === $this) {
+                $previousForcedDialogue->setNextEvent(null);
+            }
+        }
 
         return $this;
     }

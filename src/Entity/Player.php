@@ -6,6 +6,7 @@ use App\Repository\PlayerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlayerRepository::class)]
@@ -52,10 +53,17 @@ class Player
     #[ORM\OneToMany(targetEntity: AcceptedQuest::class, mappedBy: 'player')]
     private Collection $acceptedQuests;
 
+    /**
+     * @var Collection<int, PlayerEffect>
+     */
+    #[ORM\OneToMany(targetEntity: PlayerEffect::class, mappedBy: 'player')]
+    private Collection $playerEffects;
+
     public function __construct()
     {
         $this->inventorySlots = new ArrayCollection();
         $this->acceptedQuests = new ArrayCollection();
+        $this->playerEffects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -222,5 +230,99 @@ class Player
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, PlayerEffect>
+     */
+    public function getPlayerEffects(): Collection
+    {
+        return $this->playerEffects;
+    }
+
+    public function createPlayerEffect(Effect $effect, EntityManagerInterface $entityManager): PlayerEffect {
+        $playerEffect = new PlayerEffect();
+        $playerEffect->setPlayer($this);
+        $playerEffect->setEffect($effect);
+        $playerEffect->setDebuffDuration($effect->getDebuffDuration());
+
+        $this->addPlayerEffect($playerEffect);
+        $effect->addPlayerEffect($playerEffect);
+
+        $entityManager->persist($playerEffect);
+        $entityManager->persist($this);
+        $entityManager->persist($effect);
+
+        return $playerEffect;
+    }
+
+    public function addPlayerEffect(PlayerEffect $playerEffect): static
+    {
+        if (!$this->playerEffects->contains($playerEffect)) {
+            $this->playerEffects->add($playerEffect);
+            $playerEffect->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlayerEffect(PlayerEffect $playerEffect): static
+    {
+        if ($this->playerEffects->removeElement($playerEffect)) {
+            // set the owning side to null (unless already changed)
+            if ($playerEffect->getPlayer() === $this) {
+                $playerEffect->setPlayer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Update all the effects linked to the player. All available properties:
+     * - Health
+     * - Dabloons
+     * - Distance
+     * - InventoryMax
+     * @param EntityManagerInterface $entityManager
+     * @return void
+     */
+    public function updatePlayerEffects(EntityManagerInterface $entityManager): ?Player
+    {
+        $player = $this;
+        foreach ($this->getPlayerEffects() as $playerEffect) {//Loop through Player Effects to apply all effect changes if the duration is longer.
+            $effect = $playerEffect->getEffect();
+            $property = $effect->getAffectedPlayerProperty();
+            $changeValue = $effect->getEffectValueSeverity();
+            $debuffDuration = $playerEffect->getDebuffDuration();
+
+            //Check through the available changeable properties and change the player.
+            //!!!IF THIS CASE GETS UPDATED, BE SURE TO UPDATE THE EFFECTTYPE FORM PLAYER PROPERTY!!!
+            switch ($property) {
+                case 'health':
+                    $player->setHealth($player->getHealth() + $changeValue);
+                    break;
+                case 'dabloons':
+                    $player->setDabloons($player->getDabloons() + $changeValue);
+                    break;
+                case 'distance':
+                    $player->setDistance($player->getDistance() + $changeValue);
+                    break;
+                case 'inventoryMax':
+                    $player->setInventoryMax($player->getInventoryMax() + $changeValue);
+                    break;
+            }
+
+            $playerEffect->setDebuffDuration($debuffDuration - 1);//Decrease duration by one
+
+            if ($debuffDuration <= 0) {//If effect duration reaches 0, remove the effect.
+                $entityManager->remove($playerEffect);
+            } else {
+                $entityManager->persist($playerEffect);
+            }
+            $entityManager->persist($player);
+        }
+
+        return $player;
     }
 }

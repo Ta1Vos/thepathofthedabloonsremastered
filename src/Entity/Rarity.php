@@ -6,9 +6,11 @@ use App\Repository\RarityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RarityRepository::class)]
+#[UniqueEntity(fields: ['priority'], message: 'This priority is already in use.')]
 class Rarity
 {
     #[ORM\Id]
@@ -27,7 +29,11 @@ class Rarity
     private ?string $name = null;
 
     #[Assert\NotNull]
-    #[Assert\PositiveOrZero]
+    #[Assert\Range(
+        notInRangeMessage: 'Minimum chance is {{ min }}% and maximum chance is {{ max }}%',
+        min: 0,
+        max: 100
+    )]
     #[ORM\Column]
     private ?int $chanceIn = null;
 
@@ -37,9 +43,24 @@ class Rarity
     #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'rarity')]
     private Collection $items;
 
+    #[Assert\NotNull]
+    #[Assert\Type(
+        type: 'integer',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
+    #[ORM\Column(unique: true)]
+    private ?int $priority;
+
+    /**
+     * @var Collection<int, Shop>
+     */
+    #[ORM\OneToMany(targetEntity: Shop::class, mappedBy: 'rarity')]
+    private Collection $shops;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
+        $this->shops = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,6 +116,48 @@ class Rarity
             // set the owning side to null (unless already changed)
             if ($item->getRarity() === $this) {
                 $item->setRarity(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPriority(): ?int
+    {
+        return $this->priority;
+    }
+
+    public function setPriority(int $priority): self
+    {
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Shop>
+     */
+    public function getShops(): Collection
+    {
+        return $this->shops;
+    }
+
+    public function addShop(Shop $shop): static
+    {
+        if (!$this->shops->contains($shop)) {
+            $this->shops->add($shop);
+            $shop->setRarity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeShop(Shop $shop): static
+    {
+        if ($this->shops->removeElement($shop)) {
+            // set the owning side to null (unless already changed)
+            if ($shop->getRarity() === $this) {
+                $shop->setRarity(null);
             }
         }
 
