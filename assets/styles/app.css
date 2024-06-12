@@ -2,6 +2,19 @@ body {
     background-color: skyblue;
 }
 
+.overlay {
+    position: absolute;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    width: 105%;
+    height: 100vh;
+    z-index: -1;
+    background-color: black;
+    opacity: 0;
+    transition: 2.5s;
+}
+
 .title-text {
     padding: 25px;
     border-radius: 5px;
