@@ -198,11 +198,10 @@ class Rarity
                 $chanceToBeAdded = ceil($calculatedChance / count($rarities));
                 foreach ($rarities as $changingRarity) {
                     $changingRarity->setChanceIn($changingRarity->getChanceIn() + $chanceToBeAdded);
-//                    dd("ok :)");
                 }
 
             } else {//Calculate the influence of negative luck
-
+                $calculatedChance = 0;//Value that gets removed from the lower chances.
             }
         }
 
