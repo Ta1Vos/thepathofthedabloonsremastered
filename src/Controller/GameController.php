@@ -55,6 +55,7 @@ class GameController extends AbstractController
         $player->setWorld($world);
         $player->setDistance(0);
         $player->setDabloons(0);
+        $player->setLuck(0);
         $player->setLastSave(new \DateTime());
 
         $entityManager->persist($player);
@@ -148,9 +149,10 @@ class GameController extends AbstractController
     public function testItemGeneration(Request $request, EntityManagerInterface $entityManager): Response
     {
         $rarity = $entityManager->getRepository(Rarity::class)->find(1);
+        $player = $entityManager->getRepository(Player::class)->find(1);
 
 //        dump();
-        die($rarity->generateRarity($entityManager)->getName());
+        die($rarity->generateRarity($player, $entityManager)->getName());
 
         return $this->redirectToRoute('app_home');
     }

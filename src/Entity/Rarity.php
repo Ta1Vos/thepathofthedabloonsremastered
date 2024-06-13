@@ -165,30 +165,83 @@ class Rarity
         return $this;
     }
 
+    private function getOrderedRarities(EntityManagerInterface $entityManager)
+    {
+        return $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Rarity p 
+            WHERE p.priority > 0
+            ORDER BY p.priority ASC'
+        )->getResult();
+    }
+
+    private function calcRarityLuckInfluence(int $luck, array $rarities, EntityManagerInterface $entityManager, $rarityMax): array
+    {
+        $avgRarityChance = floor($rarityMax / count($rarities));
+//        dd($rarities);
+
+        foreach ($rarities as $rarity) {
+            if (!is_a($rarity, Rarity::class)) break; //Kill the foreach loop if rarities does not contain only Rarity class
+            $chance = $rarity->getChanceIn();
+            if ($chance > $avgRarityChance && $luck > 0) {
+                //Calculate the influence of positive luck. Luck will try to equalize the chances you have with all the rarities, by lowering the rarity chances above the average and spreading it over the other rarities.
+                $calculatedChance = floor($luck ** 2 / ($luck / 2));
+//                if ($chance < $avgRarityChance * 1.15) { //More balancing for rare rarities? Decrease less chance for rare rarities.
+//                    $calculatedChance = $calculatedChance - $calculatedChance / 5;
+//                }
+
+                while ($chance - $calculatedChance < 0) {
+                    $calculatedChance-= 0.1;
+                }
+
+                $rarity->setChanceIn($chance - $calculatedChance);//Remove the luck from the balanced rarity
+                $chanceToBeAdded = ceil($calculatedChance / count($rarities));
+                foreach ($rarities as $changingRarity) {
+                    $changingRarity->setChanceIn($changingRarity->getChanceIn() + $chanceToBeAdded);
+//                    dd("ok :)");
+                }
+
+            } else {//Calculate the influence of negative luck
+
+            }
+        }
+
+        dd($rarities);
+
+        return $rarities;
+    }
+
     /**
      * Generate a rarity with the influence of the current rarity. This will mainly be used
      * for the Shop feature in this project.
      * @return array
      */
-    public function generateRarity(Player $player, EntityManagerInterface $entityManager): Rarity|array
+    public function generateRarity(Player $player, EntityManagerInterface $entityManager, Shop $shop = null): Rarity
     {
-        $rarityCurrent = $this->getChanceIn();
-        $generatedRarity = null;
+        $rarities = $this->getOrderedRarities($entityManager);
 
-        $rarities = $entityManager->createQuery(
-            'SELECT p
-            FROM App\Entity\Rarity p 
-            ORDER BY p.priority ASC'
-        )->getResult();
+        $luck = $player->getLuck();
 
-//            $rarities = $entityManager->getRepository(Rarity::class)->findAll();
-        $rarityTotal = 0;
-
-        foreach ($rarities as $rarity) {
-            $rarityTotal += $rarity->getChanceIn();
+        if ($shop) {
+            $luck += $shop->getAdditionalLuck();
         }
 
-        $rNum = rand(0, $rarityTotal + 1);
+        $rarityMax = 0;
+        foreach ($rarities as $rarity) {
+            $rarityMax += $rarity->getChanceIn();
+        }
+
+        if ($luck != 0) {
+            $rarities = $this->calcRarityLuckInfluence($luck, $rarities, $entityManager, $rarityMax);
+        }
+
+        foreach ($rarities as $rarity) {//Recalculate the rarity max
+            $rarityMax += $rarity->getChanceIn();
+        }
+
+        $generatedRarity = null;
+
+        $rNum = rand(0, $rarityMax + 1);
 
         $counted = 0;
 
