@@ -2,15 +2,28 @@
 
 namespace App\Controller;
 
+use App\Entity\Dialogue;
 use App\Entity\Effect;
+use App\Entity\Event;
 use App\Entity\GameOption;
+use App\Entity\Item;
+use App\Entity\Option;
 use App\Entity\Player;
+use App\Entity\Shop;
 use App\Entity\World;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+
+$encoders = [new JsonEncoder()];
+$normalizers = [new ObjectNormalizer()];
+
+$serializer = new Serializer($normalizers, $encoders);
 
 class GameController extends AbstractController
 {
@@ -47,6 +60,56 @@ class GameController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/game/fetch/{gameProperty}/{id}', name: 'app_gamne_fetch')]
+    public function fetchInfo(Request $request, EntityManagerInterface $entityManager, string $gameProperty, $id = null): Response
+    {
+        if (!$gameProperty) {
+            $this->addFlash('danger', 'Access denied (400) 1.');
+            return $this->redirectToRoute('app_home');
+        } else if (!intval($id)) {
+            $this->addFlash('warning', 'Access denied (400) 2.');
+            return $this->redirectToRoute('app_home');
+        }
+
+        $entity = null;
+
+        switch ($gameProperty) {
+            case 'dialogue':
+                $entity = $entityManager->getRepository(Dialogue::class)->find($id);
+                break;
+            case 'event':
+                $entity = $entityManager->getRepository(Event::class)->find($id);
+                break;
+            case 'option':
+                $entity = $entityManager->getRepository(Option::class)->find($id);
+                break;
+            case 'item':
+                $entity = $entityManager->getRepository(Item::class)->find($id);
+                break;
+            case 'effect':
+                $entity = $entityManager->getRepository(Effect::class)->find($id);
+                break;
+            case 'world':
+                $entity = $entityManager->getRepository(World::class)->find($id);
+                break;
+            case 'shop':
+                $entity = $entityManager->getRepository(Shop::class)->find($id);
+                break;
+            case 'quest':
+                $entity = "This feature as not yet been implemented";
+                break;
+        }
+
+        if (!$entity) {
+            $this->addFlash('danger', 'Access denied (404).');
+            return $this->redirectToRoute('app_home');
+        }
+
+        $json = json_encode($entity);
+//        dd($entity);
+        return new Response($json);
     }
 
     #[Route('/game/ingame', name: 'app_game')]
