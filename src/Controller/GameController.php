@@ -147,9 +147,10 @@ class GameController extends AbstractController
     #[Route('/game/test/item-generate', name: 'app_update_item_generate')]
     public function testItemGeneration(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $rarity = $entityManager->getRepository(Rarity::class)->find(6);
+        $rarity = $entityManager->getRepository(Rarity::class)->find(1);
 
-        dd($rarity->generateRarity($entityManager));
+//        dump();
+        die($rarity->generateRarity($entityManager)->getName());
 
         return $this->redirectToRoute('app_home');
     }

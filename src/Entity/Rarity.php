@@ -170,9 +170,10 @@ class Rarity
      * for the Shop feature in this project.
      * @return array
      */
-    public function generateRarity(EntityManagerInterface $entityManager = null): Rarity|array {
-        if ($entityManager) {
-            $rarityCurrent = $this->getChanceIn();
+    public function generateRarity(Player $player, EntityManagerInterface $entityManager): Rarity|array
+    {
+        $rarityCurrent = $this->getChanceIn();
+        $generatedRarity = null;
 
         $rarities = $entityManager->createQuery(
             'SELECT p
@@ -181,19 +182,32 @@ class Rarity
         )->getResult();
 
 //            $rarities = $entityManager->getRepository(Rarity::class)->findAll();
-            $rarityTotal = 0;
+        $rarityTotal = 0;
 
-            foreach ($rarities as $rarity) {
-                $rarityTotal += $rarity->getChanceIn();
-            }
-
-            return $rarities;
+        foreach ($rarities as $rarity) {
+            $rarityTotal += $rarity->getChanceIn();
         }
 
-        return $this;
+        $rNum = rand(0, $rarityTotal + 1);
+
+        $counted = 0;
+
+        foreach ($rarities as $rarity) {
+            if ($rNum <= $rarity->getChanceIn() + $counted + 1) {
+                $generatedRarity = $rarity;
+                break;
+            } else {
+                $counted += $rarity->getChanceIn();
+            }
+        }
+
+        echo $rNum . '   ';
+
+        return $generatedRarity;
     }
 
-    public function generateItem(): Item {
+    public function generateItem(): Item
+    {
         $items = $this->getItems();
         $index = rand(0, count($items) - 1);
 
