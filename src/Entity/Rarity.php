@@ -178,6 +178,7 @@ class Rarity
     private function calcRarityLuckInfluence(int $luck, array $rarities, EntityManagerInterface $entityManager, $rarityMax): array
     {
         $avgRarityChance = floor($rarityMax / count($rarities));
+        $removeChances = 0;
 //        dd($rarities);
 
         foreach ($rarities as $rarity) {
@@ -190,7 +191,7 @@ class Rarity
 //                    $calculatedChance = $calculatedChance - $calculatedChance / 5;
 //                }
 
-                while ($chance - $calculatedChance < 0) {
+                while ($chance - $calculatedChance < 0) {//Make sure nothing goes into negatives
                     $calculatedChance-= 0.1;
                 }
 
@@ -200,9 +201,15 @@ class Rarity
                     $changingRarity->setChanceIn($changingRarity->getChanceIn() + $chanceToBeAdded);
                 }
 
-            } else {//Calculate the influence of negative luck
-                $calculatedChance = 0;//Value that gets removed from the lower chances.
+            } else {//Calculate the influence of negative luck. Ignore the rarity with the highest priority
+                $toBeRemoved = ceil($chance * (-0.1 * $luck));//Remove a quarter from each chance value.
+                $removeChances += $toBeRemoved;//Add the removed chances to the more common rarity.
+                $rarity->setChanceIn($chance - $toBeRemoved);
             }
+        }
+
+        if (is_a($rarities[0], Rarity::class)) {
+            $rarities[0]->setChanceIn($rarities[0]->getChanceIn() + $removeChances);//Add the chances removed from the lower priority rarities.
         }
 
         dd($rarities);
