@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240612092709 extends AbstractMigration
+final class Version20240613095900 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -33,7 +33,7 @@ final class Version20240612092709 extends AbstractMigration
         $this->addSql('CREATE TABLE item (id INT AUTO_INCREMENT NOT NULL, rarity_id INT DEFAULT NULL, name VARCHAR(100) NOT NULL, price INT DEFAULT NULL, is_weapon TINYINT(1) NOT NULL, description LONGTEXT NOT NULL, defeat_chance INT DEFAULT NULL, INDEX IDX_1F1B251EF3747573 (rarity_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE item_effect (item_id INT NOT NULL, effect_id INT NOT NULL, INDEX IDX_3099E43D126F525E (item_id), INDEX IDX_3099E43DF5E9B83B (effect_id), PRIMARY KEY(item_id, effect_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE `option` (id INT AUTO_INCREMENT NOT NULL, quests_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, INDEX IDX_5A8600B05D8115BE (quests_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE player (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, world_id INT DEFAULT NULL, health INT NOT NULL, dabloons INT NOT NULL, distance INT NOT NULL, inventory_max INT NOT NULL, last_save DATETIME NOT NULL, INDEX IDX_98197A65A76ED395 (user_id), INDEX IDX_98197A658925311C (world_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE player (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, world_id INT DEFAULT NULL, health INT NOT NULL, dabloons INT NOT NULL, distance INT NOT NULL, inventory_max INT NOT NULL, last_save DATETIME NOT NULL, luck INT NOT NULL, INDEX IDX_98197A65A76ED395 (user_id), INDEX IDX_98197A658925311C (world_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE player_effect (id INT AUTO_INCREMENT NOT NULL, player_id INT DEFAULT NULL, effect_id INT DEFAULT NULL, debuff_duration INT NOT NULL, INDEX IDX_2960072C99E6F5DF (player_id), INDEX IDX_2960072CF5E9B83B (effect_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE quest (id INT AUTO_INCREMENT NOT NULL, rewarded_item_id INT DEFAULT NULL, quest_text LONGTEXT NOT NULL, dabloon_reward INT NOT NULL, is_completed TINYINT(1) NOT NULL, single_completion TINYINT(1) NOT NULL, name VARCHAR(255) NOT NULL, INDEX IDX_4317F817843BB51E (rewarded_item_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE rarity (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(50) NOT NULL, chance_in INT NOT NULL, priority INT NOT NULL, UNIQUE INDEX UNIQ_B7C0BE4662A6DC27 (priority), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
