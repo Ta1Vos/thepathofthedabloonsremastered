@@ -163,4 +163,11 @@ class Rarity
 
         return $this;
     }
+
+    public function generateItem(): Item {
+        $items = $this->getItems();
+        $index = rand(0, count($items) - 1);
+
+        return $items[$index];
+    }
 }
