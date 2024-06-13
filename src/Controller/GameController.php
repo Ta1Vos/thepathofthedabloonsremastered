@@ -150,9 +150,12 @@ class GameController extends AbstractController
     {
         $rarity = $entityManager->getRepository(Rarity::class)->find(1);
         $player = $entityManager->getRepository(Player::class)->find(1);
+        $newRarity = $rarity->generateRarity($player, $entityManager);
+        $items = $newRarity->getItems();
+        $item = $items[rand(0, count($items) - 1)];
 
-//        dump();
-        die($rarity->generateRarity($player, $entityManager)->getName());
+        dd($item);
+        die();
 
         return $this->redirectToRoute('app_home');
     }
