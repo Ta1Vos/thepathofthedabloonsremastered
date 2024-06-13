@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\RarityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -159,6 +160,34 @@ class Rarity
             if ($shop->getRarity() === $this) {
                 $shop->setRarity(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Generate a rarity with the influence of the current rarity. This will mainly be used
+     * for the Shop feature in this project.
+     * @return array
+     */
+    public function generateRarity(EntityManagerInterface $entityManager = null): Rarity|array {
+        if ($entityManager) {
+            $rarityCurrent = $this->getChanceIn();
+
+        $rarities = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Rarity p 
+            ORDER BY p.priority ASC'
+        )->getResult();
+
+//            $rarities = $entityManager->getRepository(Rarity::class)->findAll();
+            $rarityTotal = 0;
+
+            foreach ($rarities as $rarity) {
+                $rarityTotal += $rarity->getChanceIn();
+            }
+
+            return $rarities;
         }
 
         return $this;

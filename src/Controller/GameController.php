@@ -9,6 +9,7 @@ use App\Entity\GameOption;
 use App\Entity\Item;
 use App\Entity\Option;
 use App\Entity\Player;
+use App\Entity\Rarity;
 use App\Entity\Shop;
 use App\Entity\World;
 use Doctrine\ORM\EntityManagerInterface;
@@ -120,8 +121,8 @@ class GameController extends AbstractController
         ]);
     }
 
-    #[Route('/game/test', name: 'app_testing')]
-    public function test(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/game/test/effect-add', name: 'app_test_effect_add')]
+    public function testEffectAdd(Request $request, EntityManagerInterface $entityManager): Response
     {
         $player = $entityManager->getRepository(Player::class)->find(2);
 
@@ -132,13 +133,23 @@ class GameController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/game/update', name: 'app_update')]
-    public function update(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/game/test/effect-update', name: 'app_update_effect_update')]
+    public function testEffectUpdate(Request $request, EntityManagerInterface $entityManager): Response
     {
         $player = $entityManager->getRepository(Player::class)->find(2);
 
         $player->updatePlayerEffects($entityManager);
         $entityManager->flush();
+
+        return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/game/test/item-generate', name: 'app_update_item_generate')]
+    public function testItemGeneration(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $rarity = $entityManager->getRepository(Rarity::class)->find(6);
+
+        dd($rarity->generateRarity($entityManager));
 
         return $this->redirectToRoute('app_home');
     }
