@@ -21,25 +21,25 @@ class RarityFixtures extends Fixture implements OrderedFixtureInterface
 
         $rarity = new Rarity();
         $rarity->setName('Uncommon');
-        $rarity->setChanceIn(65);
+        $rarity->setChanceIn(40);
         $rarity->setPriority(2);
         $manager->persist($rarity);
 
         $rarity = new Rarity();
         $rarity->setName('Rare');
-        $rarity->setChanceIn(75);
+        $rarity->setChanceIn(15);
         $rarity->setPriority(3);
         $manager->persist($rarity);
 
         $rarity = new Rarity();
         $rarity->setName('Unique');
-        $rarity->setChanceIn(70);
+        $rarity->setChanceIn(5);
         $rarity->setPriority(4);
         $manager->persist($rarity);
 
         $rarity = new Rarity();
         $rarity->setName('Legendary');
-        $rarity->setChanceIn(100);
+        $rarity->setChanceIn(2);
         $rarity->setPriority(5);
         $manager->persist($rarity);
 
