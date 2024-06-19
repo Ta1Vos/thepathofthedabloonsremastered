@@ -92,3 +92,11 @@ function runDialog(dialogText, letterCount) {
     }
 }
 
+function fetchFirstEvent() {
+    const hostname = location.hostname;
+    fetch(location.hostname + '/game/test/item-generate')
+        .then(myData => myData.text())
+        .then(textData => dialogPrioritizer(textData, false))
+}
+
+fetchFirstEvent();

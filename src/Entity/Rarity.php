@@ -261,7 +261,7 @@ class Rarity
             }
         }
 
-        echo $rNum . '   ';
+//        echo $rNum . '   ';
 
         return $generatedRarity;
     }
