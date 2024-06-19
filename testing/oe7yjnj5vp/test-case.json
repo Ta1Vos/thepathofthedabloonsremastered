@@ -1,0 +1,533 @@
+{
+  "steps" : null,
+  "testStepGroups" : [ {
+    "groupType" : 0,
+    "groupName" : "Open website",
+    "testSteps" : [ {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : {
+        "actionName" : "open",
+        "object" : {
+          "type" : "raw",
+          "object" : "http://127.0.0.1:8000/",
+          "pageScannerQuery" : null,
+          "pageObjectReference" : null
+        },
+        "testdata" : {
+          "data" : "",
+          "type" : "text"
+        },
+        "takeScreenshot" : "0",
+        "screenshot" : null
+      },
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : null,
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    } ],
+    "groupCondition" : null
+  }, {
+    "groupType" : 0,
+    "groupName" : "Register user correctly",
+    "testSteps" : [ {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : {
+        "actionName" : "click",
+        "object" : {
+          "type" : "raw",
+          "object" : "/html/body/nav/div/div/ul/li[5]/div/a",
+          "pageScannerQuery" : null,
+          "pageObjectReference" : null
+        },
+        "testdata" : {
+          "data" : "",
+          "type" : "text"
+        },
+        "takeScreenshot" : "0",
+        "screenshot" : null
+      },
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : null,
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    }, {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : {
+        "actionName" : "type",
+        "object" : {
+          "type" : "raw",
+          "object" : "//*[@id=\"registration_form_username\"]",
+          "pageScannerQuery" : null,
+          "pageObjectReference" : null
+        },
+        "testdata" : {
+          "data" : "JOSF",
+          "type" : "text"
+        },
+        "takeScreenshot" : "0",
+        "screenshot" : null
+      },
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : null,
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    }, {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : {
+        "actionName" : "type",
+        "object" : {
+          "type" : "raw",
+          "object" : "//*[@id=\"registration_form_email\"]",
+          "pageScannerQuery" : null,
+          "pageObjectReference" : null
+        },
+        "testdata" : {
+          "data" : "JOSF@josf.nl",
+          "type" : "text"
+        },
+        "takeScreenshot" : "0",
+        "screenshot" : null
+      },
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : null,
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    }, {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : {
+        "actionName" : "type",
+        "object" : {
+          "type" : "raw",
+          "object" : "//*[@id=\"registration_form_plainPassword_first\"]",
+          "pageScannerQuery" : null,
+          "pageObjectReference" : null
+        },
+        "testdata" : {
+          "data" : "josf-test",
+          "type" : "text"
+        },
+        "takeScreenshot" : "0",
+        "screenshot" : null
+      },
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : null,
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    }, {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : {
+        "actionName" : "type",
+        "object" : {
+          "type" : "raw",
+          "object" : "//*[@id=\"registration_form_plainPassword_second\"]",
+          "pageScannerQuery" : null,
+          "pageObjectReference" : null
+        },
+        "testdata" : {
+          "data" : "josf-test",
+          "type" : "text"
+        },
+        "takeScreenshot" : "0",
+        "screenshot" : null
+      },
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : null,
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    }, {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : {
+        "actionName" : "click",
+        "object" : {
+          "type" : "raw",
+          "object" : "//*[@id=\"registration_form_agreeTerms\"]",
+          "pageScannerQuery" : null,
+          "pageObjectReference" : null
+        },
+        "testdata" : {
+          "data" : "",
+          "type" : "text"
+        },
+        "takeScreenshot" : "0",
+        "screenshot" : null
+      },
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : null,
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    }, {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : {
+        "actionName" : "submit",
+        "object" : {
+          "type" : "raw",
+          "object" : "",
+          "pageScannerQuery" : null,
+          "pageObjectReference" : null
+        },
+        "testdata" : {
+          "data" : "",
+          "type" : "text"
+        },
+        "takeScreenshot" : "0",
+        "screenshot" : null
+      },
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : null,
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    } ],
+    "groupCondition" : null
+  }, {
+    "groupType" : 0,
+    "groupName" : "Login user correctly",
+    "testSteps" : [ {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : {
+        "actionName" : "click",
+        "object" : {
+          "type" : "raw",
+          "object" : "/html/body/nav/div/div/ul/li[6]/div/a",
+          "pageScannerQuery" : null,
+          "pageObjectReference" : null
+        },
+        "testdata" : {
+          "data" : "",
+          "type" : "text"
+        },
+        "takeScreenshot" : "0",
+        "screenshot" : null
+      },
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : null,
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    }, {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : {
+        "actionName" : "type",
+        "object" : {
+          "type" : "raw",
+          "object" : "//*[@id=\"username\"]",
+          "pageScannerQuery" : null,
+          "pageObjectReference" : null
+        },
+        "testdata" : {
+          "data" : "JOSF",
+          "type" : "text"
+        },
+        "takeScreenshot" : "0",
+        "screenshot" : null
+      },
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : null,
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    }, {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : {
+        "actionName" : "type",
+        "object" : {
+          "type" : "raw",
+          "object" : "//*[@id=\"password\"]",
+          "pageScannerQuery" : null,
+          "pageObjectReference" : null
+        },
+        "testdata" : {
+          "data" : "josf-test",
+          "type" : "text"
+        },
+        "takeScreenshot" : "0",
+        "screenshot" : null
+      },
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : null,
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    }, {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : {
+        "actionName" : "submit",
+        "object" : {
+          "type" : "raw",
+          "object" : "",
+          "pageScannerQuery" : null,
+          "pageObjectReference" : null
+        },
+        "testdata" : {
+          "data" : "",
+          "type" : "text"
+        },
+        "takeScreenshot" : "0",
+        "screenshot" : null
+      },
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : null,
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    } ],
+    "groupCondition" : null
+  }, {
+    "groupType" : 0,
+    "groupName" : "CRUD Dialogue",
+    "testSteps" : [ {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : null,
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : {
+        "groupType" : 0,
+        "groupName" : "Create Correctly",
+        "testSteps" : [ {
+          "version" : null,
+          "result" : null,
+          "message" : null,
+          "executionTimeMs" : 0,
+          "webAction" : {
+            "actionName" : "",
+            "object" : {
+              "type" : "raw",
+              "object" : "",
+              "pageScannerQuery" : null,
+              "pageObjectReference" : null
+            },
+            "testdata" : {
+              "data" : "",
+              "type" : "text"
+            },
+            "takeScreenshot" : "0",
+            "screenshot" : null
+          },
+          "apiAction" : null,
+          "pageActionReference" : null,
+          "dataSheetReference" : null,
+          "testStepGroup" : null,
+          "contextId" : null,
+          "hasBreakpoint" : false,
+          "isDisabled" : false
+        } ],
+        "groupCondition" : null
+      },
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    }, {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : null,
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : {
+        "groupType" : 0,
+        "groupName" : "Edit Correctly",
+        "testSteps" : [ {
+          "version" : null,
+          "result" : null,
+          "message" : null,
+          "executionTimeMs" : 0,
+          "webAction" : {
+            "actionName" : "",
+            "object" : {
+              "type" : "raw",
+              "object" : "",
+              "pageScannerQuery" : null,
+              "pageObjectReference" : null
+            },
+            "testdata" : {
+              "data" : "",
+              "type" : "text"
+            },
+            "takeScreenshot" : "0",
+            "screenshot" : null
+          },
+          "apiAction" : null,
+          "pageActionReference" : null,
+          "dataSheetReference" : null,
+          "testStepGroup" : null,
+          "contextId" : null,
+          "hasBreakpoint" : false,
+          "isDisabled" : false
+        } ],
+        "groupCondition" : null
+      },
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    }, {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : null,
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : {
+        "groupType" : 0,
+        "groupName" : "Read",
+        "testSteps" : [ {
+          "version" : null,
+          "result" : null,
+          "message" : null,
+          "executionTimeMs" : 0,
+          "webAction" : {
+            "actionName" : "",
+            "object" : {
+              "type" : "raw",
+              "object" : "",
+              "pageScannerQuery" : null,
+              "pageObjectReference" : null
+            },
+            "testdata" : {
+              "data" : "",
+              "type" : "text"
+            },
+            "takeScreenshot" : "0",
+            "screenshot" : null
+          },
+          "apiAction" : null,
+          "pageActionReference" : null,
+          "dataSheetReference" : null,
+          "testStepGroup" : null,
+          "contextId" : null,
+          "hasBreakpoint" : false,
+          "isDisabled" : false
+        } ],
+        "groupCondition" : null
+      },
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    }, {
+      "version" : null,
+      "result" : null,
+      "message" : null,
+      "executionTimeMs" : 0,
+      "webAction" : null,
+      "apiAction" : null,
+      "pageActionReference" : null,
+      "dataSheetReference" : null,
+      "testStepGroup" : {
+        "groupType" : 0,
+        "groupName" : "Delete",
+        "testSteps" : [ {
+          "version" : null,
+          "result" : null,
+          "message" : null,
+          "executionTimeMs" : 0,
+          "webAction" : {
+            "actionName" : "",
+            "object" : {
+              "type" : "raw",
+              "object" : "",
+              "pageScannerQuery" : null,
+              "pageObjectReference" : null
+            },
+            "testdata" : {
+              "data" : "",
+              "type" : "text"
+            },
+            "takeScreenshot" : "0",
+            "screenshot" : null
+          },
+          "apiAction" : null,
+          "pageActionReference" : null,
+          "dataSheetReference" : null,
+          "testStepGroup" : null,
+          "contextId" : null,
+          "hasBreakpoint" : false,
+          "isDisabled" : false
+        } ],
+        "groupCondition" : null
+      },
+      "contextId" : null,
+      "hasBreakpoint" : false,
+      "isDisabled" : false
+    } ],
+    "groupCondition" : null
+  } ],
+  "title" : "TPOTDR forms",
+  "description" : null,
+  "id" : "oe7yjnj5vp",
+  "dataDrivenStorageId" : null,
+  "tags" : [ ]
+}
