@@ -6,9 +6,10 @@ use App\Repository\ShopRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ShopRepository::class)]
-class Shop
+class Shop implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -44,8 +45,8 @@ class Shop
     #[Assert\Length(
         min: 1,
         max: 255,
-        minMessage: 'Quest name must be at least {{ limit }} characters long',
-        maxMessage: 'Quest name cannot be longer than {{ limit }} characters'
+        minMessage: 'Shop name must be at least {{ limit }} characters long',
+        maxMessage: 'Shop name cannot be longer than {{ limit }} characters'
     )]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -173,5 +174,22 @@ class Shop
         $this->name = $name;
 
         return $this;
+    }
+
+    public function generateItems(): static {
+        $rarity = $this->getRarity();
+
+
+        return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+       return [
+           'name' => $this->getName(),
+           'additionalLuck' => $this->getAdditionalLuck(),
+           'additionalPrice' => $this->getAdditionalPrice(),
+
+       ];
     }
 }

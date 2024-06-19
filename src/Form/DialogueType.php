@@ -24,7 +24,10 @@ class DialogueType extends AbstractType
                 'multiple' => true,
             ])
             ->add('nextEvent', null, [
-                'label' => 'Force event'
+                'label' => 'Force event',
+                'choice_label' => function (Event $entity) {
+                    return $entity->getId() . ': ' . $entity->getName();
+                },
             ])
         ;
     }

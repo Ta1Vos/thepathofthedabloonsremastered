@@ -59,6 +59,9 @@ class Player
     #[ORM\OneToMany(targetEntity: PlayerEffect::class, mappedBy: 'player')]
     private Collection $playerEffects;
 
+    #[ORM\Column]
+    private ?int $luck = null;
+
     public function __construct()
     {
         $this->inventorySlots = new ArrayCollection();
@@ -324,5 +327,17 @@ class Player
         }
 
         return $player;
+    }
+
+    public function getLuck(): ?int
+    {
+        return $this->luck;
+    }
+
+    public function setLuck(int $luck): static
+    {
+        $this->luck = $luck;
+
+        return $this;
     }
 }
