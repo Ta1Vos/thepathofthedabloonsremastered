@@ -241,6 +241,7 @@ class Rarity
             $rarities = $this->calcRarityLuckInfluence($luck, $rarities, $entityManager, $rarityMax);
         }
 
+        $rarityMax = 0;
         foreach ($rarities as $rarity) {//Recalculate the rarity max
             $rarityMax += $rarity->getChanceIn();
         }
