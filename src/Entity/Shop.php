@@ -192,4 +192,16 @@ class Shop implements \JsonSerializable
 
        ];
     }
+
+    public function getJSONFormat(bool $toJson = true): array|string {
+        $array = [];
+        foreach ($this as $key => $value) {
+            $type = gettype($value);
+            if ($type != "object" && $type != "unknown type") $array[$key] = $value; //Do not grab collection items, these will not be used.
+        }
+
+        if ($toJson) return json_encode($array);
+
+        return $array;
+    }
 }

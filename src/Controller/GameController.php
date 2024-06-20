@@ -153,7 +153,8 @@ class GameController extends AbstractController
         $newRarity = $rarity->generateRarity($player->getLuck(), $entityManager);
         $items = $newRarity->getItems();
         $item = $items[rand(0, count($items) - 1)];
+//        dd($item->getJSONFormat(false));
 
-        return new Response($item->getDescription());
+        return new Response($item->getJSONFormat());
     }
 }
