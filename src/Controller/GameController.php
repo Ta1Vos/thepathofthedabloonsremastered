@@ -107,46 +107,55 @@ class GameController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        if ($gameProperty == 'random') {
-            switch ($id) {
-                case 'event':
-                    $events = $currentWorld->getEvents();
-                    $entity = $events[rand(0, count($events) - 1)];
+         if ($gameProperty == 'start') {
+            if ($player->getDistance() <= 0) {
+                $entity = $entityManager->getRepository(Event::class)->findOneBy(['name' => '!start']);
+                $player->setDistance(1);
+                $entityManager->persist($player);
+                $entityManager->flush();
+            }
+        } else if ($gameProperty == 'random') {
+             switch ($id) {
+                 case 'event':
+                     $events = $currentWorld->getEvents();
+                     $entity = $events[rand(0, count($events) - 1)];
 //                    dd($events);
+                     break;
+             }
+         }
+
+        if (!$entity) {//If entity has been selected, skip
+            if (!intval($id)) {//If no id has been selected, ignore
+                $this->addFlash('warning', 'Access denied (400) 2.');
+                return $this->redirectToRoute('app_home');
+            }
+
+            switch ($gameProperty) {
+                case 'dialogue':
+                    $entity = $entityManager->getRepository(Dialogue::class)->find($id);
+                    break;
+                case 'event':
+                    $entity = $entityManager->getRepository(Event::class)->find($id);
+                    break;
+                case 'option':
+                    $entity = $entityManager->getRepository(Option::class)->find($id);
+                    break;
+                case 'item':
+                    $entity = $entityManager->getRepository(Item::class)->find($id);
+                    break;
+                case 'effect':
+                    $entity = $entityManager->getRepository(Effect::class)->find($id);
+                    break;
+                case 'world':
+                    $entity = $entityManager->getRepository(World::class)->find($id);
+                    break;
+                case 'shop':
+                    $entity = $entityManager->getRepository(Shop::class)->find($id);
+                    break;
+                case 'quest':
+
                     break;
             }
-        }
-
-        if (!intval($id) && !$entity) {
-            $this->addFlash('warning', 'Access denied (400) 2.');
-            return $this->redirectToRoute('app_home');
-        }
-
-        switch ($gameProperty) {
-            case 'dialogue':
-                $entity = $entityManager->getRepository(Dialogue::class)->find($id);
-                break;
-            case 'event':
-                $entity = $entityManager->getRepository(Event::class)->find($id);
-                break;
-            case 'option':
-                $entity = $entityManager->getRepository(Option::class)->find($id);
-                break;
-            case 'item':
-                $entity = $entityManager->getRepository(Item::class)->find($id);
-                break;
-            case 'effect':
-                $entity = $entityManager->getRepository(Effect::class)->find($id);
-                break;
-            case 'world':
-                $entity = $entityManager->getRepository(World::class)->find($id);
-                break;
-            case 'shop':
-                $entity = $entityManager->getRepository(Shop::class)->find($id);
-                break;
-            case 'quest':
-
-                break;
         }
 
         if (!$entity) {
