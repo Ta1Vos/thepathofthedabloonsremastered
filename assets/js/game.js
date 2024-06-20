@@ -10,12 +10,11 @@ function dialogPrioritizer(dialogText, addConfirmButton) {
     if (dialogRunning === false) {
         dialogRunning = true;
 
-
         if (addConfirmButton !== undefined) {
             addConfirmAfterDialog = addConfirmButton;
         }
 
-        runDialog(dialogText);
+        return runDialog(dialogText);
     } else {
         setTimeout(() => {
             dialogPrioritizer(dialogText, addConfirmButton);
@@ -58,45 +57,38 @@ function runDialog(dialogText, letterCount) {
         dialogBox.innerHTML += `</p>`;
         dialogRunning = false;
 
-        //Add a confirm button and remove other ones
-        if (addConfirmAfterDialog !== false) {
-            //Remove all confirm buttons
-            if (currentConfirmButton) {
-                currentConfirmButton = document.querySelectorAll(`.confirm-button`);
-                for (let i = 0; i < currentConfirmButton.length; i++) {
-                    currentConfirmButton[i].remove();
-                }
-            }
+        return true;
 
-            dialogBox.innerHTML += `<button class="confirm-button">Confirm</button>`;
-            currentConfirmButton = document.querySelector(`.confirm-button`);
-
-            //Add a confirm button
-            if (addConfirmAfterDialog === true) {
-                currentConfirmButton.addEventListener(`click`, buyItem);
-                //If the call came from an item use
-            } else if (addConfirmAfterDialog === `useItem`) {
-                currentConfirmButton.addEventListener(`click`, function () {
-                    currentConfirmButton.remove();
-                    viewItemInfo(currentItemInView[0], true, true);
-                });
-            } else if (addConfirmAfterDialog === `sellItem`) {
-                currentConfirmButton.addEventListener(`click`, function () {
-                    currentConfirmButton.remove();
-                    viewItemInfo(currentItemInView[0], true, undefined, true);
-                });
-            }
-
-            addConfirmAfterDialog = false;
-        }
+        // //Add a confirm button and remove other ones
+        // if (addConfirmAfterDialog !== false) {
+        //     //Remove all confirm buttons
+        //     if (currentConfirmButton) {
+        //         currentConfirmButton = document.querySelectorAll(`.confirm-button`);
+        //         for (let i = 0; i < currentConfirmButton.length; i++) {
+        //             currentConfirmButton[i].remove();
+        //         }
+        //     }
+        //
+        //     dialogBox.innerHTML += `<button class="confirm-button">Confirm</button>`;
+        //     currentConfirmButton = document.querySelector(`.confirm-button`);
+        //
+        //     //Add a confirm button
+        //     if (addConfirmAfterDialog === true) {
+        //         currentConfirmButton.addEventListener(`click`, buyItem);
+        //         //If the call came from an item use
+        //     } else if (addConfirmAfterDialog === `useItem`) {
+        //         currentConfirmButton.addEventListener(`click`, function () {
+        //             currentConfirmButton.remove();
+        //             viewItemInfo(currentItemInView[0], true, true);
+        //         });
+        //     } else if (addConfirmAfterDialog === `sellItem`) {
+        //         currentConfirmButton.addEventListener(`click`, function () {
+        //             currentConfirmButton.remove();
+        //             viewItemInfo(currentItemInView[0], true, undefined, true);
+        //         });
+        //     }
+        //
+        //     addConfirmAfterDialog = false;
+        // }
     }
 }
-
-function fetchFirstEvent() {
-    console.log(location.host + '/game/test/item-generate');
-    fetch('/game/fetch/start')
-        .then(myData => myData.text())
-        .then(textData => dialogPrioritizer(textData, false))
-}
-
-fetchFirstEvent();

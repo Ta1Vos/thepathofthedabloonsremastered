@@ -7,5 +7,7 @@
  */
 import './styles/app.css';
 import './js/animations.js';
+import './js/fetchHandler.js';
+import './js/gameLoader.js';
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
