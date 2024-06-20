@@ -24,6 +24,7 @@ class ShopType extends AbstractType
                 'choice_label' => function (Rarity $entity) {
                     return $entity->getId() . ': ' . $entity->getName();
                 },
+                'placeholder' => 'none'
             ])
             ->add('guaranteedItems', EntityType::class, [
                 'class' => Item::class,

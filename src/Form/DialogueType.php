@@ -28,6 +28,7 @@ class DialogueType extends AbstractType
                 'choice_label' => function (Event $entity) {
                     return $entity->getId() . ': ' . $entity->getName();
                 },
+                'placeholder' => 'none'
             ])
         ;
     }

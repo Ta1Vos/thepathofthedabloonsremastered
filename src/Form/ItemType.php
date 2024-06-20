@@ -29,6 +29,7 @@ class ItemType extends AbstractType
                 'choice_label' => function (Rarity $entity) {
                     return $entity->getId() . ': ' . $entity->getName();
                 },
+                'placeholder' => 'none'
             ])
             ->add('effects', EntityType::class, [
                 'class' => Effect::class,

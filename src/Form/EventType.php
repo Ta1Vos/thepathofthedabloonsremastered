@@ -45,7 +45,8 @@ class EventType extends AbstractType
                 'class' => Shop::class,
                 'choice_label' => function (Shop $entity) {
                     return $entity->getId() . ': ' . $entity->getName();
-                }
+                },
+                'placeholder' => 'none'
             ])
             ->add('worlds', EntityType::class, [
                 'class' => World::class,
