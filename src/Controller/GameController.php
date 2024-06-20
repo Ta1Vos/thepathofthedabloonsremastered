@@ -93,20 +93,29 @@ class GameController extends AbstractController
     #[Route('/game/fetch/{gameProperty}/{id}', name: 'app_game_fetch')]
     public function fetchInfo(Request $request, EntityManagerInterface $entityManager, string $gameProperty, $id = null): Response
     {
+        $playerSession = $request->getSession()->get('game-player-id');
+        if (!$playerSession) {
+            return new Response('No save file selected (404)');
+        }
+
+        $player = $entityManager->getRepository(Player::class)->find($playerSession);
+        $currentWorld = $player->getWorld();
         $entity = null;
+
         if (!$gameProperty) {
             $this->addFlash('danger', 'Access denied (400) 1.');
             return $this->redirectToRoute('app_home');
         }
 
-//        if ($gameProperty == 'random') {
-//            switch ($id) {
-//                case 'event':
-//                    $events = $world->getEvents();
-//                    $entity = $events[rand(0, count($events) - 1)];
-//                    break;
-//            }
-//        }
+        if ($gameProperty == 'random') {
+            switch ($id) {
+                case 'event':
+                    $events = $currentWorld->getEvents();
+                    $entity = $events[rand(0, count($events) - 1)];
+//                    dd($events);
+                    break;
+            }
+        }
 
         if (!intval($id) && !$entity) {
             $this->addFlash('warning', 'Access denied (400) 2.');

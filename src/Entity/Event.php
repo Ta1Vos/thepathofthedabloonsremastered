@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+//FUTURE TO-DO: ADD DISTANCE LIMIT SO THAT SOME EVENTS REQUIRE A SPECIFIC DISTANCE!!!!!!!
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
