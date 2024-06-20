@@ -95,7 +95,7 @@ class GameController extends AbstractController
     {
         $playerSession = $request->getSession()->get('game-player-id');
         if (!$playerSession) {
-            return new Response('No save file selected (404)');
+            return new Response('ERROR: No save file selected (404)');
         }
 
         $player = $entityManager->getRepository(Player::class)->find($playerSession);
@@ -103,31 +103,39 @@ class GameController extends AbstractController
         $entity = null;
 
         if (!$gameProperty) {
-            $this->addFlash('danger', 'Access denied (400) 1.');
-            return $this->redirectToRoute('app_home');
+            return new Response('ERROR: Access denied (400)');
         }
 
-         if ($gameProperty == 'start') {
+        if ($gameProperty == 'start') {//Check if player meets the requirements to get the start dialogue, otherwise load a random event. !Required to start the game!
             if ($player->getDistance() <= 0) {
                 $entity = $entityManager->getRepository(Event::class)->findOneBy(['name' => '!start']);
                 $player->setDistance(1);
                 $entityManager->persist($player);
                 $entityManager->flush();
+            } else {
+                $gameProperty = 'random';
+                $id = 'event';
             }
-        } else if ($gameProperty == 'random') {
-             switch ($id) {
-                 case 'event':
-                     $events = $currentWorld->getEvents();
-                     $entity = $events[rand(0, count($events) - 1)];
-//                    dd($events);
-                     break;
-             }
-         }
+        }
+
+        if ($gameProperty == 'random') {
+            switch ($id) {
+                case 'event':
+                    $events = $currentWorld->getEvents();
+                    $entity = $events[rand(0, count($events) - 1)];
+
+                    if (!$entity) {
+                        return new Response('ERROR: Something went wrong! Event (404)');
+                    }
+
+//                    dd($events, $entity);
+                    break;
+            }
+        }
 
         if (!$entity) {//If entity has been selected, skip
             if (!intval($id)) {//If no id has been selected, ignore
-                $this->addFlash('warning', 'Access denied (400) 2.');
-                return $this->redirectToRoute('app_home');
+                return new Response('ERROR: Access denied (400)');
             }
 
             switch ($gameProperty) {
@@ -159,8 +167,7 @@ class GameController extends AbstractController
         }
 
         if (!$entity) {
-            $this->addFlash('danger', 'Access denied (404).');
-            return $this->redirectToRoute('app_home');
+            return new Response('ERROR: Access denied (404)');
         }
 
         $json = $entity->getJSONFormat();
