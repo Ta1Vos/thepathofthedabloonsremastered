@@ -67,15 +67,25 @@ class GameController extends AbstractController
     #[Route('/game/fetch/{gameProperty}/{id}', name: 'app_gamne_fetch')]
     public function fetchInfo(Request $request, EntityManagerInterface $entityManager, string $gameProperty, $id = null): Response
     {
+        $entity = null;
         if (!$gameProperty) {
             $this->addFlash('danger', 'Access denied (400) 1.');
             return $this->redirectToRoute('app_home');
-        } else if (!intval($id)) {
+        }
+
+//        if ($gameProperty == 'random') {
+//            switch ($id) {
+//                case 'event':
+//                    $events = $world->getEvents();
+//                    $entity = $events[rand(0, count($events) - 1)];
+//                    break;
+//            }
+//        }
+
+        if (!intval($id) && !$entity) {
             $this->addFlash('warning', 'Access denied (400) 2.');
             return $this->redirectToRoute('app_home');
         }
-
-        $entity = null;
 
         switch ($gameProperty) {
             case 'dialogue':
@@ -109,7 +119,7 @@ class GameController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        $json = json_encode($entity);
+        $json = $entity->getJSONFormat();
 //        dd($entity);
         return new Response($json);
     }
