@@ -64,7 +64,7 @@ class GameController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/game/save-file/load/{id}', name: 'app_game_save-file_create')]
+    #[Route('/game/save-file/load/{id}', name: 'app_game_save-file_load')]
     public function saveFileLoad(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
