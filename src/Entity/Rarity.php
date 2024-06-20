@@ -222,11 +222,9 @@ class Rarity
      * for the Shop feature in this project.
      * @return array
      */
-    public function generateRarity(Player $player, EntityManagerInterface $entityManager, Shop $shop = null): Rarity
+    public function generateRarity(int $luck, EntityManagerInterface $entityManager, Shop $shop = null): Rarity
     {
         $rarities = $this->getOrderedRarities($entityManager);
-
-        $luck = $player->getLuck();
 
         if ($shop) {
             $luck += $shop->getAdditionalLuck();
