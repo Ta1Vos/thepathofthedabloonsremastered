@@ -100,7 +100,7 @@ class GameController extends AbstractController
                 $entity = $entityManager->getRepository(Shop::class)->find($id);
                 break;
             case 'quest':
-                $entity = "This feature as not yet been implemented";
+
                 break;
         }
 
