@@ -64,7 +64,33 @@ class GameController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/game/fetch/{gameProperty}/{id}', name: 'app_gamne_fetch')]
+    #[Route('/game/save-file/load/{id}', name: 'app_game_save-file_create')]
+    public function saveFileLoad(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $user = $this->getUser();
+
+        $players = $user->getPlayers();
+        $selectedPlayer = null;
+
+        foreach ($players as $player) {
+            if ($player->getId() == $id) {
+                $session = $request->getSession();
+                $session->set('game-player-id', $id);
+                $request->setSession($session);
+                $selectedPlayer = true;
+            }
+        }
+
+        if (!$selectedPlayer) {
+            $this->addFlash('danger', 'Access denied (404).');
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->redirectToRoute('app_game');
+    }
+
+    #[Route('/game/fetch/{gameProperty}/{id}', name: 'app_game_fetch')]
     public function fetchInfo(Request $request, EntityManagerInterface $entityManager, string $gameProperty, $id = null): Response
     {
         $entity = null;
@@ -127,6 +153,13 @@ class GameController extends AbstractController
     #[Route('/game/ingame', name: 'app_game')]
     public function game(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $playerSession = $request->getSession()->get('game-player-id');
+        if (!$playerSession) {
+            $this->addFlash('warning', 'No save file selected.');
+            return $this->redirectToRoute('app_home');
+        }
+
+        $player = $entityManager->getRepository(Player::class)->find($playerSession);
         return $this->render('game/index.html.twig', [
             'overrideTitleMargin' => true
         ]);
@@ -147,7 +180,13 @@ class GameController extends AbstractController
     #[Route('/game/test/effect-update', name: 'app_update_effect_update')]
     public function testEffectUpdate(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $player = $entityManager->getRepository(Player::class)->find(2);
+        $playerSession = $request->getSession()->get('game-player-id');
+        if (!$playerSession) {
+            $this->addFlash('warning', 'No save file selected.');
+            return $this->redirectToRoute('app_home');
+        }
+
+        $player = $entityManager->getRepository(Player::class)->find($playerSession);
 
         $player->updatePlayerEffects($entityManager);
         $entityManager->flush();
@@ -158,8 +197,14 @@ class GameController extends AbstractController
     #[Route('/game/test/item-generate', name: 'app_update_item_generate')]
     public function testItemGeneration(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $playerSession = $request->getSession()->get('game-player-id');
+        if (!$playerSession) {
+            return new Response('No item selected');
+        }
+
+        $player = $entityManager->getRepository(Player::class)->find($playerSession);
         $rarity = $entityManager->getRepository(Rarity::class)->findOneBy(['name' => 'Common']);
-        $player = $entityManager->getRepository(Player::class)->find(1);
+
         $newRarity = $rarity->generateRarity($player->getLuck(), $entityManager);
         $items = $newRarity->getItems();
         $item = $items[rand(0, count($items) - 1)];
