@@ -170,16 +170,18 @@ class GameController extends AbstractController
 
         $player = $entityManager->getRepository(Player::class)->find($playerSession);
         return $this->render('game/index.html.twig', [
-            'overrideTitleMargin' => true
+            'overrideTitleMargin' => true,
+            'player' => $player,
+            'statusEffects' => $player->getPlayerEffects()
         ]);
     }
 
     #[Route('/game/test/effect-add', name: 'app_test_effect_add')]
     public function testEffectAdd(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $player = $entityManager->getRepository(Player::class)->find(2);
+        $player = $entityManager->getRepository(Player::class)->find(1);
 
-        $effect = $entityManager->getRepository(Effect::class)->find(4);
+        $effect = $entityManager->getRepository(Effect::class)->find(1);
         $player->createPlayerEffect($effect, $entityManager);
         $entityManager->flush();
 
