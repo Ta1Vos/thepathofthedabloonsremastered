@@ -28,7 +28,7 @@ $serializer = new Serializer($normalizers, $encoders);
 
 class GameController extends AbstractController
 {
-    #[Route('/game/save-file/create', name: 'app_game_save-file_create')]
+    #[Route('/game/save-file/create', name: 'app_game_save_file_create')]
     public function saveFileCreate(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -38,7 +38,7 @@ class GameController extends AbstractController
 
         if (count($players) >= 3) {
             $this->addFlash('warning', 'You cannot have more than 3 save files. Delete one in order to create another one.');
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_game_save_file_menu');
         }
 
 //        $gameOptions = new GameOption();
@@ -61,10 +61,10 @@ class GameController extends AbstractController
         $entityManager->persist($player);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('app_game_save_file_menu');
     }
 
-    #[Route('/game/save-file/load/{id}', name: 'app_game_save-file_load')]
+    #[Route('/game/save-file/load/{id}', name: 'app_game_save_file_load')]
     public function saveFileLoad(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -88,6 +88,20 @@ class GameController extends AbstractController
         }
 
         return $this->redirectToRoute('app_game');
+    }
+
+    #[Route('/game/save-files', name: 'app_game_save_file_menu')]
+    public function saveFileMenu(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $user = $this->getUser();
+
+        $players = $user->getPlayers();
+
+        return $this->render('game/save-files.html.twig', [
+            'bannerTitle' => 'TPOTDR | Save File Select',
+            'players' => $players,
+        ]);
     }
 
     #[Route('/game/fetch/{gameProperty}/{id}', name: 'app_game_fetch')]

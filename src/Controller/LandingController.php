@@ -34,11 +34,11 @@ class LandingController extends AbstractController
             $user = $this->getUser();
             //Check for any special roles
             if ($this->isGranted('ROLE_MODERATOR')) {
-                return $this->render('guest/index.html.twig', [
+                return $this->render('moderator/index.html.twig', [
 
                 ]);
             } else if ($this->isGranted('ROLE_ADMIN')) {
-                return $this->render('guest/index.html.twig', [
+                return $this->render('admin/index.html.twig', [
 
                 ]);
             }
