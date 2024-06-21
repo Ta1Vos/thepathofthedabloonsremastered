@@ -52,7 +52,10 @@
                     ACTIONS
                 </div>
                 {{ form(deactivateForm) }}
-                {{ form(disableForm) }}
+                {{ form_start(disableForm) }}
+                {{ form_row(disableForm.usernameRetype) }}
+                {{ form_row(disableForm.submit) }}
+                {{ form_end(disableForm) }}
                 {# Button form for User Moderation. Be sure to add confirmation before an action is executed. #}
             </div>
             {% if 'ROLE_ADMIN' not in app.user.roles %}
