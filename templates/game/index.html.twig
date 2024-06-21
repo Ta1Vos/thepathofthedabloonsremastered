@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block banner %}{% endblock %}
-{% block title %}Hello GameController!{% endblock %}
 
 {% block body %}
     <div class="row mb-5">
@@ -28,21 +27,48 @@
         </div>
         <div class="col-12 col-lg-3 m-0 p-0">
             <div class="game-stats bg-darkgreen h-100">
-                <p class="luck">
-                    Luck: <span class="luck-counter">[Number]</span>
-                </p>
-                <p class="health">
-                    Health: <span class="health-counter">[Number]</span>
-                </p>
-                <p class="regeneration">
-                    Regeneration: <span class="regen-counter">[Number]</span>
-                </p>
-                <p class="poison">
-                    Poison: <span class="poison-counter">[Number]</span>
-                </p>
-                <p class="distance">
-                    Distance: <span class="distance-counter">[Number]</span>
-                </p>
+                {% if player is defined %}
+                    <p class="luck">
+                        Luck: <span class="luck-counter">{{ player.luck }}</span>
+                    </p>
+                    <p class="health">
+                        Health: <span class="health-counter">{{ player.health }}</span>
+                    </p>
+{#                    <p class="regeneration">#}
+{#                        Regeneration: <span class="regen-counter">{{  }}</span>#}
+{#                    </p>#}
+{#                    <p class="poison">#}
+{#                        Poison: <span class="poison-counter">[Number]</span>#}
+{#                    </p>#}
+                    <p class="distance">
+                        Distance: <span class="distance-counter">{{ player.distance }}</span>
+                    </p>
+                    {% for statusEffect in statusEffects %}
+                        {% set effect = statusEffect.effect %}
+                        {% set name = effect.name|replace({' ': '-'}) %}
+                        <p class="{{ name }}">
+                            <u>{{ effect.name }}</u><br>
+                            Severity: <span class="{{ name }}-counter">{{ effect.effectValueSeverity }}</span><br>
+                            Duration: <span class="{{ name }}-duration">{{ statusEffect.debuffDuration }}</span>
+                        </p>
+                    {% endfor %}
+                {% else %}
+                    <p class="luck">
+                        Luck: <span class="luck-counter">[Number]</span>
+                    </p>
+                    <p class="health">
+                        Health: <span class="health-counter">[Number]</span>
+                    </p>
+                    <p class="regeneration">
+                        Regeneration: <span class="regen-counter">[Number]</span>
+                    </p>
+                    <p class="poison">
+                        Poison: <span class="poison-counter">[Number]</span>
+                    </p>
+                    <p class="distance">
+                        Distance: <span class="distance-counter">[Number]</span>
+                    </p>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -75,4 +101,5 @@
             <input type="checkbox" class="display-RNG"><div class="settings-RNG settings-info">Only show options when necessary</div>
         </div>
     </div>
+    <script href="{{ asset('js/game.js') }}" defer></script>
 {% endblock %}

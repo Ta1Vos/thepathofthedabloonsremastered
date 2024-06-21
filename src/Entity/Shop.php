@@ -16,12 +16,27 @@ class Shop implements \JsonSerializable
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotNull]
+    #[Assert\Type(
+        type: 'integer',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[ORM\Column]
     private ?int $additionalLuck = null;
 
+    #[Assert\NotNull]
+    #[Assert\Type(
+        type: 'integer',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[ORM\Column]
     private ?int $additionalPrice = null;
 
+    #[Assert\NotNull]
+    #[Assert\Type(
+        type: 'integer',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[ORM\Column]
     private ?int $itemAmount = null;
 
@@ -31,6 +46,7 @@ class Shop implements \JsonSerializable
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'shop')]
     private Collection $linkedEvents;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'shops')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Rarity $rarity = null;
@@ -191,5 +207,17 @@ class Shop implements \JsonSerializable
            'additionalPrice' => $this->getAdditionalPrice(),
 
        ];
+    }
+
+    public function getJSONFormat(bool $toJson = true): array|string {
+        $array = [];
+        foreach ($this as $key => $value) {
+            $type = gettype($value);
+            if ($type != "object" && $type != "unknown type") $array[$key] = $value; //Do not grab collection items, these will not be used.
+        }
+
+        if ($toJson) return json_encode($array);
+
+        return $array;
     }
 }

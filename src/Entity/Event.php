@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+//FUTURE TO-DO: ADD DISTANCE LIMIT SO THAT SOME EVENTS REQUIRE A SPECIFIC DISTANCE!!!!!!!
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
@@ -17,7 +17,7 @@ class Event
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $eventText = null;
 
 
@@ -238,5 +238,17 @@ class Event
         }
 
         return $this;
+    }
+
+    public function getJSONFormat(bool $toJson = true): array|string {
+        $array = [];
+        foreach ($this as $key => $value) {
+            $type = gettype($value);
+            if ($type != "object" && $type != "unknown type") $array[$key] = $value; //Do not grab collection items, these will not be used.
+        }
+
+        if ($toJson) return json_encode($array);
+
+        return $array;
     }
 }

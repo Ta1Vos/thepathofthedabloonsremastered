@@ -27,6 +27,7 @@ class QuestType extends AbstractType
                 'choice_label' => function (Item $entity) {
                     return $entity->getId() . ': ' . $entity->getName();
                 },
+                'placeholder' => 'none'
             ])
         ;
     }

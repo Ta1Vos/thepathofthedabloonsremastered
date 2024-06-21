@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
@@ -263,5 +264,17 @@ class Item
         }
 
         return $this;
+    }
+
+    public function getJSONFormat(bool $toJson = true): array|string {
+        $array = [];
+        foreach ($this as $key => $value) {
+            $type = gettype($value);
+            if ($type != "object" && $type != "unknown type") $array[$key] = $value; //Do not grab collection items, these will not be used.
+        }
+
+        if ($toJson) return json_encode($array);
+
+        return $array;
     }
 }

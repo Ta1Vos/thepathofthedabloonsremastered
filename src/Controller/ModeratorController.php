@@ -191,7 +191,7 @@ class ModeratorController extends AbstractController
 
         if (!$user->isDisabled()) {//If user is NOT disabled
             $userDisableForm = $formFactory->createNamedBuilder('disableUser')
-                ->add('username-retype', TextType::class, [
+                ->add('usernameRetype', TextType::class, [
                     'label' => '(Fill in username to confirm disable)',
                     'attr' => [
                         'placeholder' => $user->getUsername(),
@@ -207,7 +207,7 @@ class ModeratorController extends AbstractController
                 ->getForm();
         } else {//If user IS disabled
             $userDisableForm = $formFactory->createNamedBuilder('disableUser')
-                ->add('username-retype', TextType::class, [
+                ->add('usernameRetype', TextType::class, [
                     'label' => '(Fill in username to confirm activation)',
                     'attr' => [
                         'placeholder' => $user->getUsername(),
@@ -233,7 +233,7 @@ class ModeratorController extends AbstractController
             }
 
             //If username validation fails
-            if ($formData["username-retype"] != $user->getUsername()) {
+            if ($formData["usernameRetype"] != $user->getUsername()) {
                 $this->addFlash('warning', 'Invalid username confirmation.');
             } else {
                 if (!$user->isDisabled()) {//If user IS NOT disabled

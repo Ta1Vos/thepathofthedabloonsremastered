@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 #[IsGranted("ROLE_USER")]
 class MemberController extends AbstractController
@@ -39,7 +40,8 @@ class MemberController extends AbstractController
             ->add('username', TextType::class, [
                 'attr' => [
                     'value' => $loggedInUser->getUsername()
-                ]
+                ],
+                'constraints' => [new NotNull()],
             ])
             ->add('submit', SubmitType::class)
             ->getForm();

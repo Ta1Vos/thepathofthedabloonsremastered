@@ -28,7 +28,8 @@ class OptionType extends AbstractType
                 'choice_label' => function (Quest $entity) {
                     return $entity->getId() . ': ' . $entity->getName();
                 },
-                'label' => 'Quest'
+                'label' => 'Quest',
+                'placeholder' => 'none'
             ])
         ;
     }
