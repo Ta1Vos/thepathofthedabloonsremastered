@@ -17,8 +17,10 @@ class Dialogue
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotNull]
+    #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $dialogueText = null;
+    private ?string $dialogueText;
 
     #[Assert\NotBlank]
     #[Assert\Length(

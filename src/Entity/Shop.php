@@ -16,12 +16,27 @@ class Shop implements \JsonSerializable
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotNull]
+    #[Assert\Type(
+        type: 'integer',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[ORM\Column]
     private ?int $additionalLuck = null;
 
+    #[Assert\NotNull]
+    #[Assert\Type(
+        type: 'integer',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[ORM\Column]
     private ?int $additionalPrice = null;
 
+    #[Assert\NotNull]
+    #[Assert\Type(
+        type: 'integer',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[ORM\Column]
     private ?int $itemAmount = null;
 
@@ -31,6 +46,7 @@ class Shop implements \JsonSerializable
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'shop')]
     private Collection $linkedEvents;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'shops')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Rarity $rarity = null;
