@@ -18,7 +18,7 @@ class World
 
     #[Assert\NotBlank]
     #[Assert\Length(
-        min: 1,
+        min: 2,
         max: 150,
         minMessage: 'World name must be at least {{ limit }} characters long',
         maxMessage: 'World name cannot be longer than {{ limit }} characters'

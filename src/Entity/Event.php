@@ -47,7 +47,7 @@ class Event
 
     #[Assert\NotBlank]
     #[Assert\Length(
-        min: 1,
+        min: 2,
         max: 255,
         minMessage: 'Event name must be at least {{ limit }} characters long',
         maxMessage: 'Event name cannot be longer than {{ limit }} characters'

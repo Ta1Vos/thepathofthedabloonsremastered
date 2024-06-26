@@ -10,6 +10,8 @@ use App\Entity\Shop;
 use App\Entity\World;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -18,8 +20,14 @@ class EventType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('eventText')
-            ->add('name')
+            ->add('eventText', TextareaType::class, [
+                'required' => true,
+                'empty_data' => ' ',
+            ])
+            ->add('name', TextType::class, [
+                'required' => true,
+                'empty_data' => ' '
+            ])
             ->add('effects', EntityType::class, [
                 'class' => Effect::class,
                 'choice_label' => function (Effect $entity) {
@@ -54,8 +62,7 @@ class EventType extends AbstractType
                     return $entity->getId() . ': ' . $entity->getName();
                 },
                 'multiple' => true,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

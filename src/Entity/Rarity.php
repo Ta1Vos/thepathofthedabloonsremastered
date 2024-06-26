@@ -21,7 +21,7 @@ class Rarity
 
     #[Assert\NotBlank]
     #[Assert\Length(
-        min: 1,
+        min: 2,
         max: 50,
         minMessage: 'Rarity name must be at least {{ limit }} characters long',
         maxMessage: 'Rarity name cannot be longer than {{ limit }} characters'

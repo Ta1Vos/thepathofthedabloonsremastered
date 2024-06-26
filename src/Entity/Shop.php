@@ -59,7 +59,7 @@ class Shop implements \JsonSerializable
 
     #[Assert\NotBlank]
     #[Assert\Length(
-        min: 1,
+        min: 2,
         max: 255,
         minMessage: 'Shop name must be at least {{ limit }} characters long',
         maxMessage: 'Shop name cannot be longer than {{ limit }} characters'

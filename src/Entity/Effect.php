@@ -20,7 +20,7 @@ class Effect
 
     #[Assert\NotBlank]
     #[Assert\Length(
-        min: 1,
+        min: 2,
         max: 100,
         minMessage: 'Effect name must be at least {{ limit }} characters long',
         maxMessage: 'Effect name cannot be longer than {{ limit }} characters'

@@ -19,6 +19,12 @@ class Dialogue
 
     #[Assert\NotNull]
     #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Dialogue text must be at least {{ limit }} characters long',
+        maxMessage: 'Dialogue text cannot be longer than {{ limit }} characters'
+    )]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $dialogueText;
 
