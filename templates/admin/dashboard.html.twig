@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TPOTDR | Creator Dashboard{% endblock %}
+
+{% block body %}
+    <div class="row wrapper text-center">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-5">
+                    <a class="start-button w-100 btn py-4 fs-1 bg-lightgreen border border-5 border-black rounded-5 fm-courier fw-bolder"
+                       href="{{ path("app_admin_dashboard_dialogues") }}">
+                        Dialogue Editor
+                    </a>
+                </div>
+                <div class="col-5">
+                    <a class="start-button w-100 btn py-4 fs-1 bg-lightgreen border border-5 border-black rounded-5 fm-courier fw-bolder"
+                       href="{{ path("app_admin_dashboard_events")  }}">
+                        Event Editor
+                    </a>
+                </div>
+                <div class="col-1"></div>
+            </div>
+            <a class="start-button w-50 btn py-4 fs-1 bg-lightgreen border border-5 border-black rounded-5 fm-courier fw-bolder"
+               href="{{ path("app_admin_dashboard_options")  }}">
+                Option Editor
+            </a>
+            <a class="start-button w-50 btn py-4 fs-1 bg-lightgreen border border-5 border-black rounded-5 fm-courier fw-bolder"
+               href="{{ path("app_admin_dashboard_worlds")  }}">
+                World Editor
+            </a>
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-5">
+                    <a class="start-button w-100 btn py-4 fs-1 bg-lightgreen border border-5 border-black rounded-5 fm-courier fw-bolder"
+                       href="{{ path("app_admin_dashboard_items")  }}">
+                        Item Editor
+                    </a>
+                </div>
+                <div class="col-5">
+                    <a class="start-button w-100 btn py-4 fs-1 bg-lightgreen border border-5 border-black rounded-5 fm-courier fw-bolder"
+                       href="{{ path("app_admin_dashboard_effects")  }}">
+                        Effect Editor
+                    </a>
+                </div>
+                <div class="col-1"></div>
+            </div>
+            <a class="start-button w-50 btn py-4 fs-1 bg-lightgreen border border-5 border-black rounded-5 fm-courier fw-bolder"
+               href="{{ path("app_admin_dashboard_rarities")  }}">
+                Rarity Editor
+            </a>
+            <a class="start-button w-50 btn py-4 fs-1 bg-lightgreen border border-5 border-black rounded-5 fm-courier fw-bolder"
+               href="{{ path("app_admin_dashboard_shops")  }}">
+                Shop Editor
+            </a>
+            <a class="start-button w-50 disabled btn py-4 fs-1 bg-lightgreen border border-5 border-black rounded-5 fm-courier fw-bolder"
+               href="{{ path("app_admin_dashboard")  }}">
+                Quest Editor
+            </a>
+        </div>
+        <div class="col-1"></div>
+    </div>
+{% endblock %}

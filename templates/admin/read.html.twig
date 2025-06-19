@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TPOTDR | Effect Editor{% endblock %}
+
+{% block body %}
+    <div class="row wrapper text-center">
+        <div class="col-1"></div>
+        <div class="col-10">
+            {% if createName is defined %}
+                <a href="{{ path(createName) }}">
+                    <div class="btn btn-success fs-2 fw-bold bg-darkgreen text-white">
+                        + Create
+                    </div>
+                </a>
+            {% endif %}
+            <div class="my-3">&nbsp;</div>
+            {% if dashboardItems is not defined or dashboardItems|length <= 0 %}
+            <span class="text-danger fs-3">Nothing to see here but us chickens</span>
+            {% elseif dashboardItems|length > 0 %}
+            <div class="row bg-lightgreen border border-black border-3 fw-bold">
+                <div class="col-1">
+                    Id
+                </div>
+                <div class="col-5">
+                    Name
+                </div>
+                <div class="col-6">
+                    Actions
+                </div>
+            </div>
+            {% for dashboardItem in dashboardItems %}
+            {% if dashboardItem.id % 2 == 1 %}
+            <div class="row bg-lightolive border border-black border-1">
+                {% else %}
+                <div class="row bg-lightgreen border border-black border-1">
+                    {% endif %}
+                    <div class="col-1 fs-4">
+                        {{ dashboardItem.id }}
+                    </div>
+                    <div class="col-5 fs-4">
+                        {{ dashboardItem.name }}
+                    </div>
+                    <div class="col-3 fs-4">
+                        <a href="{{ path(editName, {'id': dashboardItem.id}) }}">
+                            <div class="btn btn-warning fw-bold text-white">
+                                +/- Edit
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-3">
+                        <a href="{{ path(deleteName, {'id': dashboardItem.id}) }}">
+                            <div class="btn btn-danger fw-bold text-white">
+                                - Delete
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-1"></div>
+    </div>
+{% endblock %}

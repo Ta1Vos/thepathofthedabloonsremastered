@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TPOTDR | SEARCH MEMBERS{% endblock %}
+
+{% block body %}
+    <div class="row wrapper text-center">
+        <div class="col-1"></div>
+        <div class="col-10 d-flex align-items-center flex-column">
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-8">
+                    {{ form_errors(searchForm) }}
+
+                    {{ form_start(searchForm) }}
+                    {{ form_row(searchForm.username) }}
+                    {{ form_row(searchForm.submit, {
+                        label: 'Search',
+                        'attr': {
+                            'class': 'fs-4 mt-3 bg-darkgreen text-gold'
+                        },
+                    }) }}
+
+                    {{ form_end(searchForm) }}
+                    {{ form_start(searchAllForm) }}
+                    {{ form_row(searchAllForm.search_all, {
+                        'attr': {
+                            'class': 'fs-2 mt-5 bg-darkgreen text-gold',
+                        },
+                    }) }}
+                    {{ form_end(searchAllForm) }}
+                </div>
+                <div class="col-2"></div>
+            </div>
+            <hr class="border border-dark border-4 opacity-75 w-100">
+            {{ form_start(moderateUserForm) }}
+            {{ form_row(moderateUserForm.select) }}
+            {{ form_row(moderateUserForm.submit, {
+                'attr': {
+                    'class': 'fs-2 mt-3 bg-darkgreen text-gold',
+                },
+            }) }}
+            {{ form_end(moderateUserForm) }}
+        </div>
+        <div class="col-1"></div>
+    </div>
+{% endblock %}

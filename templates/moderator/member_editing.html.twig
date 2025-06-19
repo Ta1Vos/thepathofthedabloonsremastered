@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TPOTDR | MODERATE{% endblock %}
+
+{% block body %}
+    <div class="wrapper text-center pt-5">
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <div class="row">
+                    <div class="col-4"></div>
+                    <div class="col-4 fs-2 text-gold">
+                        <div class="bg-success fs-3 mb-1">
+                            Name
+                        </div>
+                        <div class="bg-darkgreen mb-3 py-1">
+                            {{ user.username }}
+                        </div>
+                        <div class="bg-success fs-3 mb-1">
+                            Email
+                        </div>
+                        <div class="bg-darkgreen py-1">
+                            <a href="mailto:{{ user.email }}" class="text-gold">{{ user.email }}</a>
+                        </div>
+                        {% if user.deactivationTime is not null %}
+                            <div class="bg-success fs-3 mb-1 mt-3">
+                                Deactivation time
+                                <hr class="m-0">
+                                <div class="fs-6">
+                                    (Time until account is re-activated)
+                                </div>
+                            </div>
+                            <div class="bg-darkgreen py-1">
+                                {{ user.deactivationTime|date('Y-m-d | H:i') }}
+                            </div>
+                        {% endif %}
+                        {% if user.disabled == true %}
+                            <div class="bg-danger fs-2 mb-1 mt-3">
+                                ACCOUNT IS DISABLED
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-4"></div>
+                </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+        <hr class="border border-dark border-4 opacity-75 w-100 my-3">
+        <div class="row mx-3">
+            <div class="col-4 bg-lightgreen rounded-3">
+                <div class="bg-darkgreen text-gold mt-2 fs-3">
+                    ACTIONS
+                </div>
+                {{ form(deactivateForm) }}
+                {{ form_start(disableForm) }}
+                {{ form_row(disableForm.usernameRetype) }}
+                {{ form_row(disableForm.submit) }}
+                {{ form_end(disableForm) }}
+                {# Button form for User Moderation. Be sure to add confirmation before an action is executed. #}
+            </div>
+            {% if 'ROLE_ADMIN' not in app.user.roles %}
+                <div class="col-4"></div>
+            {% endif %}
+            <div class="col-4 bg-lightgreen rounded-3">
+                <div class="bg-darkgreen text-gold mt-2 fs-3">
+                    FORCE NEW INFO
+                </div>
+                <small class="text-muted">(Leave fields empty to not change them)</small>
+                {# Force user info form so anything can be reset. Be sure to add confirmation. #}
+                {{ form(forceInfoForm) }}
+            </div>
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+                <div class="col-4 bg-lightgreen rounded-3">
+                    <div class="bg-darkgreen text-gold mt-2 fs-3">
+                        SAVE FILES
+                    </div>
+                    {# Save file moderating for admins. Be sure to add confirmation. #}
+                </div>
+            {% endif %}
+        </div>
+        <a href="{{ path('app_mod_member_searching') }}">
+            <button class="bg-lightgreen rounded-3 border-2 border-black fs-2 mb-5">Back to member search</button>
+        </a>
+    </div>
+{% endblock %}

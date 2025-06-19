@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{# {% block banner %}{% endblock %} #}
+
+{% block body %}
+    <div class="w-75 text-center m-auto">
+        <div class="row bg-lightolive border border-black border-1 fw-bold">
+            <div class="col-1 fs-4">
+                Save file ID
+            </div>
+            <div class="col-3 fs-4">
+                Save file Last Save
+            </div>
+        </div>
+        {% if players is defined %}
+        {% for player in players %}
+        {% if loop.index0 % 2 == 1 %}
+        <div class="row bg-lightolive border border-black border-1">
+            {% else %}
+            <div class="row bg-lightgreen border border-black border-1">
+                {% endif %}
+                <div class="col-1 fs-4">
+                    {{ player.id }}
+                </div>
+                <div class="col-3 fs-4">
+                    {{ player.lastSave|date("F jS \\a\\t g:ia") }}
+                </div>
+                {#                <div class="col-5 fs-4"> #}
+                {#                    {{ player.name }} #}
+                {#                </div> #}
+                <div class="col-3 fs-4">
+                    <a href="{{ path('app_game_save_file_load', {'id': player.id}) }}">
+                        <div class="btn btn-success fw-bold text-white">
+                            Play
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+                <h2><b>Uh oh!</b> Something went wrong</h2>
+            {% endif %}
+            <a href="{{ path('app_game_save_file_create') }}" class="row bg-success border border-black border-1">
+                <div class="btn btn-success fw-bold text-white">
+                    + Create Save File
+                </div>
+            </a>
+        </div>
+    </div>
+{% endblock %}

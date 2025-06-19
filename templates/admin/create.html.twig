@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TPOTDR | Dialogue Editor{% endblock %}
+
+{% block body %}
+    <div class="row wrapper text-center">
+    <div class="col-1"></div>
+    <div class="col-10 fs-3">
+        <div class="my-3">&nbsp;</div>
+        {% if form is defined %}
+            {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {% endif %}
+        <div class="col-1"></div>
+    </div>
+    <div class="create-info m-auto">
+        <table class="fs-3 border border-3 border-black w-100">
+            <tr>
+                <td>CTRL/Shift+LeftClick on non-selected items to select multiple. This is only possible on the large inputs.</td>
+            </tr>
+            <tr>
+                <td>CTRL+LeftClick on selected items to deselect. This is only possible on the large inputs.</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
